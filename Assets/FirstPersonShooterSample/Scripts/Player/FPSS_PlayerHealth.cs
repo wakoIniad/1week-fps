@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections.Generic;
+
 
 //プレイヤーの体力
 
@@ -9,6 +11,7 @@ public class FPSS_PlayerHealth : MonoBehaviour
     public int playerHealth = 10;
     public TMP_Text healthText;
     public string gameoverSceneName = "";
+    public List<CoreManager> cores = new List<CoreManager>();
 
     int nowHealth;//現在の体力を入れておく
 
@@ -20,6 +23,7 @@ public class FPSS_PlayerHealth : MonoBehaviour
         //表示を更新する
         healthText.text = "Health: " + nowHealth.ToString();
     }
+
 
     //ダメージを受けるとき
     public void Damage(int damage)
@@ -42,13 +46,14 @@ public class FPSS_PlayerHealth : MonoBehaviour
     //体力が無くなったときに
     void Death()
     {
-        //シーンを読み込む
-        if(string.IsNullOrEmpty(gameoverSceneName))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }else
-        {
-            SceneManager.LoadScene(gameoverSceneName);
+        if(cores.Count > 0) {
+
+        } else {
+            if(string.IsNullOrEmpty(gameoverSceneName)) {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            } else {  
+                SceneManager.LoadScene(gameoverSceneName);
+            }
         }
     }
 

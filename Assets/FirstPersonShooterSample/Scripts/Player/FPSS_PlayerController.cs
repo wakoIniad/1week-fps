@@ -78,26 +78,26 @@ public class FPSS_PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
             yAxis += 1;
-            if(dashInputTimer != -1 && dashInputTimer < dashInputSpeed) {
-                dashInput = true;
-            }
-            dashInputTimer = 0;
-        } else {
-            dashInput = false;
-        }
-        
-        if(dashInputTimer != -1) {
-            dashInputTimer += Time.deltaTime;
-        }
-        if(dashInputTimer >= dashInputSpeed) {
-            dashInputTimer = -1f;
-        }
+            //if(dashInputTimer != -1 && dashInputTimer < dashInputSpeed) {
+            //    dashInput = true;
+            //}
+            //dashInputTimer = 0;
+        }// else {
+        //    dashInput = false;
+        //}
+        //
+        //if(dashInputTimer != -1) {
+        //    dashInputTimer += Time.deltaTime;
+        //}
+        //if(dashInputTimer >= dashInputSpeed) {
+        //    dashInputTimer = -1f;
+        //}
 
         //ジャンプボタンを押した瞬間か
         jumpInput = Input.GetKeyDown(KeyCode.Space);
 
         //ダッシュボタンを押しているか
-        //dashInput = Input.GetKey(KeyCode.LeftShift);
+        dashInput = Input.GetKey(KeyCode.LeftShift);
     }
 
 
@@ -119,21 +119,21 @@ public class FPSS_PlayerController : MonoBehaviour
         }
 
         //移動させる
-        //rb.position += transform.right * moveVector.x * moveSpeed * Time.deltaTime;
-        //rb.position += transform.forward * moveVector.y * moveSpeed * Time.deltaTime;
-        rb.AddForce(
-            transform.right * moveVector.x * moveSpeed * Time.deltaTime*10, 
-            ForceMode.VelocityChange
-        );
-        rb.AddForce(
-            transform.forward * moveVector.y * moveSpeed * Time.deltaTime*10, 
-            ForceMode.VelocityChange
-        );
+        rb.position += transform.right * moveVector.x * moveSpeed * Time.deltaTime;
+        rb.position += transform.forward * moveVector.y * moveSpeed * Time.deltaTime;
+        //rb.AddForce(
+        //    transform.right * moveVector.x * moveSpeed * Time.deltaTime*10, 
+        //    ForceMode.VelocityChange
+        //);
+        //rb.AddForce(
+        //    transform.forward * moveVector.y * moveSpeed * Time.deltaTime*10, 
+        //    ForceMode.VelocityChange
+        //);
         //地上にいてジャンプボタンが押されたとき
         if(jumpInput && isGround)
         {
             //ジャンプさせる
-            rb.AddForce(new Vector3(0, jumpSpeed*10, 0), ForceMode.VelocityChange);
+            rb.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.VelocityChange);
         }
 
     }

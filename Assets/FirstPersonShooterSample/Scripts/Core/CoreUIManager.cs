@@ -1,8 +1,10 @@
+using TMPro;
 using UnityEngine;
 
-public class WeaponSetting : MonoBehaviour
+public class CoreUIManager : MonoBehaviour
 {
-    public float damage = 1;
+    
+    public TextMeshProUGUI healthText;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -14,8 +16,10 @@ public class WeaponSetting : MonoBehaviour
     {
         
     }
-    public float GetDamage() {
-        return damage;
+    public void Remove() {
+        Destroy(gameObject);
     }
-    
+    public void DisplayCoreHealth(float hp) {
+        healthText.text = hp.ToString();
+    }
 }
