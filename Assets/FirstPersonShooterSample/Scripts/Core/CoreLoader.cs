@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class CoreLoader : MonoBehaviour
 {
@@ -11,14 +12,19 @@ public class CoreLoader : MonoBehaviour
     public Transform loaderTransform;
     public GameObject CoreObjectPrefab;
     
-    public Dictionary<string, CoreLocalModel> CoreList = new Dictionary<string, CoreLocalModel>();
+    Dictionary<string, CoreLocalModel> CoreList = new Dictionary<string, CoreLocalModel>();
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     void Start()
-   {
+    {
         loaderTransform = gameObject.GetComponent<Transform>();
-        
-
+    }
+    public void CreateModel(string id, Vector3 position) {
+        GameObject generatedObject = Instantiate(CoreObjectPrefab);
+        CoreLocalModel model = generatedObject.GetComponent<CoreLocalModel>();
+        model.SetId(id);
+        model.SetPosition(position);
+        CoreList.Add(id, model);
     }
     public bool isOwned(string? id) {
         if(id is string t) {
@@ -27,13 +33,7 @@ public class CoreLoader : MonoBehaviour
             return false;
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    public CoreLocalModel GetCoreById(string id) {
+    public CoreLocalModel GetModelById(string id) {
         return CoreList[id];
     }
     /*public CoreObjectData[] GetOwnedCores() {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerModel : MonoBehaviour
+public class PlayerLocalModel : MonoBehaviour
 {
     public Transform tr;
     public string id;
@@ -17,5 +17,17 @@ public class PlayerModel : MonoBehaviour
     }
     public void SetId(string settingId) {
         id = settingId;
+    }
+    public void SetPosition(Vector3 position) {
+        tr.position = position;
+    }
+    public void SetRotate(Vector3 rotate) {
+        tr.eulerAngles = rotate;
+    }
+    public void Deactivate() {
+        gameObject.SetActive(false);
+    }
+    public void Activate() {
+        gameObject.SetActive(true);
     }
 }

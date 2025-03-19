@@ -55,7 +55,7 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
         GameObject statusView = Instantiate(coreStatusViewPrefab, coreStatusViewContainer);
         CoreStatusView viewManager = statusView.GetComponent<CoreStatusView>();
         coreView[id] = viewManager;
-        viewManager.DisplayCoreHealth(coreLoader.GetCoreById(id).nowHealth);
+        viewManager.DisplayCoreHealth(coreLoader.GetModelById(id).nowHealth);
         viewManager.button.onClick.AddListener(() => OnCoreStatusViewClicked?.Invoke(id));
     }
     public void RemoveCore(string id) {

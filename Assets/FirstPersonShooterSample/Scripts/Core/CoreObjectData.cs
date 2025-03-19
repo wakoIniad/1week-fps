@@ -28,6 +28,10 @@ public class CoreLocalModel : MonoBehaviour
         //if(owned) owned = false;
         //Destroy(gameObject);
     }
+
+    public void SetId(string settingId) {
+        id = settingId;
+    }
     
     public Vector3 GetPosition()
     {

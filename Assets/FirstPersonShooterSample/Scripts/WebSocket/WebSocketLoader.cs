@@ -45,35 +45,61 @@ public class WebSocketLoader : MonoBehaviour
             Debug.Log("playerId: " + model.targetPlayerId);
             Debug.Log("value: " + model.value);
             Debug.Log("vec3: " + model.vec3.ToString());
-            if(model.CommandType == "Create") {
-
-            } else {
-                switch(model.Target) {
-                    case "Core":
-                        if(model.targetCoreId is string id) {
-                            switch(model.CommandType) {
-                                case "Breaked":
-                                    if(!coreLoader.isOwned(id))return;
-                                    coreLoader.ApplyBreakData(id);
-                                    break;
-                                case "Damageed":
-                                    if(!coreLoader.isOwned(id))return;
-                                    if(model.value is float hp)coreLoader.ApplyDamageData(id, hp);
-                                    break;
-                                case "Owned":
-                                    if(!coreLoader.isOwned(id))return;
-                                    coreLoader.ApplyOwned(id);
-                                    break;
-                                case "Transporting":
-                                    if(model.targetPlayerId is string playerId) {
-                                        playerLoader.GetPlayerModelById(playerId);
-                                    }
-                                    break;
-                            }
+            switch(model.Target) {
+                case "Core":
+                    if(model.targetCoreId is string coreId) {
+                        switch(model.CommandType) {
+                            case "Created":
+                                if(model.vec3 is Vector3 position) {
+                                    coreLoader.CreateModel(coreId, position);
+                                }
+                                break;
+                            case "Breaked":
+                                if(!coreLoader.isOwned(coreId))return;
+                                coreLoader.ApplyBreakData(coreId);
+                                break;
+                            case "Damageed":
+                                if(!coreLoader.isOwned(coreId))return;
+                                if(model.value is float hp)coreLoader.ApplyDamageData(coreId, hp);
+                                break;
+                            case "Owned":
+                                if(!coreLoader.isOwned(coreId))return;
+                                coreLoader.ApplyOwned(coreId);
+                                break;
+                            case "Transporting":
+                                if(model.targetPlayerId is string playerId) {
+                                    PlayerLocalModel playerModel = playerLoader.GetModelById(playerId);
+                                    coreLoader.ApplyTransporter(coreId, playerModel.tr);
+                                }
+                                break;
                         }
-                        break;
-                }
+                    }
+                    break;
+                case "Player":
+                    if(model.targetPlayerId is string id) {
+                    if(model.vec3 is Vector3 vec3) {
+                        switch(model.CommandType) {
+                            case "Created":
+                                playerLoader.CreateModel(id, vec3);
+                                break;
+                            case "SetPosition":
+                                playerLoader.SetPosition(id, vec3);
+                                break;
+                            case "SetRotation":
+                                playerLoader.SetRotation(id, vec3);
+                                break;
+                            case "Deactivate":
+                                playerLoader.Deactivate(id);
+                                break;
+                            case "Activate":
+                                playerLoader.Activate(id);
+                                break;
+                        }
+                    }
+                    }
+                    break;
             }
+            
                     
         };
  
