@@ -1,13 +1,13 @@
 using UnityEngine;
 using System;
 
-public class CoreObjectData : MonoBehaviour
+public class CoreLocalModel : MonoBehaviour
 {
     public CoreLoader loader;
     public float defaultHealth = 10;
     public bool owned = false;
     public float nowHealth = 10;
-    public int id = 0;
+    public string id = "0";
     public bool transporting = false;
     
     public void Damage(float damage)
@@ -40,7 +40,7 @@ public class CoreObjectData : MonoBehaviour
     public void SetAsNotowned() {
         owned = false;
     }
-    public int GetId() {
+    public string GetId() {
         return id;
     }
     public void SetPosition(Vector3 pos) {

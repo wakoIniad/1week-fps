@@ -31,8 +31,8 @@ namespace WebSocketSetting {
         public string CommandType { get; set; }
 
         //data
-        public int? targetCoreId { get; set; }
-        public int? targetPlayerId { get; set; }
+        public string? targetCoreId { get; set; }
+        public string? targetPlayerId { get; set; }
         public Vector3? vec3 { get; set; }
         public float? value { get; set; }
     }

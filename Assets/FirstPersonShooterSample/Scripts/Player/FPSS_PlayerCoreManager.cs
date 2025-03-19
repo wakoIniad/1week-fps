@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class FPSS_PlayerCoreManager : MonoBehaviour
 {
-    public event Action<int> OnCoreStatusViewClicked;
+    public event Action<string> OnCoreStatusViewClicked;
     public CoreLoader coreLoader;
     public Transform coreStatusViewContainer;
     public GameObject coreStatusViewPrefab;
     //public Dictionary<int, CoreObjectData> ownedCores = new Dictionary<int, CoreObjectData>();
-    public Dictionary<int, CoreStatusView> coreView = new Dictionary<int, CoreStatusView>();
+    public Dictionary<string, CoreStatusView> coreView = new Dictionary<string, CoreStatusView>();
     private bool HandleCoreTransportFlagA = false;
     private bool HandleCoreTransportFlagB = false;
-    private CoreObjectData transportTarget;
-    private CoreObjectData transportingCoreObject;
+    private CoreLocalModel transportTarget;
+    private CoreLocalModel transportingCoreObject;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -48,32 +48,32 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     }
     public void RespownAtCore() {
     }
-    public void DamageCore(int id, float hp) {
+    public void DamageCore(string id, float hp) {
         coreView[id].DisplayCoreHealth(hp);
     }
-    public void AddCore(int id) {
+    public void AddCore(string id) {
         GameObject statusView = Instantiate(coreStatusViewPrefab, coreStatusViewContainer);
         CoreStatusView viewManager = statusView.GetComponent<CoreStatusView>();
         coreView[id] = viewManager;
         viewManager.DisplayCoreHealth(coreLoader.GetCoreById(id).nowHealth);
         viewManager.button.onClick.AddListener(() => OnCoreStatusViewClicked?.Invoke(id));
     }
-    public void RemoveCore(int id) {
+    public void RemoveCore(string id) {
         coreView[id].Remove();
         coreView.Remove(id);
     }
     void OnTriggerEnter(Collider other) {
         if(other.gameObject.CompareTag("Core")) {
-            CoreObjectData coreObject = other.gameObject.GetComponent<CoreObjectData>();
-            if(coreObject.owned) {
+            CoreLocalModel coreModel = other.gameObject.GetComponent<CoreLocalModel>();
+            if(coreModel.owned) {
                 //HandleCoreTransportFlagAでは、隣接するコアの範囲の共通部分が反応しない
                 //HandleCoreTransportFlagBでは、先に入ったコアと共通部分が反応する
                 //この範囲を足し合わせれば全ての範囲で反応する
                 HandleCoreTransportFlagA = !HandleCoreTransportFlagA;
                 HandleCoreTransportFlagB = true;
-                transportTarget = coreObject;
+                transportTarget = coreModel;
             } else {
-                coreObject.TryClaim();
+                coreModel.TryClaim();
             }
         }
     }
@@ -82,8 +82,8 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     //->対策：falseにするのではなく反転する
     void OnTriggerExit(Collider other) {
         if(other.gameObject.CompareTag("Core")) {
-            CoreObjectData coreObject = other.gameObject.GetComponent<CoreObjectData>();
-            if(coreObject.owned) {
+            CoreLocalModel coreModel = other.gameObject.GetComponent<CoreLocalModel>();
+            if(coreModel.owned) {
                 HandleCoreTransportFlagA = !HandleCoreTransportFlagA;
                 HandleCoreTransportFlagB = true;
             }
