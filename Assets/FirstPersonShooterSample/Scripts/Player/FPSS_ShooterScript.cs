@@ -54,6 +54,15 @@ public class FPSS_ShooterScript : MonoBehaviour
                         enemyHealth.Damage(damage);
                     }
                 }
+                if(hit.transform.CompareTag("Core"))
+                {
+                    //敵の体力を管理しているものがあるか
+                    CoreManager enemyHealth = hit.transform.GetComponent<CoreManager>();
+                    if(enemyHealth)
+                    {
+                        enemyHealth.Damage(damage);
+                    }
+                }
                 //パーティクルを出現させる
                 if(hitParticlePrefab)
                 {

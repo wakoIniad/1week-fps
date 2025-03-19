@@ -3,6 +3,7 @@ using System;
 
 public class CoreManager : MonoBehaviour
 {
+    public float defaultHealth = 10;
     private float nowHealth = 10;
     public string owner = "";
     public event Action OnBreak;
@@ -19,32 +20,28 @@ public class CoreManager : MonoBehaviour
         
     }
     
-    //ダメージを受けるとき
-    void Damage(float damage)
+    public void Damage(float damage)
     {
-        //既に体力が無いときこの先の処理をしない
         if(nowHealth <= 0){ return; }
 
-        //体力を減らす
         nowHealth -= damage;
 
-        //体力が無くなったらその処理をする
         if(nowHealth <= 0)
         {
             Break();
         }
-        OnDamage.Invoke(nowHealth);
+        if(OnDamage != null) OnDamage.Invoke(nowHealth);
     }
 
     //体力が無くなったときに
     void Break()
     {
-        Destroy(gameObject);
-        OnBreak.Invoke();
-        owner = null;
+        if(OnBreak != null)OnBreak.Invoke();
+        owner = "";
+        //Destroy(gameObject);
     }
-    void OnTriggerEnter(Collision other) {
-        if(other.gameObject.CompareTag("Weapon")) {
+    void OnTriggerEnter(Collider other) {
+        if(other.gameObject.CompareTag("EnemyBullet")) {
             WeaponSetting setting = other.gameObject.GetComponent<WeaponSetting>();
             if(setting) {
                 Damage(setting.GetDamage());
@@ -55,5 +52,9 @@ public class CoreManager : MonoBehaviour
     public Vector3 GetPosition()
     {
         return transform.position;
+    }
+    public void ChangeOwner(string ownerName) {
+        this.owner = ownerName;
+        nowHealth = defaultHealth;
     }
 }

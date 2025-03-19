@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Timeline;
 
-public class CoreItem: MonoBehaviour
+public class CoreItem
 {
     CoreUIManager coreUIManager;
     public FPSS_PlayerCoreManager CoreManager;
@@ -12,6 +12,7 @@ public class CoreItem: MonoBehaviour
         coreUIManager = viewController;
         CoreManager = manager;
         sourceCore = source;
+        coreUIManager.DisplayCoreHealth(source.defaultHealth);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -30,7 +31,7 @@ public class CoreItem: MonoBehaviour
     public void Breaked() {
         sourceCore.OnDamage -= Damaged;
         sourceCore.OnBreak -= Breaked;
-        
+
         CoreManager.removeCore(this);
         coreUIManager.Remove();
     }

@@ -18,6 +18,7 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
         
     }
     public void AddCore(CoreManager source) {
+        source.ChangeOwner("me");
         GameObject statusView = Instantiate(coreStatusViewPrefab, coreStatusViewContainer);
         CoreUIManager viewManager = statusView.GetComponent<CoreUIManager>();
         ownedCores.Add(new CoreItem(this, source, viewManager));
@@ -25,11 +26,11 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     public void removeCore(CoreItem target) {
         ownedCores.Remove(target);
     }
-    void OnTriggerEnter(Collision other) {
+    void OnTriggerEnter(Collider other) {
         if(other.gameObject.CompareTag("Core")) {
             CoreManager core = other.gameObject.GetComponent<CoreManager>();
-            if(core.owner == null) {
-                core.owner = "me";
+            if(core.owner == "") {
+                AddCore(core);
             }
         }
     }
