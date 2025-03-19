@@ -43,6 +43,10 @@ public class CoreObjectData : MonoBehaviour
     public int GetId() {
         return id;
     }
+    public void SetPosition(Vector3 pos) {
+            Transform anchor = gameObject.GetComponent<Transform>();
+            anchor.position = pos;
+    }
 
     //サーバーに送信する関数を呼び出す
     public void TryClaim() {
@@ -51,6 +55,7 @@ public class CoreObjectData : MonoBehaviour
     public void TryDamage(float amount) {
         loader.TryDamage(id, amount);
     }
+    //早さが求められるので、確認無しでワープした後プレイヤーの位置を更新するリクエストを送る
     public void TryWarp(Rigidbody rb) {
         if(owned) {
             Transform anchor = gameObject.GetComponent<Transform>();
@@ -60,19 +65,23 @@ public class CoreObjectData : MonoBehaviour
         }
     }
     public void TryCollect(Transform tr) {
-        if(owned) {
-            Transform selfTr = gameObject.GetComponent<Transform>();
-            selfTr.parent = tr;
-            selfTr.localScale = new Vector3(0.1f,0.1f,0.1f);//元から小さくてもいいかも
-            transporting = true;
-        }
+        loader.TryCollect(id, tr);
     }
+    public void SetAsPlaced() {
+        Transform selfTr = gameObject.GetComponent<Transform>();
+        selfTr.parent = loader.loaderTransform;
+        selfTr.localScale = new Vector3(1,1,1);
+        transporting = false;
+    }
+    public void SetTransprter(Transform tr) {
+        Transform selfTr = gameObject.GetComponent<Transform>();
+        selfTr.parent = tr;
+        selfTr.localScale = new Vector3(0.1f,0.1f,0.1f);//元から小さくてもいいかも
+        transporting = true;
+    }
+        
+    
     public void TryPlace() {
-        if(transporting) {
-            Transform selfTr = gameObject.GetComponent<Transform>();
-            selfTr.parent = loader.loaderTransform;
-            selfTr.localScale = new Vector3(1,1,1);
-            transporting = false;
-        }
+        loader.TryPlace(id);
     }
 }

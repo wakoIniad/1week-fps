@@ -5,17 +5,35 @@ using System.Text.Json.Serialization;
 using UnityEngine;
 
 
-namespace WebSocketData {
+namespace WebSocketSetting {
+    
     public class WebSocketData
     {
         //[JsonPropertyName("Header")]
-        //自分以外のプレイヤーのHPは反映する必要がないのでしない。
-        //targetIDが必要なのは１プレイやーで複数持ち得るコアだけ（今のところ）
-        /**
+        /**Headers**
+        
+        otherPlayerPsitionChange: targetaPlayerId, vec3(position)
+        otherPlayerObjectCreate: targetaPlayerId(settingId), vec3(position)
+        otherPlayerObjectDelete: targetaPlayerId
+        otherPlayerRotateChange: targetaPlayerId, vec3(rotate)
+        updateMyhealth(mainly damaged): value
+
+        coreTransporting; targetaPlayerId, targetCoreId
+        corePlaced: targetCoreId, vec3(position)
+        coreBreaked(for owners): targetCoreId
+        coreDamaged(for owners): targetCoreId, value(hp)
+        coreOwned(for owners): targetCoreId
+        coreObjectCreate: targetCoreId(settingId), vec3(position)
         */
-        public string Header { get; set; }
-        public int? targetCore { get; set; }
-        public Vector3? position { get; set; }
+
+        //header (２つ合わせて)
+        public string Target { get; set; }
+        public string CommandType { get; set; }
+
+        //data
+        public int? targetCoreId { get; set; }
+        public int? targetPlayerId { get; set; }
+        public Vector3? vec3 { get; set; }
         public float? value { get; set; }
     }
 }
