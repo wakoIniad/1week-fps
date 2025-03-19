@@ -43,6 +43,7 @@ public class FPSS_PlayerController : MonoBehaviour
         UpdateGround();
         UpdateInput();
         UpdateMove();
+
     }
 
 

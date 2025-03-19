@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FPSS_PlayerCoreManager : MonoBehaviour
 {
+    public event Action<int> OnCoreStatusViewClicked;
     public CoreLoader coreLoader;
     public Transform coreStatusViewContainer;
     public GameObject coreStatusViewPrefab;
@@ -21,6 +23,8 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     {
         
     }
+    public void RespownAtCore() {
+    }
     public void DamageCore(int id, float hp) {
         coreView[id].DisplayCoreHealth(hp);
     }
@@ -28,6 +32,8 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
         GameObject statusView = Instantiate(coreStatusViewPrefab, coreStatusViewContainer);
         CoreStatusView viewManager = statusView.GetComponent<CoreStatusView>();
         coreView[id] = viewManager;
+        viewManager.DisplayCoreHealth(coreLoader.GetCoreById(id).nowHealth);
+        viewManager.button.onClick.AddListener(() => OnCoreStatusViewClicked?.Invoke(id));
     }
     public void RemoveCore(int id) {
         coreView[id].Remove();

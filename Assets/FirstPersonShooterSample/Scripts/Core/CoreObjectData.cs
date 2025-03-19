@@ -50,4 +50,12 @@ public class CoreObjectData : MonoBehaviour
     public void TryDamage(float amount) {
         loader.TryDamage(id, amount);
     }
+    public void TryWarp(Rigidbody rb) {
+        if(owned) {
+            Transform anchor = gameObject.GetComponent<Transform>();
+            rb.position = anchor.position;
+            rb.rotation = anchor.rotation;
+            
+        }
+    }
 }

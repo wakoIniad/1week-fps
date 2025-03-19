@@ -22,8 +22,12 @@ public class FPSS_Respawner : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         //初期位置、向きを保存
-        startPosition = transform.position;
-        startRotation = transform.rotation;
+        //startPosition = transform.position;
+        //startRotation = transform.rotation;
+    }
+    public void setRespownAnchor(Transform anchor) {
+        startPosition = anchor.position;
+        startRotation = anchor.rotation;
     }
 
     //毎フレーム呼ばれる

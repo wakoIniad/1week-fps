@@ -8,10 +8,9 @@ using System.Collections.Generic;
 
 public class FPSS_PlayerHealth : MonoBehaviour
 {
-    FPSS_PlayerCoreManager coreManager;
+    PlayerRespown respownManager;
     public int playerHealth = 10;
     public TMP_Text healthText;
-    public string gameoverSceneName = "";
 
     int nowHealth;//現在の体力を入れておく
 
@@ -22,7 +21,7 @@ public class FPSS_PlayerHealth : MonoBehaviour
         nowHealth = playerHealth;
         //表示を更新する
         healthText.text = "Health: " + nowHealth.ToString();
-        coreManager = gameObject.GetComponent<FPSS_PlayerCoreManager>();
+        respownManager = gameObject.GetComponent<PlayerRespown>();
     }
 
 
@@ -47,15 +46,8 @@ public class FPSS_PlayerHealth : MonoBehaviour
     //体力が無くなったときに
     void Death()
     {
-        if(coreManager.CoreCount() > 0) {
-
-        } else {
-            if(string.IsNullOrEmpty(gameoverSceneName)) {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            } else {  
-                SceneManager.LoadScene(gameoverSceneName);
-            }
-        }
+        nowHealth = playerHealth;
+        respownManager.StartHandleRespown();
     }
 
     //すり抜ける当たり判定にあたったとき
@@ -71,6 +63,14 @@ public class FPSS_PlayerHealth : MonoBehaviour
             {
                 Damage(enemyAttacker.GetDamage());
             }
+        }
+    }
+
+//テスト
+    void Update() {
+        
+        if(Input.GetKeyDown(KeyCode.T)) {
+            Damage(2);
         }
     }
 }
