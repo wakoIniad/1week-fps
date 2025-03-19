@@ -8,10 +8,10 @@ using System.Collections.Generic;
 
 public class FPSS_PlayerHealth : MonoBehaviour
 {
+    public FPSS_PlayerCoreManager coreManager;
     public int playerHealth = 10;
     public TMP_Text healthText;
     public string gameoverSceneName = "";
-    public List<CoreManager> cores = new List<CoreManager>();
 
     int nowHealth;//現在の体力を入れておく
 
@@ -46,7 +46,7 @@ public class FPSS_PlayerHealth : MonoBehaviour
     //体力が無くなったときに
     void Death()
     {
-        if(cores.Count > 0) {
+        if(coreManager.CoreCount() > 0) {
 
         } else {
             if(string.IsNullOrEmpty(gameoverSceneName)) {
