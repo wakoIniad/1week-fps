@@ -60,7 +60,7 @@ public class FPSS_ShooterScript : MonoBehaviour
                     CoreObjectData coreObject = hit.transform.GetComponent<CoreObjectData>();
                     if(coreObject)
                     {
-                        coreObject.TryDamage(coreObject.GetId());
+                        coreObject.TryDamage(damage);
                     }
                 }
                 //パーティクルを出現させる

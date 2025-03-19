@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 public class FPSS_PlayerHealth : MonoBehaviour
 {
-    public FPSS_PlayerCoreManager coreManager;
+    FPSS_PlayerCoreManager coreManager;
     public int playerHealth = 10;
     public TMP_Text healthText;
     public string gameoverSceneName = "";
@@ -22,6 +22,7 @@ public class FPSS_PlayerHealth : MonoBehaviour
         nowHealth = playerHealth;
         //表示を更新する
         healthText.text = "Health: " + nowHealth.ToString();
+        coreManager = gameObject.GetComponent<FPSS_PlayerCoreManager>();
     }
 
 

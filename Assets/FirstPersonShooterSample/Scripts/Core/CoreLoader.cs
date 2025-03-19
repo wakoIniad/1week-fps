@@ -74,6 +74,7 @@ public class CoreLoader : MonoBehaviour
         if(CoreList[targetCoreId].owned) {
             if(OnOwnedCoreBreaked != null)OnOwnedCoreBreaked.Invoke(targetCoreId);
         }
+        CoreList[targetCoreId].SetAsNotowned();
     }
     
     //サーバーに処理のリクエストを送る関数。今はそのまま通しているが、今後サーバー側の処理に置き換える
@@ -85,7 +86,7 @@ public class CoreLoader : MonoBehaviour
     }
     public void TryDamage(int targetCoreId, float amount) {
         ApplyDamageData(targetCoreId, amount);
-        if(CoreList[targetCoreId].nowHealth < 0) {
+        if(CoreList[targetCoreId].nowHealth <= 0) {
             ApplyBreakData(targetCoreId);
         }
     }

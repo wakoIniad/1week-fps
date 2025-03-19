@@ -17,14 +17,14 @@ public class CoreObjectData : MonoBehaviour
 
         if(nowHealth <= 0)
         {
-            Break();
+            //Break();
         }
     }
 
     //体力が無くなったときに
     void Break()
     {
-        if(owned) owned = false;
+        //if(owned) owned = false;
         //Destroy(gameObject);
     }
     
@@ -34,11 +34,16 @@ public class CoreObjectData : MonoBehaviour
     }
     public void SetAsOwned() {
         owned = true;
+        nowHealth = defaultHealth;
+    }
+    public void SetAsNotowned() {
+        owned = false;
     }
     public int GetId() {
         return id;
     }
 
+    //サーバーに送信する関数を呼び出す
     public void TryClaim() {
         loader.TryClaim(id);
     }
