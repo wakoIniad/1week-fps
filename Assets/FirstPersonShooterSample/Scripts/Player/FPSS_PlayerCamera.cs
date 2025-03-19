@@ -14,6 +14,7 @@ public class FPSS_PlayerCamera : MonoBehaviour
     public float angle = 130;//縦方向に視点を動かせる角度
     public bool reverseX = false;//横方向の向きを反転させるか
     public bool reverseY = false;//縦方向の向きを反転させるか
+    public bool stop = false;
 
 
     float camRot;//現在のカメラの角度を入れておく
@@ -49,11 +50,13 @@ public class FPSS_PlayerCamera : MonoBehaviour
 
         playerTransform = playerBody.transform;
         playerRigidbody = playerBody.GetComponent<Rigidbody>();
+        
     }
 
     //毎フレーム呼ばれる
     void Update()
     {
+        if(stop)return;
         //入力を取得
         //Unity > ProjectSettings > InputManagerに設定がある
         float xInput = Input.GetAxis("Mouse X");

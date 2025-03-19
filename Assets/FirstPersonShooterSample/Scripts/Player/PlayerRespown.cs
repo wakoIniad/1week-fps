@@ -8,6 +8,7 @@ public class PlayerRespown : MonoBehaviour
     private bool waitingRespawn = false;
     private Rigidbody rb;
     private FPSS_PlayerHealth healthManager;
+    public GameManager gameManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -32,6 +33,7 @@ public class PlayerRespown : MonoBehaviour
 
     }
     public void StartHandleRespown() {
+        gameManager.EnterUIMde();
         waitingRespawn = true;
         coreManager.OnCoreStatusViewClicked += SpawnAnchorSelected;
     }
@@ -45,6 +47,7 @@ public class PlayerRespown : MonoBehaviour
         EndHandleRespown();
     }
     public void EndHandleRespown() {
+        gameManager.ExitUIMde();
         waitingRespawn = false;
         coreManager.OnCoreStatusViewClicked -= SpawnAnchorSelected;
 

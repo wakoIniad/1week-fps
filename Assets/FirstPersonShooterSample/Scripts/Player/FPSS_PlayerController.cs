@@ -27,6 +27,8 @@ public class FPSS_PlayerController : MonoBehaviour
     public float dashInputSpeed = 0.5f;
     float dashInputTimer = -1f;
 
+    public bool stop;
+
 
     //ゲームをはじめて最初に呼ばれる
     void Start()
@@ -39,6 +41,7 @@ public class FPSS_PlayerController : MonoBehaviour
     //毎フレーム呼ばれる
     void Update()
     {
+        if(stop)return;
         //機能ごとに分けてわかりやすく
         UpdateGround();
         UpdateInput();

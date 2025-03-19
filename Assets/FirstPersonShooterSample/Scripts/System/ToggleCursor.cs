@@ -7,7 +7,7 @@ public class ToggleCursor : MonoBehaviour
     [SerializeField] bool showCursor = false;
 
     //ゲームをはじめて最初に呼ばれる
-    void Start()
+    void UpdateCursor()
     {
         //マウスカーソルの設定
         if (showCursor)
@@ -20,5 +20,17 @@ public class ToggleCursor : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+    }
+    void Start() {
+        UpdateCursor();
+    }
+    public void ShowCursor() {
+        showCursor = true;
+        UpdateCursor();
+    }
+    public void HideCursor() {
+        showCursor = false;
+        UpdateCursor();
+        
     }
 }
