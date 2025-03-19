@@ -9,6 +9,7 @@ public class CoreLoader : MonoBehaviour
     public event Action<int, float> OnOwnedCoreDamaged;
     public event Action<int> OnOwnedCoreBreaked;
     public event Action<int> OnCoreOwned;
+    public Transform loaderTransform;
     
     public List<CoreObjectData> CoreList = new List<CoreObjectData>();
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -16,6 +17,7 @@ public class CoreLoader : MonoBehaviour
     private WebSocket ws;
     void Start()
    {
+        loaderTransform = gameObject.GetComponent<Transform>();
        ws = new WebSocket("ws://localhost:3000/");
 
        ws.OnOpen += (sender, e) =>
@@ -74,6 +76,8 @@ public class CoreLoader : MonoBehaviour
         if(CoreList[targetCoreId].owned) {
             if(OnOwnedCoreBreaked != null)OnOwnedCoreBreaked.Invoke(targetCoreId);
         }
+        //プライヤーが移動中の場合落ちる  
+        CoreList[targetCoreId].TryPlace();
         CoreList[targetCoreId].SetAsNotowned();
     }
     

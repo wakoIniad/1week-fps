@@ -8,6 +8,7 @@ public class CoreObjectData : MonoBehaviour
     public bool owned = false;
     public float nowHealth = 10;
     public int id = 0;
+    public bool transporting = false;
     
     public void Damage(float damage)
     {
@@ -56,6 +57,22 @@ public class CoreObjectData : MonoBehaviour
             rb.position = anchor.position;
             rb.rotation = anchor.rotation;
             
+        }
+    }
+    public void TryCollect(Transform tr) {
+        if(owned) {
+            Transform selfTr = gameObject.GetComponent<Transform>();
+            selfTr.parent = tr;
+            selfTr.localScale = new Vector3(0.1f,0.1f,0.1f);//元から小さくてもいいかも
+            transporting = true;
+        }
+    }
+    public void TryPlace() {
+        if(transporting) {
+            Transform selfTr = gameObject.GetComponent<Transform>();
+            selfTr.parent = loader.loaderTransform;
+            selfTr.localScale = new Vector3(1,1,1);
+            transporting = false;
         }
     }
 }
