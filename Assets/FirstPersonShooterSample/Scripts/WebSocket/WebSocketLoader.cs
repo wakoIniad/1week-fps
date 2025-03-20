@@ -9,6 +9,7 @@ using NativeWebSocket;
 public class WebSocketLoader : MonoBehaviour
 {
     public PlayerModelLoader playerLoader;
+
     public CoreLoader coreLoader;
     private WebSocket ws;
     private Transform myTr;
@@ -22,15 +23,16 @@ public class WebSocketLoader : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Debug.Log("Start");
         ws = new WebSocket("ws://localhost:3000/");
         
 
-        ws.OnOpen += (sender, e) =>
+        ws.OnOpen += () =>
         {
             Debug.Log("WebSocket Open");
         };
  
-        ws.OnMessage += (sender, e) =>
+        ws.OnMessage += (bytes) =>
         {
             /**Headers**
         
@@ -48,9 +50,9 @@ public class WebSocketLoader : MonoBehaviour
         coreObjectCreate: targetCoreId(settingId), vec3(position)
         */
             //WebSocketData model = JsonConvert.DeserializeObject<WebSocketData>(e.Data);
-            
-            Debug.Log("WebSocket Data: " + e.Data);
-            string[] splitted = e.Data.Split(',');
+            string data = System.Text.Encoding.UTF8.GetString(bytes);
+            Debug.Log("WebSocket Data: " + data);
+            string[] splitted = data.Split(',');
             string Target = splitted[0];
             string CommandType = splitted[1];
             string[] arg = splitted[2..];
@@ -167,12 +169,12 @@ public class WebSocketLoader : MonoBehaviour
                     
         };
  
-        ws.OnError += (sender, e) =>
+        ws.OnError += (e) =>
         {
-            Debug.Log("WebSocket Error Message: " + e.Message);
+            Debug.Log("WebSocket Error Message: " + e);
         };
  
-        ws.OnClose += (sender, e) =>
+        ws.OnClose += (e) =>
         {
             Debug.Log("WebSocket Close");
         };
@@ -184,51 +186,51 @@ public class WebSocketLoader : MonoBehaviour
         return vec3.x+","+vec3.y+","+vec3.z;
     }
     public void SendMyPosition() {
-        ws.Send(
+        ws.SendText(
             "Position,"+
             Vector3ToString(myTr.position));
     }
     public void SendMyRotation() {
-        ws.Send(
+        ws.SendText(
             "Rotation,"+
             Vector3ToString(myTr.eulerAngles));
     }
     
     public void RequestTransportCore(string coreId) {
-        ws.Send(
+        ws.SendText(
             "TransportRequest,"+
             coreId
             );
     }
     
     public void RequestClaimCore(string coreId) {
-        ws.Send(
+        ws.SendText(
             "ClaimRequest,"+
             coreId
         );
     }
     
     public void RequestPlaceCore(string coreId) {
-        ws.Send(
+        ws.SendText(
             "PlaceRequest,"+
             coreId
         );
     }
     
     public void EntryDamageCore(string coreId, float amount) {
-        ws.Send(
+        ws.SendText(
             "CoreDamageEntry,"+
             coreId+','+amount
         );
     }
     
     public void EntryDamagePlayer(string playerId, float amount) {
-        ws.Send(
+        ws.SendText(
             "PlayerDamageEntry,"+
             playerId+','+amount
         );
     }
     public void Entry() {
-        ws.Send("Entry");
+        ws.SendText("Entry");
     }
 }
