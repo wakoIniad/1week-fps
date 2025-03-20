@@ -1,6 +1,7 @@
 using UnityEngine;
 
-using WebSocketSharp;
+//using WebSocketSharp;
+using NativeWebSocket;
 //using WebSocketSetting;
 //using Newtonsoft.Json;
 //using Unity.VisualScripting;
@@ -15,7 +16,7 @@ public class WebSocketLoader : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        ws = new WebSocket("ws://localhost:3000/");
+        ws = new WebSocket("wss://localhost:3000/");
  
         ws.OnOpen += (sender, e) =>
         {
@@ -170,6 +171,7 @@ public class WebSocketLoader : MonoBehaviour
         };
  
         ws.Connect();
+        Entry();
     }
     string Vector3ToString(Vector3 vec3) {
         return vec3.x+","+vec3.y+","+vec3.z;
