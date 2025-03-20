@@ -94,7 +94,7 @@ public class CoreLocalModel : MonoBehaviour
     public void TryPlace() {
         loader.TryPlace(id);
     }
-    public void TryRespown() {
-        loader.TryRespown(id);
+    public void TryRespawn() {
+        loader.TryRespawn(id);
     }
 }

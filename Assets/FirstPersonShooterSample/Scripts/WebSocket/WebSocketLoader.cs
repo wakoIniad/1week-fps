@@ -243,7 +243,7 @@ public class WebSocketLoader : MonoBehaviour
             targetCoreId
         );
     }
-    public void RequestWarp(sbyte targetaCoreId) {
+    public void RequestWarp(string targetaCoreId) {
         SendText(
             "WarpRequest,"+
             targetaCoreId

@@ -111,8 +111,8 @@ public class CoreLoader : MonoBehaviour
         //}
         webSocketLoader.RequestTransportCore(targetCoreId);
     }
-    public void TryRespown(string targetCoreId) {
-        webSocketLoader.RequestRespown(targetCoreId);
+    public void TryRespawn(string targetCoreId) {
+        webSocketLoader.RequestRespawn(targetCoreId);
     }
     public void TryWarp(string targetCoreId) {
         webSocketLoader.RequestWarp(targetCoreId);

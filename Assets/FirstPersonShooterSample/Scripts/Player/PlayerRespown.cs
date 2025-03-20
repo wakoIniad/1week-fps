@@ -41,7 +41,7 @@ public class PlayerRespown : MonoBehaviour
         Debug.Log("test:"+id);
         if(waitingRespawn) {
             CoreLocalModel core = coreManager.coreLoader.GetModelById(id);
-            core.TryRespown();
+            core.TryRespawn();
             //healthManager.nowH
         }
         EndHandleRespown();
