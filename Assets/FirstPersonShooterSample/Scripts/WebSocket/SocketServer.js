@@ -103,7 +103,7 @@ class Player {
 
         this.nowHealth -= amount;
         
-        connections[this.id].emit('message',`Player,Damage,${amount}`);
+        connections[this.id].send(`Player,Damage,${amount}`);
         if(nowHealth <= 0)
         {
             Kill();
@@ -113,7 +113,7 @@ class Player {
     Kill()
     {
         
-        connections[this.id].broadcast.emit("message", `Player,Deactivate,${this.id}`);
+        connections[this.id].broadcast(`Player,Deactivate,${this.id}`);
         killedAt = this.position;
         this.ghost = true;
         let gameOver = true;
@@ -134,7 +134,7 @@ class Player {
         if(coreList[targetCoreId].Warp(this.id)) {
             this.ghost = false;
             this.nowHealth = this.defaultHealth;
-            connections[this.id].broadcast.emit("message", `Player,Activate,${this.id}`);
+            connections[this.id].broadcast(`Player,Activate,${this.id}`);
             return true;
         } else {
             this.gameOver = true;
@@ -154,8 +154,8 @@ class Core {
     }
     Unclaim(position) {
         const lastOwner = this.owner;
-        connections[lastOwner].emit('message',`Core,Break,${this.id}`);
-        io.emit("message",`Core,Place,${this.id},${position.join(',')}`);
+        connections[lastOwner].send(`Core,Break,${this.id}`);
+        server.sendAllClient("message",`Core,Place,${this.id},${position.join(',')}`);
         this.owner = null;
         this.transporting = false;
         this.nowHealth = 0;
@@ -205,7 +205,7 @@ class Core {
             Break();
         } else {
             if(this.owner) {
-                connections[this.owner].emit('message',`Core,Damage,${amount}`);
+                connections[this.owner].send(`Core,Damage,${amount}`);
             }
         }
     }
@@ -213,7 +213,7 @@ class Core {
     Break()
     {
         if(this.owner) {
-            connections[this.owner].emit('message',`Core,Break,${this.id}`);
+            connections[this.owner].send(`Core,Break,${this.id}`);
             this.owner = null;
         }
     }
@@ -243,45 +243,57 @@ async function connect() {
   return contract.address.toHuman();
 }
 
-const io = new WebSocket.Server({ port: 8080 });
+const server = new WebSocket.Server({ port: 8080 });
 
+server.sendAllClient = text => {
+    Object.values(connections).forEach( socket => {
+        socket.send(text);
+    });
+}
 server.on("connection", async (socket) => {
     connectionCounter++;
     console.log("connected");
     const id = makeId();
     connections[id] = socket;
-    
+    socket.broadcast = (text) => {
+        Object.keys(connections).forEach( key => {
+            if(key !== id) {
+                connections[key].send(text);
+            }
+        });
+    }
+
     socket.on("message", (msg) => {
         if(!msg)return console.log('noMSG:'+msg);
         const [ command, ...args ] = msg.toString().split(',');
         switch(command) {
             case "Entry":
-                socket.emit("message",`System,AsignId,${id}`);
+                socket.send(`System,AsignId,${id}`);
                 const createAt = [10,10,10];
                 coreList[id] = new Core(id, createAt);// psitionは仮
                 playerList[id] = new Player(id, createAt);
-                server.emit("message", `Core,Create,${id},${createAt.join(',')}`);
+                server.sendAllClient(`Core,Create,${id},${createAt.join(',')}`);
 
-                socket.broadcast.emit("message",`Player,Create,${id},${createAt.join(',')}`);
+                socket.broadcast(`Player,Create,${id},${createAt.join(',')}`);
                 break;
             case "Position":
-                socket.broadcast.emit("message", `Player,Position,${id},${args.join(',')}`);
+                socket.broadcast(`Player,Position,${id},${args.join(',')}`);
                 break;
             case "Position":
-                socket.broadcast.emit("message", `Player,Rotation,${id},${args.join(',')}`);
+                socket.broadcast(`Player,Rotation,${id},${args.join(',')}`);
                 break;
             case "ClaimRequest":
                 if(coreList[arg[0]].Claim(id)) {
-                    socket.emit("message",`Core,Claim,${arg[0]}`);
+                    socket.send(`Core,Claim,${arg[0]}`);
                 }
             case "TransportRequest":
                 if(coreList[arg[0]].Transport(id)) {
-                    server.emit("message",`Core,Transport,${arg[0]},${id}`);
+                    server.sendAllClient(`Core,Transport,${arg[0]},${id}`);
                 }
                 break;
             case "PlaceRequest":
                 if(coreList[arg[0]].Place(id)) {
-                    server.emit("message",`Core,Place,${arg[0]},${coreList[arg[0]].position.join(',')}`);
+                    server.sendAllClient(`Core,Place,${arg[0]},${coreList[arg[0]].position.join(',')}`);
                 }
                 break;
             case "CoreDamageEntry":
