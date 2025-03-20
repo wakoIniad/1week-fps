@@ -12,6 +12,7 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     public Dictionary<string, CoreStatusView> coreView = new Dictionary<string, CoreStatusView>();
     private bool HandleCoreTransportFlagA = false;
     private bool HandleCoreTransportFlagB = false;
+    private bool HandleCoreTransportFlag = false;
     private CoreLocalModel transportTarget;
     private CoreLocalModel transportingCoreObject;
     private bool waitForPlace;
@@ -27,7 +28,17 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     void Update()
     {
         //和集合で全ての範囲を取る
-        if(HandleCoreTransportFlagA || HandleCoreTransportFlagB) {
+        /*if(HandleCoreTransportFlagA || HandleCoreTransportFlagB) {
+            if(Input.GetKeyDown(KeyCode.C) && transportingCoreObject == null) {
+                transportTarget.TryCollect();
+                transportingCoreObject = transportTarget;
+                transportTarget = null;
+            }
+        } else {
+            transportTarget = null;
+        Debug.Log("TRTargetIsNull:");
+        }*/
+        if(HandleCoreTransportFlag) {
             if(Input.GetKeyDown(KeyCode.C) && transportingCoreObject == null) {
                 transportTarget.TryCollect();
                 transportingCoreObject = transportTarget;
@@ -47,6 +58,7 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
                 transportingCoreObject = null;
             }
         }
+        HandleCoreTransportFlag = false;
     }
     public void RespownAtCore() {
     }
@@ -64,7 +76,7 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
         coreView[id].Remove();
         coreView.Remove(id);
     }
-    void OnTriggerEnter(Collider other) {
+    /*void OnTriggerEnter(Collider other) {
         if(other.gameObject.CompareTag("Core")) {
             CoreLocalModel coreModel = other.gameObject.GetComponent<CoreLocalModel>();
             if(coreModel.owned) {
@@ -82,6 +94,7 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     //コアが２つ以上密接している場合、新たなコアの範囲に入った状態で、も解いたコアから出ることで、
     //反応しない可能性があるため対策を考える
     //->対策：falseにするのではなく反転する
+    
     void OnTriggerExit(Collider other) {
         if(other.gameObject.CompareTag("Core")) {
             CoreLocalModel coreModel = other.gameObject.GetComponent<CoreLocalModel>();
@@ -90,8 +103,23 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
                 HandleCoreTransportFlagB = true;
             }
         }
-    }
+    }*/
 
+    void OnTriggerStay(Collider other) {
+        if(other.gameObject.CompareTag("Core")) {
+            HandleCoreTransportFlag = true;
+        }
+    }
+    void OnTriggerEnter(Collider other) {
+        if(other.gameObject.CompareTag("Core")) {
+            CoreLocalModel coreModel = other.gameObject.GetComponent<CoreLocalModel>();
+            if(coreModel.owned) {
+                transportTarget = coreModel;
+            } else {
+                coreModel.TryClaim();
+            }
+        }
+    }
     public int CoreCount() {
         return coreView.Count;
     }
