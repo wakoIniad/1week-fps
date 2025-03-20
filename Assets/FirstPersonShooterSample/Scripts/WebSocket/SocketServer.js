@@ -1,24 +1,24 @@
-const express = require('express');
-const http = require('http');
+//const express = require('express');
+//const http = require('http');
+//
+//// Socket.ioをインポート
+//const socketIo = require('socket.io');
+//
+//const app = express();
+//const server = http.Server(app);
+//
+//// 初期化
+//const io = socketIo(server);
 
-// Socket.ioをインポート
-const socketIo = require('socket.io');
-
-const app = express();
-const server = http.Server(app);
-
-// 初期化
-const io = socketIo(server);
-
-const PORT = 3000;
+//const PORT = 3000;
 
 /*app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });*/
 
-server.listen(PORT, () => {
-  console.log(`listening on port ${PORT}`);
-});
+//server.listen(PORT, () => {
+//  console.log(`listening on port ${PORT}`);
+//});
 
 const connections = {};
 const coreList = {};
@@ -28,7 +28,7 @@ function makeId() {
     return connectionCounter.toString();
 }
 // クライアントとのコネクションが確立したら'connected'という表示させる
-io.on("connection", (socket) => {
+/*io.on("connection", (socket) => {
     connectionCounter++;
     console.log("connected");
     const id = makeId();
@@ -78,7 +78,7 @@ io.on("connection", (socket) => {
     socket.on('close', () => {
       console.log('ws close');
     });
-});
+});*/
 
 class Player {
     constructor(id, position) {
@@ -218,3 +218,80 @@ class Core {
         }
     }
 }
+
+const WebSocket = require("ws");
+
+const { ApiPromise, WsProvider } = require("@polkadot/api");
+const { ContractPromise } = require("@polkadot/api-contract");
+
+const metadata = require("./metadata.json");
+
+async function connect() {
+  // Connect to the local development network
+  const provider = new WsProvider("wss://rpc.shibuya.astar.network");
+  const api = await ApiPromise.create({ provider });
+
+  const contract = new ContractPromise(
+    api,
+    metadata,
+    "a1MvMiL1VPNKHc6pb8XNAw6fcwh85fc8V3wgocpmJjYK1Tm"
+  );
+
+  console.log(contract.address.toHuman());
+
+  return contract.address.toHuman();
+}
+
+const io = new WebSocket.Server({ port: 8080 });
+
+io.on("connection", async (socket) => {
+    connectionCounter++;
+    console.log("connected");
+    const id = makeId();
+    connections[id] = socket;
+    
+    socket.on("message", (msg) => {
+        const [ command, ...args ] = msg.split(',');
+        switch(command) {
+            case "Entry":
+                socket.emit("message",`System,AsignId,${id}`);
+                const createAt = [10,10,10];
+                coreList[id] = new Core(id, createAt);// psitionは仮
+                playerList[id] = new Player(id, createAt);
+                io.emit("message", `Core,Create,${id},${createAt.join(',')}`);
+                io.broadcast.emit("message",`Player,Create,${id},${createAt.join(',')}`);
+                break;
+            case "Position":
+                socket.broadcast.emit("message", `Player,Position,${id},${args.join(',')}`);
+                break;
+            case "Position":
+                socket.broadcast.emit("message", `Player,Rotation,${id},${args.join(',')}`);
+                break;
+            case "ClaimRequest":
+                if(coreList[arg[0]].Claim(id)) {
+                    socket.emit("message",`Core,Claim,${arg[0]}`);
+                }
+            case "TransportRequest":
+                if(coreList[arg[0]].Transport(id)) {
+                    io.emit("message",`Core,Transport,${arg[0]},${id}`);
+                }
+                break;
+            case "PlaceRequest":
+                if(coreList[arg[0]].Place(id)) {
+                    io.emit("message",`Core,Place,${arg[0]},${coreList[arg[0]].position.join(',')}`);
+                }
+                break;
+            case "CoreDamageEntry":
+                coreList[arg[0]].Damage(id, +arg[1]);
+                break;
+            case "CoreDamageEntry":
+                playerList[arg[0]].Damage(id, +arg[1]);
+                break;
+
+
+        }
+    });
+    socket.on('close', () => {
+      console.log('ws close');
+    });
+});
