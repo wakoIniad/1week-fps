@@ -224,7 +224,7 @@ const WebSocket = require("ws");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 const { ContractPromise } = require("@polkadot/api-contract");
 
-const metadata = require("./metadata.json");
+//const metadata = require("./metadata.json");
 
 async function connect() {
   // Connect to the local development network

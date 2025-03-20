@@ -1,7 +1,7 @@
 using UnityEngine;
 
-using WebSocketSharp;
-//using NativeWebSocket;
+//using WebSocketSharp;
+using NativeWebSocket;
 //using WebSocketSetting;
 //using Newtonsoft.Json;
 //using Unity.VisualScripting;
@@ -13,18 +13,18 @@ public class WebSocketLoader : MonoBehaviour
     private WebSocket ws;
     private Transform myTr;
     //private string MyPlayerId;
-    /*void Update()
+    void Update()
     {
         #if !UNITY_WEBGL || UNITY_EDITOR
         ws.DispatchMessageQueue();
         #endif
-    }*/
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         ws = new WebSocket("ws://localhost:3000/");
         
- 
+
         ws.OnOpen += (sender, e) =>
         {
             Debug.Log("WebSocket Open");
