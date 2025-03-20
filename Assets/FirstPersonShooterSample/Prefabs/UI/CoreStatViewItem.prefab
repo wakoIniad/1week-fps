@@ -270,5 +270,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc7108c45fb7eb64b93b03f5e976e18b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  image: {fileID: 2541493158548431858}
   healthText: {fileID: 4260547587468901781}
   button: {fileID: 286542848401059693}

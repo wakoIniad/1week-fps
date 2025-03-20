@@ -49,11 +49,13 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
         }
         if(transportingCoreObject != null) {//transporting属性が消えてたらnullにするので大丈夫
             if(transportingCoreObject.transporting && transportingCoreObject.owned) {
+                coreView[transportingCoreObject.id].DisplayTransporting();
                 if(Input.GetKeyDown(KeyCode.P)) {
                     waitForPlace = true;
                     transportingCoreObject.TryPlace();
                 }
             } else if(waitForPlace){
+                coreView[transportingCoreObject.id].DisplayPlacing();
                 waitForPlace = false;
                 transportingCoreObject = null;
             }
