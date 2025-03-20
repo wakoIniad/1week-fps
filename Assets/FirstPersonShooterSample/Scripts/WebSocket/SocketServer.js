@@ -118,6 +118,8 @@ class Player {
     //体力が無くなったときに
     Kill()
     {
+        
+        connections[this.id].broadcast.emit("message", `Player,Deactivate,${id}`);
         killedAt = this.position;
         this.ghost = true;
         let gameOver = true;
@@ -138,6 +140,7 @@ class Player {
         if(coreList[targetCoreId].Warp(this.id)) {
             this.ghost = false;
             this.nowHealth = this.defaultHealth;
+            connections[this.id].broadcast.emit("message", `Player,Activate,${id}`);
             return true;
         } else {
             this.gameOver = true;
