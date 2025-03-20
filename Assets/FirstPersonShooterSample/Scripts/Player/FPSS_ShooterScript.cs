@@ -50,10 +50,12 @@ public class FPSS_ShooterScript : MonoBehaviour
                 //何かのTagがEnemyだったとき
                 if(hit.transform.CompareTag("OtherPlayer"))
                 {
+                        Debug.Log("OtherPlayer");
                     //敵の体力を管理しているものがあるか
                     PlayerLocalModel model = hit.transform.GetComponent<PlayerLocalModel>();
                     if(model)
                     {
+                        Debug.Log("OtherPlayerModel");
                         model.TryDamage(damage);
                     }
                 }
