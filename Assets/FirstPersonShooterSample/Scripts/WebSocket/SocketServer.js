@@ -35,10 +35,22 @@ io.on('connection', (socket) => {
     socket.on('message', (msg) => {
         const [ command, ...args ] = msg.split(',');
         switch(command) {
-            case "deactivate":
+            case "Entry":
+                socket.emit('message',`System,AsignId,${id}`);
                 break;
-            case "activate":
+            case "Deactivate":
+                socket.broadcast.emit("message", `Player,Deactivate,${id}`);
                 break;
+            case "Activate":
+                socket.broadcast.emit("message", `Player,Activate,${id}`);
+                break;
+            case "Position":
+                socket.broadcast.emit("message", `Player,Position,${id}`);
+                break;
+            case "Position":
+                socket.broadcast.emit("message", `Player,Position,${id}`);
+                break;
+
         }
     });
     socket.on('close', () => {

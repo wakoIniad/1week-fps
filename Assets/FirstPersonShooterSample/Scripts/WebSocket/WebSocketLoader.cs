@@ -10,7 +10,6 @@ public class WebSocketLoader : MonoBehaviour
     public PlayerModelLoader playerLoader;
     public CoreLoader coreLoader;
     private WebSocket ws;
-    private float connectionKey = UnityEngine.Random.Range( 0.0f, 1.0f );
     private Transform myTr;
     //private string MyPlayerId;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -61,7 +60,7 @@ public class WebSocketLoader : MonoBehaviour
                 case "Core":
                     string coreId = arg[0];
                     switch(CommandType) {
-                        case "Created":
+                        case "Create":
                             coreLoader.CreateModel(coreId, 
                             new Vector3(
                             float.Parse(arg[1]),
@@ -73,7 +72,7 @@ public class WebSocketLoader : MonoBehaviour
                             if(!coreLoader.isOwned(coreId))return;
                             coreLoader.ApplyBreakData(coreId);
                             break;
-                        case "Damageed":
+                        case "Damaged":
                             if(!coreLoader.isOwned(coreId))return;
                             coreLoader.ApplyDamageData(coreId, float.Parse(arg[1]));
                             break;
@@ -99,7 +98,7 @@ public class WebSocketLoader : MonoBehaviour
                 case "Player":
                     string playerId = arg[0];
                         switch(CommandType) {
-                            case "Created":
+                            case "Create":
                                 playerLoader.CreateModel(playerId, 
                                 new Vector3(
                                 float.Parse(arg[1]),
@@ -107,7 +106,7 @@ public class WebSocketLoader : MonoBehaviour
                                 float.Parse(arg[3]))
                                 );
                                 break;
-                            case "SetPosition":
+                            case "Position":
                                 if(!playerLoader.isMe(playerId)) {
                                     playerLoader.SetPosition(playerId,
                                     new Vector3(
@@ -117,7 +116,7 @@ public class WebSocketLoader : MonoBehaviour
                                     );
                                 }
                                 break;
-                            case "SetRotation":
+                            case "Rotation":
                                 if(!playerLoader.isMe(playerId)) {
                                     playerLoader.SetRotation(playerId, 
                                     new Vector3(
@@ -146,15 +145,12 @@ public class WebSocketLoader : MonoBehaviour
                     }
                     break;
                 case "System":// server[IDasign -> CoreCreate -> CoreOwned]
-                    float key = float.Parse(arg[0]);
                     switch(CommandType) {
-                        case "IdAsigned":
-                            if(key == connectionKey) {
-                                playerLoader.SetMyId(arg[1]);
-                                //頻繁に使うため保存しておく
-                                myTr = playerLoader.GetMyTransform();
-                                //MyPlayerId = asignedId;
-                            }
+                        case "AsignId":
+                            playerLoader.SetMyId(arg[0]);
+                            //頻繁に使うため保存しておく
+                            myTr = playerLoader.GetMyTransform();
+                            //MyPlayerId = asignedId;
                             break;
                     }
                     break;
@@ -180,41 +176,41 @@ public class WebSocketLoader : MonoBehaviour
     }
     public void SendMyPosition() {
         ws.Send(
-            "rotation,"+
+            "Position,"+
             //playerLoader.ThisPlayerId+
             //","+
             Vector3ToString(myTr.position));
     }
     public void SendMyRotation() {
         ws.Send(
-            "rotation,"+
+            "Rotation,"+
             //playerLoader.ThisPlayerId+
             //","+
             Vector3ToString(myTr.eulerAngles));
     }
     public void ActivateMe() {
         ws.Send(
-            "activate"
+            "Activate"
             //playerLoader.ThisPlayerId
             );
     }
     
     public void DeactivateMe() {
         ws.Send(
-            "deactivate"
+            "Deactivate"
             //playerLoader.ThisPlayerId
             );
     }
     
     public void RequestTransportCore(string coreId) {
         ws.Send(
-            "req_transport,"+
+            "TransportRequest,"+
             //playerLoader.ThisPlayerId+","+
             coreId
             );
     }
-    public void GetMyId() {
+    public void Entry() {
         //ws.Send("id_asign,"+connectionKey);
-        ws.Send("id_aisgn");
+        ws.Send("Entry");
     }
 }
