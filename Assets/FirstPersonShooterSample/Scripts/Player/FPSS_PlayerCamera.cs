@@ -88,7 +88,7 @@ public class FPSS_PlayerCamera : MonoBehaviour
 
         cameraTransform.localRotation = Quaternion.AngleAxis(camRot, Vector3.right);
         if(
-            time - lastSynchronizedTime > 0.3 && 
+            time - lastSynchronizedTime > 0.5 && 
             ( Mathf.Abs(lastSynchronizedAngleA - camRot) > 10 ||
               Mathf.Abs(lastSynchronizedAngleB - plyrRot) > 10 )
         ) {

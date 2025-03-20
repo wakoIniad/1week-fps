@@ -188,9 +188,7 @@ public class WebSocketLoader : MonoBehaviour
         {
             // Sending plain text
             await ws.SendText(text);
-            Debug.Log("WS_STATE=OPEN");
         } else {
-            Debug.Log("WS_STATE=not(OPEN)");
             Debug.Log(ws.State);
         }
     }

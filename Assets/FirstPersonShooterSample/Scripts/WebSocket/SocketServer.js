@@ -266,6 +266,7 @@ server.on("connection", async (socket) => {
     socket.on("message", (msg) => {
         if(!msg)return console.log('noMSG:'+msg);
         const [ command, ...args ] = msg.toString().split(',');
+        console.log(command);
         switch(command) {
             case "Entry":
                 socket.send(`System,AsignId,${id}`);
@@ -279,31 +280,32 @@ server.on("connection", async (socket) => {
             case "Position":
                 socket.broadcast(`Player,Position,${id},${args.join(',')}`);
                 break;
-            case "Position":
+            case "Rotation":
                 socket.broadcast(`Player,Rotation,${id},${args.join(',')}`);
                 break;
             case "ClaimRequest":
-                if(coreList[arg[0]].Claim(id)) {
-                    socket.send(`Core,Claim,${arg[0]}`);
+                if(coreList[args[0]].Claim(id)) {
+                    socket.send(`Core,Claim,${args[0]}`);
                 }
             case "TransportRequest":
-                if(coreList[arg[0]].Transport(id)) {
-                    server.sendAllClient(`Core,Transport,${arg[0]},${id}`);
+                if(coreList[args[0]].Transport(id)) {
+                    server.sendAllClient(`Core,Transport,${args[0]},${id}`);
                 }
                 break;
             case "PlaceRequest":
-                if(coreList[arg[0]].Place(id)) {
-                    server.sendAllClient(`Core,Place,${arg[0]},${coreList[arg[0]].position.join(',')}`);
+                if(coreList[args[0]].Place(id)) {
+                    server.sendAllClient(`Core,Place,${args[0]},${coreList[args[0]].position.join(',')}`);
                 }
                 break;
             case "CoreDamageEntry":
-                coreList[arg[0]].Damage(id, +arg[1]);
+                coreList[args[0]].Damage(id, +args[1]);
                 break;
             case "CoreDamageEntry":
-                playerList[arg[0]].Damage(id, +arg[1]);
+                playerList[args[0]].Damage(id, +args[1]);
                 break;
             default:
-                console.log(command);
+                console.log("default:"+command);
+                break;
 
         }
     });

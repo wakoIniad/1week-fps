@@ -54,7 +54,7 @@ public class FPSS_PlayerController : MonoBehaviour
         UpdateMove();
         if(xAxis != 0 || yAxis != 0) {
             if(
-                time - lastSynchronizedTime >= 0.1 &&
+                time - lastSynchronizedTime >= 0.5 &&
                 lastSynchronizetPosition != null 
                 ?Vector3.Distance(lastSynchronizetPosition, transform.position) > 0.5f
                 :true
