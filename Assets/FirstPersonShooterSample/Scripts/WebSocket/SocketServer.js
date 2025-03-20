@@ -21,22 +21,27 @@ server.listen(PORT, () => {
 });
 
 const connections = {};
+const coreList = {};
+const playerList = {};
 let connectionCounter = 0;
 function makeId() {
     return connectionCounter.toString();
 }
 // クライアントとのコネクションが確立したら'connected'という表示させる
-io.on('connection', (socket) => {
+io.on("connection", (socket) => {
     connectionCounter++;
-    console.log('connected');
+    console.log("connected");
     const id = makeId();
     connections[id] = socket;
     
-    socket.on('message', (msg) => {
+    socket.on("message", (msg) => {
         const [ command, ...args ] = msg.split(',');
         switch(command) {
             case "Entry":
-                socket.emit('message',`System,AsignId,${id}`);
+                socket.emit("message",`System,AsignId,${id}`);
+                const createAt = [10,10,10];
+                coreList[id] = new Core(id, createAt);// psitionは仮
+                io.emit("message", `Core,Create,${id},${createAt.join(',')}`);
                 break;
             case "Deactivate":
                 socket.broadcast.emit("message", `Player,Deactivate,${id}`);
@@ -45,11 +50,32 @@ io.on('connection', (socket) => {
                 socket.broadcast.emit("message", `Player,Activate,${id}`);
                 break;
             case "Position":
-                socket.broadcast.emit("message", `Player,Position,${id}`);
+                socket.broadcast.emit("message", `Player,Position,${id},${args.join(',')}`);
                 break;
             case "Position":
-                socket.broadcast.emit("message", `Player,Position,${id}`);
+                socket.broadcast.emit("message", `Player,Rotation,${id},${args.join(',')}`);
                 break;
+            case "ClaimRequest":
+                if(coreList[arg[0]].Claim(id)) {
+                    socket.emit("message",`Core,Claim,${arg[0]}`);
+                }
+            case "TransportRequest":
+                if(coreList[arg[0]].Transport(id)) {
+                    io.emit("message",`Core,Transport,${arg[0]},${id}`);
+                }
+                break;
+            case "PlaceRequest":
+                if(coreList[arg[0]].Place(id)) {
+                    io.emit("message",`Core,Place,${arg[0]},${coreList[arg[0]].position.join(',')}`);
+                }
+                break;
+            case "CoreDamageEntry":
+                coreList[arg[0]].Damage(id, +arg[1]);
+                break;
+            case "CoreDamageEntry":
+                playerList[arg[0]].Damage(id, +arg[1]);
+                break;
+
 
         }
     });
@@ -57,3 +83,139 @@ io.on('connection', (socket) => {
       console.log('ws close');
     });
 });
+
+class Player {
+    constructor(id, position) {
+        this.id = id;
+        this.position = position;
+        this.rotation = [0,0,0];
+        this.defaultHealth = 10;
+        this.nowHealth = this.defaultHealth;
+        this.gameOver = false;
+        this.ghost = false;// リスポーン待機時等
+    }
+    setPosition(position) {
+        this.position = position;
+    }
+    setRotation(position) {
+        this.rotation = this.rotation;
+    }
+    
+    Damage(applicant, amount) {
+        if(applicant === this.id)return;
+        if(this.nowHealth <= 0){ return; }
+
+        this.nowHealth -= amount;
+        
+        connections[this.id].emit('message',`Player,Damage,${amount}`);
+        if(nowHealth <= 0)
+        {
+            Kill();
+        }
+    }
+    //体力が無くなったときに
+    Kill()
+    {
+        killedAt = this.position;
+        this.ghost = true;
+        let gameOver = true;
+        for(const key of Object.keys(coreList)) {
+            if( coreList[key].owner === this.id) {
+                if(coreList[key].transporting) {//運搬中のコアはロストする
+                    coreList[key].Unclaim(killedAt);
+                } else {
+                    gameOver = false;
+                }
+            }
+        }
+        if(gameOver) {
+            this.gameOver = true;
+        }
+    }
+    Respown(targetCoreId) {
+        if(coreList[targetCoreId].Warp(this.id)) {
+            this.ghost = false;
+            this.nowHealth = this.defaultHealth;
+            return true;
+        } else {
+            this.gameOver = true;
+            return false;
+        }
+    }
+}
+
+class Core {
+    constructor(id, position) {
+        this.id = id;
+        this.position = position;
+        this.owner = null;
+        this.transporting = false;
+        this.defaultHealth = 10;
+        this.nowHealth = this.defaultHealth;
+    }
+    Unclaim(position) {
+        const lastOwner = this.owner;
+        connections[lastOwner].emit('message',`Core,Break,${this.id}`);
+        io.emit("message",`Core,Place,${this.id},${position.join(',')}`);
+        this.owner = null;
+        this.transporting = false;
+        this.nowHealth = 0;
+        this.position = position;
+    }
+    Warp(applicant) {
+        if(applicant === this.owner) {
+            playerList[applicant].position = this.position;
+            return true;
+        }
+        return false;
+    }
+    Place(applicant) {
+        if(applicant === this.owner) {
+            this.position = playerList[this.owner].position;
+            this.transporting = false;
+            return true;
+        }
+        return false;
+
+    }
+    Transport(applicant) {
+        if(applicant === this.owner) {
+            this.transporting = true;
+            return true;
+        }
+        return false;
+    }
+    Claim(applicant) {
+        if(playerList[applicant].ghost)return;
+        if(this.nowHealth <= 0){
+            this.nowHealth = this.defaultHealth;
+            this.owner = applicant;
+            return true;
+        }
+        return false;
+    }
+    Damage(applicant, amount) {
+        if(playerList[applicant].ghost)return;
+        if(this.owner === null || applicant === this.owner) return;
+        if(this.nowHealth <= 0){ return; }
+
+        this.nowHealth -= amount;
+
+        if(nowHealth <= 0)
+        {
+            Break();
+        } else {
+            if(this.owner) {
+                connections[this.owner].emit('message',`Core,Damage,${amount}`);
+            }
+        }
+    }
+    //体力が無くなったときに
+    Break()
+    {
+        if(this.owner) {
+            connections[this.owner].emit('message',`Core,Break,${this.id}`);
+            this.owner = null;
+        }
+    }
+}

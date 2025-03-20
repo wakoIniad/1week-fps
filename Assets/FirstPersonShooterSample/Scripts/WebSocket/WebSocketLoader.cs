@@ -68,23 +68,23 @@ public class WebSocketLoader : MonoBehaviour
                             float.Parse(arg[3]))
                             );
                             break;
-                        case "Breaked":
-                            if(!coreLoader.isOwned(coreId))return;
+                        case "Break":
+                            //if(!coreLoader.isOwned(coreId))return;
                             coreLoader.ApplyBreakData(coreId);
                             break;
-                        case "Damaged":
-                            if(!coreLoader.isOwned(coreId))return;
+                        case "Damage":
+                            //if(!coreLoader.isOwned(coreId))return;
                             coreLoader.ApplyDamageData(coreId, float.Parse(arg[1]));
                             break;
-                        case "Owned":
-                            if(!coreLoader.isOwned(coreId))return;
+                        case "Claim":
+                            //if(!coreLoader.isOwned(coreId))return;
                             coreLoader.ApplyOwned(coreId);
                             break;
-                        case "Transporting":
+                        case "Transport":
                             PlayerLocalModel playerModel = playerLoader.GetModelById(arg[1]);
                             coreLoader.ApplyTransporter(coreId, playerModel.tr);
                             break;
-                        case "Placed":
+                        case "Place":
                                 coreLoader.ApplyPlace(coreId);
                                 coreLoader.ApplyPositionData(coreId, 
                                 new Vector3(
@@ -136,10 +136,10 @@ public class WebSocketLoader : MonoBehaviour
                                     playerLoader.Activate(playerId);
                                 }
                                 break;
-                            case "Damaged":
-                                if(playerLoader.isMe(playerId)) {
+                            case "Damage":
+                                //if(playerLoader.isMe(playerId)) {
                                     playerLoader.SetMyHealth(float.Parse(arg[1]));
-                                }
+                                //}
                                 break;
                         
                     }
@@ -177,40 +177,60 @@ public class WebSocketLoader : MonoBehaviour
     public void SendMyPosition() {
         ws.Send(
             "Position,"+
-            //playerLoader.ThisPlayerId+
-            //","+
             Vector3ToString(myTr.position));
     }
     public void SendMyRotation() {
         ws.Send(
             "Rotation,"+
-            //playerLoader.ThisPlayerId+
-            //","+
             Vector3ToString(myTr.eulerAngles));
     }
     public void ActivateMe() {
         ws.Send(
             "Activate"
-            //playerLoader.ThisPlayerId
             );
     }
     
     public void DeactivateMe() {
         ws.Send(
             "Deactivate"
-            //playerLoader.ThisPlayerId
             );
     }
     
     public void RequestTransportCore(string coreId) {
         ws.Send(
             "TransportRequest,"+
-            //playerLoader.ThisPlayerId+","+
             coreId
             );
     }
+    
+    public void RequestClaimCore(string coreId) {
+        ws.Send(
+            "ClaimRequest,"+
+            coreId
+        );
+    }
+    
+    public void RequestPlaceCore(string coreId) {
+        ws.Send(
+            "PlaceRequest,"+
+            coreId
+        );
+    }
+    
+    public void EntryDamageCore(string coreId, float amount) {
+        ws.Send(
+            "CoreDamageEntry,"+
+            coreId+','+amount
+        );
+    }
+    
+    public void EntryDamagePlayer(string playerId, float amount) {
+        ws.Send(
+            "PlayerDamageEntry,"+
+            playerId+','+amount
+        );
+    }
     public void Entry() {
-        //ws.Send("id_asign,"+connectionKey);
         ws.Send("Entry");
     }
 }
