@@ -270,12 +270,7 @@ server.on("connection", async (socket) => {
         switch(command) {
             case "Entry":
                 socket.send(`System,AsignId,${id}`);
-                const createAt = [10,10,10];
-                coreList[id] = new Core(id, createAt);// psitionは仮
-                playerList[id] = new Player(id, createAt);
-                server.sendAllClient(`Core,Create,${id},${createAt.join(',')}`);
-
-                socket.broadcast(`Player,Create,${id},${createAt.join(',')}`);
+                
                 for(const player of Object.values(playerList)) {
                     socket.send(`Player,Create,${player.id},${player.position.join(',')}`);
                 }
@@ -283,6 +278,13 @@ server.on("connection", async (socket) => {
                 for(const core of Object.values(coreList)) {
                     socket.send(`Core,Create,${core.id},${core.position.join(',')}`);
                 }
+                
+                const createAt = [10,10,10];
+                coreList[id] = new Core(id, createAt);// psitionは仮
+                playerList[id] = new Player(id, createAt);
+                server.sendAllClient(`Core,Create,${id},${createAt.join(',')}`);
+
+                socket.broadcast(`Player,Create,${id},${createAt.join(',')}`);
                 break;
             case "Position":
                 socket.broadcast(`Player,Position,${id},${args.join(',')}`);

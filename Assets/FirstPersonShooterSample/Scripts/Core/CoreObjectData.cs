@@ -7,7 +7,7 @@ public class CoreLocalModel : MonoBehaviour
     public float defaultHealth = 10;
     public bool owned = false;
     public float nowHealth = 10;
-    public string id = "0";
+    public string id = "_";
     public bool transporting = false;
     
     public void Damage(float damage)

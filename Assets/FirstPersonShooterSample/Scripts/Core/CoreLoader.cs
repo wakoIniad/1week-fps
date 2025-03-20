@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using System.Linq;
 
 public class CoreLoader : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class CoreLoader : MonoBehaviour
         loaderTransform = gameObject.GetComponent<Transform>();
     }
     public void CreateModel(string id, Vector3 position) {
+        Debug.Log(id+':'+String.Join(',',CoreList.Keys.ToArray()));
         GameObject generatedObject = Instantiate(CoreObjectPrefab);
         CoreLocalModel model = generatedObject.GetComponent<CoreLocalModel>();
         model.SetId(id);
