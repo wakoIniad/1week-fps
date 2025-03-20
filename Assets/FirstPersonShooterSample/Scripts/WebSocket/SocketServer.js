@@ -104,9 +104,9 @@ class Player {
         this.nowHealth -= amount;
         
         connections[this.id].send(`Player,Damage,${amount}`);
-        if(nowHealth <= 0)
+        if(this.nowHealth <= 0)
         {
-            Kill();
+            this.Kill();
         }
     }
     //体力が無くなったときに
@@ -200,12 +200,12 @@ class Core {
 
         this.nowHealth -= amount;
 
-        if(nowHealth <= 0)
+        if(this.nowHealth <= 0)
         {
-            Break();
+            this.Break();
         } else {
             if(this.owner) {
-                connections[this.owner].send(`Core,Damage,${amount}`);
+                connections[this.owner].send(`Core,Damage,${this.id},${amount}`);
             }
         }
     }
@@ -279,15 +279,17 @@ server.on("connection", async (socket) => {
                     socket.send(`Core,Create,${core.id},${core.position.join(',')}`);
                 }
 
-                const createAt = [10,2.5,10];
+                const createAt = [10+Math.random()*10-5,2.5,10+Math.random()*10-5];
                 const playerCore = new Core(id, createAt);// psitionは仮
                 playerCore.owner = id;
                 coreList[id] = playerCore;
-                playerList[id] = new Player(id, createAt);
+                const playerObj = new Player(id, createAt);;
+                playerList[id] = playerObj
                 server.sendAllClient(`Core,Create,${id},${createAt.join(',')}`);
 
                 socket.broadcast(`Player,Create,${id},${createAt.join(',')}`);
                 socket.send(`Core,Claim,${playerCore.id}`);
+                socket.send(`Player,Spawn,${playerObj.position.join(',')}`);
                 break;
             case "Position":
                 socket.broadcast(`Player,Position,${id},${args.join(',')}`);
@@ -299,6 +301,7 @@ server.on("connection", async (socket) => {
                 if(coreList[args[0]].Claim(id)) {
                     socket.send(`Core,Claim,${args[0]}`);
                 } else console.log("claimReq is denied",coreList[args[0]]);
+                break;
             case "TransportRequest":
                 if(coreList[args[0]].Transport(id)) {
                     server.sendAllClient(`Core,Transport,${args[0]},${id}`);

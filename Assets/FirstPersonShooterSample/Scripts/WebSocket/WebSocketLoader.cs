@@ -93,7 +93,7 @@ public class WebSocketLoader : MonoBehaviour
                             break;
                         case "Transport":
                             PlayerLocalModel playerModel = playerLoader.GetModelById(arg[1]);
-                            coreLoader.ApplyTransporter(coreId, playerModel.tr);
+                            coreLoader.ApplyTransporter(coreId, playerModel.transform);
                             break;
                         case "Place":
                                 coreLoader.ApplyPlace(coreId);
@@ -147,10 +147,19 @@ public class WebSocketLoader : MonoBehaviour
                                     playerLoader.Activate(playerId);
                                 }
                                 break;
+                            //※※ playerIDを使わないため、argを0から使う。※※
                             case "Damage":
                                 //if(playerLoader.isMe(playerId)) {
-                                    playerLoader.SetMyHealth(float.Parse(arg[1]));
+                                    playerLoader.SetMyHealth(float.Parse(arg[0]));
                                 //}
+                                break;
+                            case "Spawn":
+                                playerLoader.SetMyPosition(
+                                    new Vector3(
+                                    float.Parse(arg[0]),
+                                    float.Parse(arg[1]),
+                                    float.Parse(arg[2]))
+                                    );
                                 break;
                         
                     }
@@ -158,7 +167,7 @@ public class WebSocketLoader : MonoBehaviour
                 case "System":// server[IDasign -> CoreCreate -> CoreOwned]
                     switch(CommandType) {
                         case "AsignId":
-                            playerLoader.SetMyId(arg[0]);
+                            playerLoader.RegisterMyModel(arg[0]);
                             break;
                     }
                     break;
