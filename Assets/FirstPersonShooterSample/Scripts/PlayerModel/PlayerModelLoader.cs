@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 public class PlayerModelLoader : MonoBehaviour
 {
-    public string ThisPlayerId;
+    [System.NonSerialized] public string ThisPlayerId;
     public FPSS_PlayerHealth MyHealthManager;
     public FPSS_PlayerController MyController;
     public GameObject ModelPrefab;

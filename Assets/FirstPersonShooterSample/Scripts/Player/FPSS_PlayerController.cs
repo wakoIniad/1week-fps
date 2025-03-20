@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 //プレイヤーを動かす
@@ -22,7 +23,7 @@ public class FPSS_PlayerController : MonoBehaviour
 
     //その他
     float moveSpeed;//現在の移動速度を入れておく
-    public Rigidbody rb;//PlayerのRigidbodyを入れておくもの
+    [System.NonSerialized] public Rigidbody rb;//PlayerのRigidbodyを入れておくもの
     RaycastHit groundHit;//地面確認時の結果を入れておくもの
 
     public float dashInputSpeed = 0.5f;
