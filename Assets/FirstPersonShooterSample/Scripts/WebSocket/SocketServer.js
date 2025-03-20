@@ -41,7 +41,9 @@ io.on("connection", (socket) => {
                 socket.emit("message",`System,AsignId,${id}`);
                 const createAt = [10,10,10];
                 coreList[id] = new Core(id, createAt);// psitionは仮
+                playerList[id] = new Player(id, createAt);
                 io.emit("message", `Core,Create,${id},${createAt.join(',')}`);
+                io.broadcast.emit("message",`Player,Create,${id},${createAt.join(',')}`);
                 break;
             case "Deactivate":
                 socket.broadcast.emit("message", `Player,Deactivate,${id}`);
@@ -97,8 +99,8 @@ class Player {
     setPosition(position) {
         this.position = position;
     }
-    setRotation(position) {
-        this.rotation = this.rotation;
+    setRotation(rotation) {
+        this.rotation = rotation;
     }
     
     Damage(applicant, amount) {
