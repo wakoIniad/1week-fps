@@ -109,14 +109,18 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
 
     void OnTriggerStay(Collider other) {
         if(other.gameObject.CompareTag("Core")) {
-            HandleCoreTransportFlag = true;
+            CoreLocalModel coreModel = other.gameObject.GetComponent<CoreLocalModel>();
+            if(coreModel.owned) {
+                transportTarget = coreModel;
+                HandleCoreTransportFlag = true;
+            }
         }
     }
     void OnTriggerEnter(Collider other) {
         if(other.gameObject.CompareTag("Core")) {
             CoreLocalModel coreModel = other.gameObject.GetComponent<CoreLocalModel>();
             if(coreModel.owned) {
-                transportTarget = coreModel;
+                //transportTarget = coreModel;
             } else {
                 coreModel.TryClaim();
             }

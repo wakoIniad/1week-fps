@@ -57,7 +57,8 @@ public class WebSocketLoader : MonoBehaviour
             string[] splitted = data.Split(',');
             string Target = splitted[0];
             string CommandType = splitted[1];
-            string[] arg = splitted[2..];
+            string[] arg = {};
+            if(splitted.Length > 2)arg = splitted[2..];
             
             Debug.Log("Header-Target: " + Target);
             Debug.Log("Header-Command: " + CommandType);

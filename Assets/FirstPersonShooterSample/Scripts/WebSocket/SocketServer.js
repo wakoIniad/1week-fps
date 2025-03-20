@@ -157,7 +157,7 @@ class Core {
     Unclaim(position) {
         const lastOwner = this.owner;
         connections[lastOwner].send(`Core,Break,${this.id}`);
-        server.sendAllClient("message",`Core,Place,${this.id},${position.join(',')}`);
+        server.sendAllClient(`Core,Place,${this.id},${position.join(',')}`);
         this.owner = null;
         this.transporting = false;
         this.nowHealth = 0;
