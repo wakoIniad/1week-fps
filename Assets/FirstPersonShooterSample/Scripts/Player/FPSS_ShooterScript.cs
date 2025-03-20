@@ -11,7 +11,7 @@ public class FPSS_ShooterScript : MonoBehaviour
     public float rayMaxDistance = 100;//最大射程
     public LayerMask rayLayer = 0b0001;//判定するもののレイヤー設定
     public AudioSource shotAudioSource;//発射音をならすもの
-    public bool stop;
+    [System.NonSerialized] public bool stop;
 
 
     bool isHit;

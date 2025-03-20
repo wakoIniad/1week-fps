@@ -29,10 +29,10 @@ public class FPSS_PlayerController : MonoBehaviour
     public float dashInputSpeed = 0.5f;
     float dashInputTimer = -1f;
 
-    public bool stop;
-    public float time = 0;
-    public float lastSynchronizedTime = 0;
-    public Vector3 lastSynchronizetPosition;
+    [System.NonSerialized] public bool stop;
+    float time = 0;
+    float lastSynchronizedTime = 0;
+    Vector3 lastSynchronizetPosition;
 
 
     //ゲームをはじめて最初に呼ばれる

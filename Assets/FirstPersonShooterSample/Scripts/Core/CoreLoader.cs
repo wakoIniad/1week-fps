@@ -10,7 +10,7 @@ public class CoreLoader : MonoBehaviour
     public event Action<string, float> OnOwnedCoreDamaged;
     public event Action<string> OnOwnedCoreBreaked;
     public event Action<string> OnCoreOwned;
-    public Transform loaderTransform;
+    [System.NonSerialized] public Transform loaderTransform;
     public GameObject CoreObjectPrefab;
     
     Dictionary<string, CoreLocalModel> CoreList = new Dictionary<string, CoreLocalModel>();
@@ -27,7 +27,7 @@ public class CoreLoader : MonoBehaviour
         model.SetPosition(position);
         CoreList.Add(id, model);
     }
-    public bool isOwned(string? id) {
+    public bool isOwned(string id) {
         if(id is string t) {
             return CoreList[t].owned;
         } else {

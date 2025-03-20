@@ -15,7 +15,7 @@ public class FPSS_PlayerCamera : MonoBehaviour
     public float angle = 130;//縦方向に視点を動かせる角度
     public bool reverseX = false;//横方向の向きを反転させるか
     public bool reverseY = false;//縦方向の向きを反転させるか
-    public bool stop = false;
+    [System.NonSerialized] public bool stop = false;
 
 
     float camRot;//現在のカメラの角度を入れておく
@@ -31,8 +31,8 @@ public class FPSS_PlayerCamera : MonoBehaviour
     //他スクリプトから簡単にアクセスできるようになる
     //その代わり一つしか存在できない
     private static FPSS_PlayerCamera instance;
-    public float time = 0;
-    public float lastSynchronizedTime = 0;
+    float time = 0;
+    float lastSynchronizedTime = 0;
     public static FPSS_PlayerCamera GetInstance()
     {
         return instance;

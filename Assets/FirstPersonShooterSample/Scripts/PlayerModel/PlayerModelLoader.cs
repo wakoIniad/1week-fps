@@ -6,7 +6,7 @@ public class PlayerModelLoader : MonoBehaviour
     public FPSS_PlayerHealth MyHealthManager;
     public FPSS_PlayerController MyController;
     public GameObject ModelPrefab;
-    public Dictionary<string, PlayerLocalModel> ModelList = new Dictionary<string, PlayerLocalModel>();
+    public List<PlayerLocalModel> ModelList = new List<PlayerLocalModel>();
     
     public void SetMyId(string asignedId) {
         ThisPlayerId = asignedId;
@@ -27,14 +27,15 @@ public class PlayerModelLoader : MonoBehaviour
         GameObject generatedObject = Instantiate(ModelPrefab);
         PlayerLocalModel model = generatedObject.GetComponent<PlayerLocalModel>();
         model.SetId(id);
-        ModelList.Add(id, model);
+        //ModelList.Add(id, model);
+        ModelList.Add(model);
     }
     public void Delete(string id) {
 
     }
     public PlayerLocalModel GetModelById(string id) {
-        //return ModelList.Find(model => model.id == id);
-        return ModelList[id];
+        return ModelList.Find(model => model.id == id);
+        //return ModelList[id];
     }
     
     public void SetPosition(string id, Vector3 position) {
