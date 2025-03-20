@@ -24,7 +24,7 @@ public class WebSocketLoader : MonoBehaviour
     void Start()
     {
         Debug.Log("Start");
-        ws = new WebSocket("ws://localhost:3000/");
+        ws = new WebSocket("ws://localhost:8080/");
         
 
         ws.OnOpen += () =>
@@ -158,9 +158,6 @@ public class WebSocketLoader : MonoBehaviour
                     switch(CommandType) {
                         case "AsignId":
                             playerLoader.SetMyId(arg[0]);
-                            //頻繁に使うため保存しておく
-                            myTr = playerLoader.GetMyTransform();
-                            //MyPlayerId = asignedId;
                             break;
                     }
                     break;
@@ -181,56 +178,71 @@ public class WebSocketLoader : MonoBehaviour
  
         ws.Connect();
         Entry();
+        
+        //頻繁に使うため保存しておく
+        myTr = playerLoader.GetMyTransform();
+        //MyPlayerId = asignedId;
+    }
+    async void SendText(string text) {
+        if (ws.State == WebSocketState.Open)
+        {
+            // Sending plain text
+            await ws.SendText(text);
+            Debug.Log("WS_STATE=OPEN");
+        } else {
+            Debug.Log("WS_STATE=not(OPEN)");
+            Debug.Log(ws.State);
+        }
     }
     string Vector3ToString(Vector3 vec3) {
         return vec3.x+","+vec3.y+","+vec3.z;
     }
     public void SendMyPosition() {
-        ws.SendText(
+        SendText(
             "Position,"+
             Vector3ToString(myTr.position));
     }
     public void SendMyRotation() {
-        ws.SendText(
+        SendText(
             "Rotation,"+
             Vector3ToString(myTr.eulerAngles));
     }
     
     public void RequestTransportCore(string coreId) {
-        ws.SendText(
+        SendText(
             "TransportRequest,"+
             coreId
             );
     }
     
     public void RequestClaimCore(string coreId) {
-        ws.SendText(
+        SendText(
             "ClaimRequest,"+
             coreId
         );
     }
     
     public void RequestPlaceCore(string coreId) {
-        ws.SendText(
+        SendText(
             "PlaceRequest,"+
             coreId
         );
     }
     
     public void EntryDamageCore(string coreId, float amount) {
-        ws.SendText(
+        SendText(
             "CoreDamageEntry,"+
             coreId+','+amount
         );
     }
     
     public void EntryDamagePlayer(string playerId, float amount) {
-        ws.SendText(
+        SendText(
             "PlayerDamageEntry,"+
             playerId+','+amount
         );
     }
     public void Entry() {
-        ws.SendText("Entry");
+        SendText("Entry");
     }
 }

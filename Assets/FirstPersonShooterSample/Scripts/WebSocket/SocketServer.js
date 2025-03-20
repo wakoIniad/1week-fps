@@ -251,7 +251,8 @@ io.on("connection", async (socket) => {
     connections[id] = socket;
     
     socket.on("message", (msg) => {
-        const [ command, ...args ] = msg.split(',');
+        if(!msg)return console.log('noMSG:'+msg);
+        const [ command, ...args ] = msg.toString().split(',');
         switch(command) {
             case "Entry":
                 socket.emit("message",`System,AsignId,${id}`);
