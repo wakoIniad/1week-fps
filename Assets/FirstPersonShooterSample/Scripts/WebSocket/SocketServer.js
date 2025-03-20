@@ -292,9 +292,11 @@ server.on("connection", async (socket) => {
                 socket.send(`Player,Spawn,${playerObj.position.join(',')}`);
                 break;
             case "Position":
+                playerList[id].setPosition(args);
                 socket.broadcast(`Player,Position,${id},${args.join(',')}`);
                 break;
             case "Rotation":
+                playerList[id].setRotation(args);
                 socket.broadcast(`Player,Rotation,${id},${args.join(',')}`);
                 break;
             case "ClaimRequest":

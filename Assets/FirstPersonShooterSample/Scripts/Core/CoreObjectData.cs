@@ -60,7 +60,7 @@ public class CoreLocalModel : MonoBehaviour
     public void SetTransprter(Transform tr) {
         Transform selfTr = gameObject.GetComponent<Transform>();
         selfTr.parent = tr;
-        selfTr.localScale = new Vector3(0.1f,0.1f,0.1f);//元から小さくてもいいかも
+        selfTr.localScale = new Vector3(1f,1f,1f);//元から小さくてもいいかも
         transporting = true;
     }
 

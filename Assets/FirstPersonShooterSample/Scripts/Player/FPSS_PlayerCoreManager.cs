@@ -14,6 +14,7 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     private bool HandleCoreTransportFlagB = false;
     private CoreLocalModel transportTarget;
     private CoreLocalModel transportingCoreObject;
+    private bool waitForPlace;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,7 +28,7 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     {
         //和集合で全ての範囲を取る
         if(HandleCoreTransportFlagA || HandleCoreTransportFlagB) {
-            if(Input.GetKeyDown(KeyCode.C)) {
+            if(Input.GetKeyDown(KeyCode.C) && transportingCoreObject == null) {
                 transportTarget.TryCollect();
                 transportingCoreObject = transportTarget;
                 transportTarget = null;
@@ -35,12 +36,14 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
         } else {
             transportTarget = null;
         }
-        if(transportingCoreObject != null) {
+        if(transportingCoreObject != null) {//transporting属性が消えてたらnullにするので大丈夫
             if(transportingCoreObject.transporting && transportingCoreObject.owned) {
                 if(Input.GetKeyDown(KeyCode.P)) {
+                    waitForPlace = true;
                     transportingCoreObject.TryPlace();
                 }
-            } else {
+            } else if(waitForPlace){
+                waitForPlace = false;
                 transportingCoreObject = null;
             }
         }
