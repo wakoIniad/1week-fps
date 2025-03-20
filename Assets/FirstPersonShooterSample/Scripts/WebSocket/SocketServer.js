@@ -266,7 +266,7 @@ server.on("connection", async (socket) => {
     socket.on("message", (msg) => {
         if(!msg)return console.log('noMSG:'+msg);
         const [ command, ...args ] = msg.toString().split(',');
-        console.log(command);
+        console.log(command,args);
         switch(command) {
             case "Entry":
                 socket.send(`System,AsignId,${id}`);
@@ -276,6 +276,13 @@ server.on("connection", async (socket) => {
                 server.sendAllClient(`Core,Create,${id},${createAt.join(',')}`);
 
                 socket.broadcast(`Player,Create,${id},${createAt.join(',')}`);
+                for(const player of Object.values(playerList)) {
+                    socket.send(`Player,Create,${player.id},${player.position.join(',')}`);
+                }
+                
+                for(const core of Object.values(coreList)) {
+                    socket.send(`Core,Create,${core.id},${core.position.join(',')}`);
+                }
                 break;
             case "Position":
                 socket.broadcast(`Player,Position,${id},${args.join(',')}`);

@@ -30,6 +30,7 @@ public class WebSocketLoader : MonoBehaviour
         ws.OnOpen += () =>
         {
             Debug.Log("WebSocket Open");
+            Entry();
         };
  
         ws.OnMessage += (bytes) =>
@@ -177,7 +178,6 @@ public class WebSocketLoader : MonoBehaviour
         };
  
         ws.Connect();
-        Entry();
         
         //頻繁に使うため保存しておく
         myTr = playerLoader.GetMyTransform();
