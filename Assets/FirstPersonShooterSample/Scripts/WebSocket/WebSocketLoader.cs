@@ -23,6 +23,7 @@ public class WebSocketLoader : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        coreLoader.webSocketLoader = playerLoader.webSocketLoader = this;
         Debug.Log("Start");
         ws = new WebSocket("ws://localhost:8080/");
         
@@ -142,24 +143,10 @@ public class WebSocketLoader : MonoBehaviour
                                     playerLoader.Deactivate(playerId);
                                 }
                                 break;
-                            case "Activate"://On Respown
+                            case "Activate"://On Respawn
                                 if(!playerLoader.isMe(playerId)) {
                                     playerLoader.Activate(playerId);
                                 }
-                                break;
-                            //※※ playerIDを使わないため、argを0から使う。※※
-                            case "Damage":
-                                //if(playerLoader.isMe(playerId)) {
-                                    playerLoader.SetMyHealth(float.Parse(arg[0]));
-                                //}
-                                break;
-                            case "Spawn":
-                                playerLoader.SetMyPosition(
-                                    new Vector3(
-                                    float.Parse(arg[0]),
-                                    float.Parse(arg[1]),
-                                    float.Parse(arg[2]))
-                                    );
                                 break;
                         
                     }
@@ -168,6 +155,21 @@ public class WebSocketLoader : MonoBehaviour
                     switch(CommandType) {
                         case "AsignId":
                             playerLoader.RegisterMyModel(arg[0]);
+                            break;
+                        
+                        //※※ playerIDを使わないため、argを0から使う。※※
+                        case "SetHealth":
+                            //if(playerLoader.isMe(playerId)) {
+                                playerLoader.SetMyHealth(float.Parse(arg[0]));
+                            //}
+                            break;
+                        case "SetPosition":
+                            playerLoader.SetMyPosition(
+                                new Vector3(
+                                float.Parse(arg[0]),
+                                float.Parse(arg[1]),
+                                float.Parse(arg[2]))
+                                );
                             break;
                     }
                     break;
@@ -235,7 +237,19 @@ public class WebSocketLoader : MonoBehaviour
             coreId
         );
     }
-    
+    public void RequestRespawn(string targetCoreId) {
+        SendText(
+            "RespawnRequest,"+
+            targetCoreId
+        );
+    }
+    public void RequestWarp(sbyte targetaCoreId) {
+        SendText(
+            "WarpRequest,"+
+            targetaCoreId
+        );
+    }//||||||||>>>>>>>******;.._-^^
+    //--------
     public void EntryDamageCore(string coreId, float amount) {
         SendText(
             "CoreDamageEntry,"+
@@ -252,4 +266,5 @@ public class WebSocketLoader : MonoBehaviour
     public void Entry() {
         SendText("Entry");
     }
+    
 }

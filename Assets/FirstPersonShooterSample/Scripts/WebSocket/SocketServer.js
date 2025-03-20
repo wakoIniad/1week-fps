@@ -98,12 +98,12 @@ class Player {
     }
     
     Damage(applicant, amount) {
-        if(applicant === this.id)return;
+        //if(applicant === this.id)return;
         if(this.nowHealth <= 0){ return; }
 
         this.nowHealth -= amount;
         
-        connections[this.id].send(`Player,Damage,${amount}`);
+        connections[this.id].send(`System,SetHealth,${this.nowHealth}`);
         if(this.nowHealth <= 0)
         {
             this.Kill();
@@ -114,7 +114,7 @@ class Player {
     {
         
         connections[this.id].broadcast(`Player,Deactivate,${this.id}`);
-        killedAt = this.position;
+        const killedAt = this.position;
         this.ghost = true;
         let gameOver = true;
         for(const key of Object.keys(coreList)) {
@@ -130,10 +130,12 @@ class Player {
             this.gameOver = true;
         }
     }
-    Respown(targetCoreId) {
+    Respawn(targetCoreId) {
         if(coreList[targetCoreId].Warp(this.id)) {
             this.ghost = false;
             this.nowHealth = this.defaultHealth;
+            connections[this.id].send(`System,SetHealth,${this.nowHealth}`);
+            connections[this.id].send(`System,SetPosition,${this.position}`);
             connections[this.id].broadcast(`Player,Activate,${this.id}`);
             return true;
         } else {
@@ -205,7 +207,7 @@ class Core {
             this.Break();
         } else {
             if(this.owner) {
-                connections[this.owner].send(`Core,Damage,${this.id},${amount}`);
+                connections[this.owner].send(`Core,Damage,${this.id},${this.nowHealth}`);
             }
         }
     }
@@ -272,7 +274,14 @@ server.on("connection", async (socket) => {
                 socket.send(`System,AsignId,${id}`);
                 
                 for(const player of Object.values(playerList)) {
-                    socket.send(`Player,Create,${player.id},${player.position.join(',')}`);
+                    if(player.ghost ) {
+                        if(!player.gameOver) {
+                            socket.send(`Player,Create,${player.id},${player.position.join(',')}`);
+                            socket.send(`Player,Deactivate,${player.id}`);
+                        }
+                    } else {
+                        socket.send(`Player,Create,${player.id},${player.position.join(',')}`);
+                    }
                 }
                 
                 for(const core of Object.values(coreList)) {
@@ -289,7 +298,7 @@ server.on("connection", async (socket) => {
 
                 socket.broadcast(`Player,Create,${id},${createAt.join(',')}`);
                 socket.send(`Core,Claim,${playerCore.id}`);
-                socket.send(`Player,Spawn,${playerObj.position.join(',')}`);
+                socket.send(`System,SetPosition,${playerObj.position.join(',')}`);
                 break;
             case "Position":
                 playerList[id].setPosition(args);
@@ -314,10 +323,18 @@ server.on("connection", async (socket) => {
                     server.sendAllClient(`Core,Place,${args[0]},${coreList[args[0]].position.join(',')}`);
                 }
                 break;
+            case "RespawnRequest":
+                playerList[id].Respawn(args[0]);
+                break;
+            case "WarpRequest":
+                if(coreList[args[0]].Warp(id)) {
+                    socket.send("System,SetPosition,"+playerList[id].position.join(','));
+                };
+                break;
             case "CoreDamageEntry":
                 coreList[args[0]].Damage(id, +args[1]);
                 break;
-            case "CoreDamageEntry":
+            case "PlayerDamageEntry":
                 playerList[args[0]].Damage(id, +args[1]);
                 break;
             default:

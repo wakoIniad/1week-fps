@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 public class PlayerModelLoader : MonoBehaviour
 {
+    [System.NonSerialized]public WebSocketLoader webSocketLoader;
     public PlayerLocalModel thisPlayerModel;
     public FPSS_PlayerHealth MyHealthManager;
     public FPSS_PlayerController MyController;
@@ -9,6 +10,7 @@ public class PlayerModelLoader : MonoBehaviour
     public Dictionary<string,PlayerLocalModel> ModelList = new Dictionary<string,PlayerLocalModel>();
     public void RegisterMyModel(string id) {
         thisPlayerModel.id = id;
+        thisPlayerModel.loader = this;
         ModelList.Add(id, thisPlayerModel);
     }
     public void SetMyHealth(float hp) {
@@ -26,6 +28,7 @@ public class PlayerModelLoader : MonoBehaviour
     public void CreateModel(string id, Vector3 position) {
         GameObject generatedObject = Instantiate(ModelPrefab);
         PlayerLocalModel model = generatedObject.GetComponent<PlayerLocalModel>();
+        model.loader = this;
         model.SetId(id);
         model.SetPosition(position);
         ModelList.Add(id, model);
@@ -51,5 +54,17 @@ public class PlayerModelLoader : MonoBehaviour
     }
     public void Activate(string id) {
         GetModelById(id).Activate();
+    }
+    public void TryDamage(string id, float amount) {
+        webSocketLoader.EntryDamagePlayer(id, amount);
+    }
+
+    
+//テスト
+    void Update() {
+        
+        if(Input.GetKeyDown(KeyCode.T)) {
+            thisPlayerModel.TryDamage(2);
+        }
     }
 }

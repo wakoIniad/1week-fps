@@ -76,11 +76,4 @@ public class FPSS_PlayerHealth : MonoBehaviour
         }
     }
 
-//テスト
-    void Update() {
-        
-        if(Input.GetKeyDown(KeyCode.T)) {
-            Damage(2);
-        }
-    }
 }

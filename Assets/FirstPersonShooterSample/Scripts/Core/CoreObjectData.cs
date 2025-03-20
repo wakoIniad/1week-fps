@@ -3,14 +3,17 @@ using System;
 
 public class CoreLocalModel : MonoBehaviour
 {
-    public CoreLoader loader;
+    [System.NonSerialized]public CoreLoader loader;
     public float defaultHealth = 10;
     public bool owned = false;
     public float nowHealth = 10;
     public string id;
     public bool transporting = false;
     
-    public void Damage(float damage)
+    public void SetHealth(float hp) {
+        nowHealth = hp;
+    }
+    /*public void Damage(float damage)
     {
         if(nowHealth <= 0){ return; }
 
@@ -20,7 +23,7 @@ public class CoreLocalModel : MonoBehaviour
         {
             //Break();
         }
-    }
+    }*/
 
     //体力が無くなったときに
     void Break()
@@ -72,13 +75,16 @@ public class CoreLocalModel : MonoBehaviour
         loader.TryDamage(id, amount);
     }
     //早さが求められるので、確認無しでワープした後プレイヤーの位置を更新するリクエストを送る
-    public void TryWarp(Rigidbody rb) {
+    /*public void TryWarp(Rigidbody rb) {
         if(owned) {
             Transform anchor = gameObject.GetComponent<Transform>();
             rb.position = anchor.position;
             rb.rotation = anchor.rotation;
             
         }
+    }*/
+    public void TryWarp() {
+        loader.TryWarp(id);
     }
     public void TryCollect() {
         loader.TryCollect(id);
@@ -87,5 +93,8 @@ public class CoreLocalModel : MonoBehaviour
     
     public void TryPlace() {
         loader.TryPlace(id);
+    }
+    public void TryRespown() {
+        loader.TryRespown(id);
     }
 }

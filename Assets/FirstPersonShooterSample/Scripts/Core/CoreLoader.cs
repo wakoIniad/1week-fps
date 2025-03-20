@@ -7,7 +7,7 @@ using System.Linq;
 public class CoreLoader : MonoBehaviour
 {
     //public string playerId = "temp";
-    public WebSocketLoader webSocketLoader;
+    [System.NonSerialized] public WebSocketLoader webSocketLoader;
     public event Action<string, float> OnOwnedCoreDamaged;
     public event Action<string> OnOwnedCoreBreaked;
     public event Action<string> OnCoreOwned;
@@ -59,7 +59,7 @@ public class CoreLoader : MonoBehaviour
             if(OnCoreOwned != null)OnCoreOwned.Invoke(targetCoreId);
     }
     public void ApplyDamageData(string targetCoreId, float damage) {
-        CoreList[targetCoreId].Damage(damage);
+        CoreList[targetCoreId].SetHealth(damage);
         if(CoreList[targetCoreId].owned) {
             if(OnOwnedCoreDamaged != null)OnOwnedCoreDamaged.Invoke(targetCoreId, CoreList[targetCoreId].nowHealth);
         }
@@ -110,5 +110,11 @@ public class CoreLoader : MonoBehaviour
         //    ApplyTransporter(targetCoreId, tr);
         //}
         webSocketLoader.RequestTransportCore(targetCoreId);
+    }
+    public void TryRespown(string targetCoreId) {
+        webSocketLoader.RequestRespown(targetCoreId);
+    }
+    public void TryWarp(string targetCoreId) {
+        webSocketLoader.RequestWarp(targetCoreId);
     }
 }

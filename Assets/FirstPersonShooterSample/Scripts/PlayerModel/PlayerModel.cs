@@ -2,17 +2,8 @@ using UnityEngine;
 
 public class PlayerLocalModel : MonoBehaviour
 {
+    [System.NonSerialized] public PlayerModelLoader loader;
     public string id;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void SetId(string settingId) {
         id = settingId;
     }
@@ -27,5 +18,8 @@ public class PlayerLocalModel : MonoBehaviour
     }
     public void Activate() {
         gameObject.SetActive(true);
+    }
+    public void TryDamage(float amount) {
+        loader.TryDamage(id, amount);
     }
 }

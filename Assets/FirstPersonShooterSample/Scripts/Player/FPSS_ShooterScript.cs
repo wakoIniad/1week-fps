@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 //銃を撃つ
 //弾速の概念は無い (ヒットスキャンと呼ばれたり...)
@@ -47,13 +48,13 @@ public class FPSS_ShooterScript : MonoBehaviour
             if(isHit)
             {
                 //何かのTagがEnemyだったとき
-                if(hit.transform.CompareTag("Enemy"))
+                if(hit.transform.CompareTag("OtherPlayer"))
                 {
                     //敵の体力を管理しているものがあるか
-                    FPSS_EnemyHealth enemyHealth = hit.transform.GetComponent<FPSS_EnemyHealth>();
-                    if(enemyHealth)
+                    PlayerLocalModel model = hit.transform.GetComponent<PlayerLocalModel>();
+                    if(model)
                     {
-                        enemyHealth.Damage(damage);
+                        model.TryDamage(damage);
                     }
                 }
                 if(hit.transform.CompareTag("Core"))
