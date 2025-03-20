@@ -184,17 +184,6 @@ public class WebSocketLoader : MonoBehaviour
             "Rotation,"+
             Vector3ToString(myTr.eulerAngles));
     }
-    public void ActivateMe() {
-        ws.Send(
-            "Activate"
-            );
-    }
-    
-    public void DeactivateMe() {
-        ws.Send(
-            "Deactivate"
-            );
-    }
     
     public void RequestTransportCore(string coreId) {
         ws.Send(

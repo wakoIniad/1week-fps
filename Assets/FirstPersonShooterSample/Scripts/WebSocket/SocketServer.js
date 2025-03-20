@@ -45,12 +45,6 @@ io.on("connection", (socket) => {
                 io.emit("message", `Core,Create,${id},${createAt.join(',')}`);
                 io.broadcast.emit("message",`Player,Create,${id},${createAt.join(',')}`);
                 break;
-            case "Deactivate":
-                socket.broadcast.emit("message", `Player,Deactivate,${id}`);
-                break;
-            case "Activate":
-                socket.broadcast.emit("message", `Player,Activate,${id}`);
-                break;
             case "Position":
                 socket.broadcast.emit("message", `Player,Position,${id},${args.join(',')}`);
                 break;
@@ -119,7 +113,7 @@ class Player {
     Kill()
     {
         
-        connections[this.id].broadcast.emit("message", `Player,Deactivate,${id}`);
+        connections[this.id].broadcast.emit("message", `Player,Deactivate,${this.id}`);
         killedAt = this.position;
         this.ghost = true;
         let gameOver = true;
@@ -140,7 +134,7 @@ class Player {
         if(coreList[targetCoreId].Warp(this.id)) {
             this.ghost = false;
             this.nowHealth = this.defaultHealth;
-            connections[this.id].broadcast.emit("message", `Player,Activate,${id}`);
+            connections[this.id].broadcast.emit("message", `Player,Activate,${this.id}`);
             return true;
         } else {
             this.gameOver = true;

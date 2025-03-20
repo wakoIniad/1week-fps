@@ -37,10 +37,10 @@ public class PlayerRespown : MonoBehaviour
         waitingRespawn = true;
         coreManager.OnCoreStatusViewClicked += SpawnAnchorSelected;
     }
-    public void SpawnAnchorSelected(int id) {
+    public void SpawnAnchorSelected(string id) {
         Debug.Log("test:"+id);
         if(waitingRespawn) {
-            CoreObjectData core = coreManager.coreLoader.GetCoreById(id);
+            CoreLocalModel core = coreManager.coreLoader.GetModelById(id);
             core.TryWarp(rb);
             //healthManager.nowH
         }

@@ -9,6 +9,7 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class FPSS_PlayerCamera : MonoBehaviour
 {
+    public WebSocketLoader webSocketLoader;
     public GameObject playerBody;//プレイヤー本体をいれておく
     public float speed = 2;//視点移動の速度
     public float angle = 130;//縦方向に視点を動かせる角度
@@ -30,6 +31,8 @@ public class FPSS_PlayerCamera : MonoBehaviour
     //他スクリプトから簡単にアクセスできるようになる
     //その代わり一つしか存在できない
     private static FPSS_PlayerCamera instance;
+    public float time = 0;
+    public float lastSynchronizedTime = 0;
     public static FPSS_PlayerCamera GetInstance()
     {
         return instance;
@@ -56,6 +59,7 @@ public class FPSS_PlayerCamera : MonoBehaviour
     //毎フレーム呼ばれる
     void Update()
     {
+        time += Time.deltaTime;
         if(stop)return;
         //入力を取得
         //Unity > ProjectSettings > InputManagerに設定がある
@@ -81,6 +85,10 @@ public class FPSS_PlayerCamera : MonoBehaviour
         }
 
         cameraTransform.localRotation = Quaternion.AngleAxis(camRot, Vector3.right);
+        if(time - lastSynchronizedTime > 0.3) {
+            webSocketLoader.SendMyRotation();
+            lastSynchronizedTime = time;
+        }
     }
 
     public Camera GetCamera()

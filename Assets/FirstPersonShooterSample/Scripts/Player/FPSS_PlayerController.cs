@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class FPSS_PlayerController : MonoBehaviour
 {
+    public WebSocketLoader webSocketLoader;
     public float walkSpeed = 2;
     public float runSpeed = 4;
     public float jumpSpeed = 8;
@@ -28,6 +29,9 @@ public class FPSS_PlayerController : MonoBehaviour
     float dashInputTimer = -1f;
 
     public bool stop;
+    public float time = 0;
+    public float lastSynchronizedTime = 0;
+    public Vector3 lastSynchronizetPosition;
 
 
     //ゲームをはじめて最初に呼ばれる
@@ -40,12 +44,25 @@ public class FPSS_PlayerController : MonoBehaviour
 
     //毎フレーム呼ばれる
     void Update()
-    {
+    {   
+        time += Time.deltaTime;
         if(stop)return;
         //機能ごとに分けてわかりやすく
         UpdateGround();
         UpdateInput();
         UpdateMove();
+        if(xAxis != 0 || yAxis != 0) {
+            if(
+                time - lastSynchronizedTime >= 0.1 &&
+                lastSynchronizetPosition != null 
+                ?Vector3.Distance(lastSynchronizetPosition, transform.position) > 0.5f
+                :true
+            ) {
+                webSocketLoader.SendMyPosition();
+                lastSynchronizedTime = time;
+                lastSynchronizetPosition = transform.position;
+            }
+        }
 
     }
 

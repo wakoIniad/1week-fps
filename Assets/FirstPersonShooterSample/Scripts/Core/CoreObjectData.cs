@@ -80,8 +80,8 @@ public class CoreLocalModel : MonoBehaviour
             
         }
     }
-    public void TryCollect(Transform tr) {
-        loader.TryCollect(id, tr);
+    public void TryCollect() {
+        loader.TryCollect(id);
     }
         
     

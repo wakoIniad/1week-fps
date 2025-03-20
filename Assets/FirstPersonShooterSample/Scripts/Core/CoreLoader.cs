@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 public class CoreLoader : MonoBehaviour
 {
     //public string playerId = "temp";
+    public WebSocketLoader webSocketLoader;
     public event Action<string, float> OnOwnedCoreDamaged;
     public event Action<string> OnOwnedCoreBreaked;
     public event Action<string> OnCoreOwned;
@@ -81,26 +82,30 @@ public class CoreLoader : MonoBehaviour
     //サーバーに処理のリクエストを送る関数。今はそのまま通しているが、今後サーバー側の処理に置き換える
     public void TryClaim(string targetCoreId) {
         //今後サーバー側の処理に置き換える
-        if(CoreList[targetCoreId].nowHealth <= 0) {
-            //ApplyClaimData(targetCoreId, playerId);
-            ApplyOwned(targetCoreId);
-        }
+        //if(CoreList[targetCoreId].nowHealth <= 0) {
+        //    //ApplyClaimData(targetCoreId, playerId);
+        //    ApplyOwned(targetCoreId);
+        //}
+        webSocketLoader.RequestClaimCore(targetCoreId);
     }
     public void TryDamage(string targetCoreId, float amount) {
-        ApplyDamageData(targetCoreId, amount);
-        if(CoreList[targetCoreId].nowHealth <= 0) {
-            ApplyBreakData(targetCoreId);
-        }
+        //ApplyDamageData(targetCoreId, amount);
+        //if(CoreList[targetCoreId].nowHealth <= 0) {
+        //    ApplyBreakData(targetCoreId);
+        //}
+        webSocketLoader.EntryDamageCore(targetCoreId, amount);
     }
     public void TryPlace(string targetCoreId) {
         
-        if(CoreList[targetCoreId].transporting) {
-            ApplyPlace(targetCoreId);
-        }
+        //if(CoreList[targetCoreId].transporting) {
+        //    ApplyPlace(targetCoreId);
+        //}
+        webSocketLoader.RequestPlaceCore(targetCoreId);
     }
-    public void TryCollect(string targetCoreId, Transform tr) {
-        if(CoreList[targetCoreId].owned) {
-            ApplyTransporter(targetCoreId, tr);
-        }
+    public void TryCollect(string targetCoreId) {
+        //if(CoreList[targetCoreId].owned) {
+        //    ApplyTransporter(targetCoreId, tr);
+        //}
+        webSocketLoader.RequestTransportCore(targetCoreId);
     }
 }

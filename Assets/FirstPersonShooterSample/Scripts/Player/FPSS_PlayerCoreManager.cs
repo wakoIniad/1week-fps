@@ -28,7 +28,7 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
         //和集合で全ての範囲を取る
         if(HandleCoreTransportFlagA || HandleCoreTransportFlagB) {
             if(Input.GetKeyDown(KeyCode.C)) {
-                transportTarget.TryCollect(transform);
+                transportTarget.TryCollect();
                 transportingCoreObject = transportTarget;
                 transportTarget = null;
             }

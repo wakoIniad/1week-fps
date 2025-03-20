@@ -59,10 +59,10 @@ public class FPSS_ShooterScript : MonoBehaviour
                 if(hit.transform.CompareTag("Core"))
                 {
                     //敵の体力を管理しているものがあるか
-                    CoreObjectData coreObject = hit.transform.GetComponent<CoreObjectData>();
-                    if(coreObject)
+                    CoreLocalModel coreModel = hit.transform.GetComponent<CoreLocalModel>();
+                    if(coreModel)
                     {
-                        coreObject.TryDamage(damage);
+                        coreModel.TryDamage(damage);
                     }
                 }
                 //パーティクルを出現させる
