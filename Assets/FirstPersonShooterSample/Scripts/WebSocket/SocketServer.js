@@ -32,8 +32,14 @@ io.on('connection', (socket) => {
     const id = makeId();
     connections[id] = socket;
     
-    socket.on('message', (mess) => {
-        console.log(mess.toString());
+    socket.on('message', (msg) => {
+        const [ command, ...args ] = msg.split(',');
+        switch(command) {
+            case "deactivate":
+                break;
+            case "activate":
+                break;
+        }
     });
     socket.on('close', () => {
       console.log('ws close');

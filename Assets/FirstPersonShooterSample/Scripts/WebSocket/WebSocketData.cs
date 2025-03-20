@@ -33,7 +33,7 @@ namespace WebSocketSetting {
         //data
         public string? targetCoreId { get; set; }
         public string? targetPlayerId { get; set; }
-        public Vector3? vec3 { get; set; }
+        public float[]? vec3 { get; set; }
         public float? value { get; set; }
     }
 }

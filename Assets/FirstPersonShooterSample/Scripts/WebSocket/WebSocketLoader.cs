@@ -40,106 +40,120 @@ public class WebSocketLoader : MonoBehaviour
         coreOwned(for owners): targetCoreId
         coreObjectCreate: targetCoreId(settingId), vec3(position)
         */
-            WebSocketData model = JsonConvert.DeserializeObject<WebSocketData>(e.Data);
-            Debug.Log("WebSocket Data: " + e.Data);
+            //WebSocketData model = JsonConvert.DeserializeObject<WebSocketData>(e.Data);
             
-            Debug.Log("Header-Target: " + model.Target);
+            Debug.Log("WebSocket Data: " + e.Data);
+            string[] splitted = e.Data.Split(',');
+            string Target = splitted[0];
+            string CommandType = splitted[1];
+            string[] arg = splitted[2..];
+            
+            Debug.Log("Header-Target: " + Target);
+            Debug.Log("Header-Command: " + CommandType);
+            Debug.Log("arg: " + arg);
+            /*Debug.Log("Header-Target: " + model.Target);
             Debug.Log("Header-Command: " + model.CommandType);
             Debug.Log("coreId: " + model.targetCoreId);
             Debug.Log("playerId: " + model.targetPlayerId);
             Debug.Log("value: " + model.value);
-            Debug.Log("vec3: " + model.vec3.ToString());
-            switch(model.Target) {
+            Debug.Log("vec3: " + model.vec3.ToString());*/
+            switch(Target) {
                 case "Core":
-                    if(model.targetCoreId is string coreId) {
-                        switch(model.CommandType) {
-                            case "Created":
-                                if(model.vec3 is Vector3 position) {
-                                    coreLoader.CreateModel(coreId, position);
-                                }
-                                break;
-                            case "Breaked":
-                                if(!coreLoader.isOwned(coreId))return;
-
-                                coreLoader.ApplyBreakData(coreId);
-                                break;
-                            case "Damageed":
-                                if(!coreLoader.isOwned(coreId))return;
-
-                                if(model.value is float hp) {
-                                    coreLoader.ApplyDamageData(coreId, hp);
-                                }
-                                break;
-                            case "Owned":
-                                if(!coreLoader.isOwned(coreId))return;
-                                coreLoader.ApplyOwned(coreId);
-                                break;
-                            case "Transporting":
-                                if(model.targetPlayerId is string playerId) {
-                                    PlayerLocalModel playerModel = playerLoader.GetModelById(playerId);
-                                    coreLoader.ApplyTransporter(coreId, playerModel.tr);
-                                }
-                                break;
-                            case "Placed":
-                                if(model.vec3 is Vector3 placedPsition) {
-                                    coreLoader.ApplyPlace(coreId);
-                                    coreLoader.ApplyPositionData(coreId, placedPsition);
-                                }
-                                break;
-                        }
+                    string coreId = arg[0];
+                    switch(CommandType) {
+                        case "Created":
+                            coreLoader.CreateModel(coreId, 
+                            new Vector3(
+                            float.Parse(arg[1]),
+                            float.Parse(arg[2]),
+                            float.Parse(arg[3]))
+                            );
+                            break;
+                        case "Breaked":
+                            if(!coreLoader.isOwned(coreId))return;
+                            coreLoader.ApplyBreakData(coreId);
+                            break;
+                        case "Damageed":
+                            if(!coreLoader.isOwned(coreId))return;
+                            coreLoader.ApplyDamageData(coreId, float.Parse(arg[1]));
+                            break;
+                        case "Owned":
+                            if(!coreLoader.isOwned(coreId))return;
+                            coreLoader.ApplyOwned(coreId);
+                            break;
+                        case "Transporting":
+                            PlayerLocalModel playerModel = playerLoader.GetModelById(arg[1]);
+                            coreLoader.ApplyTransporter(coreId, playerModel.tr);
+                            break;
+                        case "Placed":
+                                coreLoader.ApplyPlace(coreId);
+                                coreLoader.ApplyPositionData(coreId, 
+                                new Vector3(
+                                float.Parse(arg[1]),
+                                float.Parse(arg[2]),
+                                float.Parse(arg[3]))
+                                );
+                            break;
                     }
                     break;
                 case "Player":
-                    if(model.targetPlayerId is string id) {
-                        switch(model.CommandType) {
+                    string playerId = arg[0];
+                        switch(CommandType) {
                             case "Created":
-                                if(model.vec3 is Vector3 createdPosition)
-                                playerLoader.CreateModel(id, createdPosition);
+                                playerLoader.CreateModel(playerId, 
+                                new Vector3(
+                                float.Parse(arg[1]),
+                                float.Parse(arg[2]),
+                                float.Parse(arg[3]))
+                                );
                                 break;
                             case "SetPosition":
-                                if(!playerLoader.isMe(id)) {
-                                    if(model.vec3 is Vector3 position)
-                                    playerLoader.SetPosition(id, position);
+                                if(!playerLoader.isMe(playerId)) {
+                                    playerLoader.SetPosition(playerId,
+                                    new Vector3(
+                                    float.Parse(arg[1]),
+                                    float.Parse(arg[2]),
+                                    float.Parse(arg[3]))
+                                    );
                                 }
                                 break;
                             case "SetRotation":
-                                if(!playerLoader.isMe(id)) {
-                                    if(model.vec3 is Vector3 rotation)
-                                    playerLoader.SetRotation(id, rotation);
+                                if(!playerLoader.isMe(playerId)) {
+                                    playerLoader.SetRotation(playerId, 
+                                    new Vector3(
+                                    float.Parse(arg[1]),
+                                    float.Parse(arg[2]),
+                                    float.Parse(arg[3]))
+                                    );
                                 }
                                 break;
                             case "Deactivate"://On die
-                                if(!playerLoader.isMe(id)) {
-                                    playerLoader.Deactivate(id);
+                                if(!playerLoader.isMe(playerId)) {
+                                    playerLoader.Deactivate(playerId);
                                 }
                                 break;
                             case "Activate"://On Respown
-                                if(!playerLoader.isMe(id)) {
-                                    playerLoader.Activate(id);
+                                if(!playerLoader.isMe(playerId)) {
+                                    playerLoader.Activate(playerId);
                                 }
                                 break;
                             case "Damaged":
-                                if(playerLoader.isMe(id)) {
-                                    if(model.value is float hp)
-                                    playerLoader.SetMyHealth(hp);
+                                if(playerLoader.isMe(playerId)) {
+                                    playerLoader.SetMyHealth(float.Parse(arg[1]));
                                 }
                                 break;
                         
                     }
-                    }
                     break;
                 case "System":// server[IDasign -> CoreCreate -> CoreOwned]
-                    switch(model.CommandType) {
+                    float key = float.Parse(arg[0]);
+                    switch(CommandType) {
                         case "IdAsigned":
-                            if(model.value is float key) {
-                                if(key == connectionKey) {
-                                    if(model.targetPlayerId is string asignedId) {
-                                        playerLoader.SetMyId(asignedId);
-                                        //頻繁に使うため保存しておく
-                                        myTr = playerLoader.GetMyTransform();
-                                        //MyPlayerId = asignedId;
-                                    }
-                                }
+                            if(key == connectionKey) {
+                                playerLoader.SetMyId(arg[1]);
+                                //頻繁に使うため保存しておく
+                                myTr = playerLoader.GetMyTransform();
+                                //MyPlayerId = asignedId;
                             }
                             break;
                     }
@@ -167,37 +181,40 @@ public class WebSocketLoader : MonoBehaviour
     public void SendMyPosition() {
         ws.Send(
             "rotation,"+
-            playerLoader.ThisPlayerId+
-            ","+
+            //playerLoader.ThisPlayerId+
+            //","+
             Vector3ToString(myTr.position));
     }
     public void SendMyRotation() {
         ws.Send(
             "rotation,"+
-            playerLoader.ThisPlayerId+
-            ","+
+            //playerLoader.ThisPlayerId+
+            //","+
             Vector3ToString(myTr.eulerAngles));
     }
     public void ActivateMe() {
         ws.Send(
-            "activate,"+
-            playerLoader.ThisPlayerId);
+            "activate"
+            //playerLoader.ThisPlayerId
+            );
     }
     
     public void DeactivateMe() {
         ws.Send(
-            "deactivate,"+
-            playerLoader.ThisPlayerId);
+            "deactivate"
+            //playerLoader.ThisPlayerId
+            );
     }
     
     public void RequestTransportCore(string coreId) {
         ws.Send(
-            "req-transport,"+
-            playerLoader.ThisPlayerId+","+
+            "req_transport,"+
+            //playerLoader.ThisPlayerId+","+
             coreId
             );
     }
     public void GetMyId() {
-        ws.Send("id_asign,"+connectionKey);
+        //ws.Send("id_asign,"+connectionKey);
+        ws.Send("id_aisgn");
     }
 }
