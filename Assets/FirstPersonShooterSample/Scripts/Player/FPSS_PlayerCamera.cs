@@ -33,6 +33,8 @@ public class FPSS_PlayerCamera : MonoBehaviour
     private static FPSS_PlayerCamera instance;
     float time = 0;
     float lastSynchronizedTime = 0;
+    float lastSynchronizedAngleA = 0;
+    float lastSynchronizedAngleB = 0;
     public static FPSS_PlayerCamera GetInstance()
     {
         return instance;
@@ -85,9 +87,15 @@ public class FPSS_PlayerCamera : MonoBehaviour
         }
 
         cameraTransform.localRotation = Quaternion.AngleAxis(camRot, Vector3.right);
-        if(time - lastSynchronizedTime > 0.3) {
+        if(
+            time - lastSynchronizedTime > 0.3 && 
+            ( Mathf.Abs(lastSynchronizedAngleA - camRot) > 10 ||
+              Mathf.Abs(lastSynchronizedAngleB - plyrRot) > 10 )
+        ) {
             webSocketLoader.SendMyRotation();
             lastSynchronizedTime = time;
+            lastSynchronizedAngleA = camRot;
+            lastSynchronizedAngleB = plyrRot;
         }
     }
 

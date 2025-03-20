@@ -223,6 +223,7 @@ const WebSocket = require("ws");
 
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 const { ContractPromise } = require("@polkadot/api-contract");
+const { Server } = require("http");
 
 //const metadata = require("./metadata.json");
 
@@ -244,7 +245,7 @@ async function connect() {
 
 const io = new WebSocket.Server({ port: 8080 });
 
-io.on("connection", async (socket) => {
+server.on("connection", async (socket) => {
     connectionCounter++;
     console.log("connected");
     const id = makeId();
@@ -259,8 +260,9 @@ io.on("connection", async (socket) => {
                 const createAt = [10,10,10];
                 coreList[id] = new Core(id, createAt);// psitionは仮
                 playerList[id] = new Player(id, createAt);
-                io.emit("message", `Core,Create,${id},${createAt.join(',')}`);
-                io.broadcast.emit("message",`Player,Create,${id},${createAt.join(',')}`);
+                server.emit("message", `Core,Create,${id},${createAt.join(',')}`);
+
+                socket.broadcast.emit("message",`Player,Create,${id},${createAt.join(',')}`);
                 break;
             case "Position":
                 socket.broadcast.emit("message", `Player,Position,${id},${args.join(',')}`);
@@ -274,12 +276,12 @@ io.on("connection", async (socket) => {
                 }
             case "TransportRequest":
                 if(coreList[arg[0]].Transport(id)) {
-                    io.emit("message",`Core,Transport,${arg[0]},${id}`);
+                    server.emit("message",`Core,Transport,${arg[0]},${id}`);
                 }
                 break;
             case "PlaceRequest":
                 if(coreList[arg[0]].Place(id)) {
-                    io.emit("message",`Core,Place,${arg[0]},${coreList[arg[0]].position.join(',')}`);
+                    server.emit("message",`Core,Place,${arg[0]},${coreList[arg[0]].position.join(',')}`);
                 }
                 break;
             case "CoreDamageEntry":
@@ -288,11 +290,13 @@ io.on("connection", async (socket) => {
             case "CoreDamageEntry":
                 playerList[arg[0]].Damage(id, +arg[1]);
                 break;
-
+            default:
+                console.log(command);
 
         }
     });
     socket.on('close', () => {
       console.log('ws close');
+//      delete connections[id];
     });
 });
