@@ -3,18 +3,19 @@ using System.Collections.Generic;
 public class PlayerModelLoader : MonoBehaviour
 {
     public string ThisPlayerId;
+    public FPSS_PlayerHealth MyHealthManager;
+    public FPSS_PlayerController MyController;
     public GameObject ModelPrefab;
     public Dictionary<string, PlayerLocalModel> ModelList = new Dictionary<string, PlayerLocalModel>();
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
+    
+    public void SetMyHealth(float hp) {
+        MyHealthManager.SetHealth(hp);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void SetMyPosition(Vector3 position) {
+        MyController.rb.position = position;
+    }
+    public bool isMe(string id) {
+        return id == ThisPlayerId;
     }
     public void CreateModel(string id, Vector3 position) {
         GameObject generatedObject = Instantiate(ModelPrefab);

@@ -51,6 +51,18 @@ public class CoreLocalModel : MonoBehaviour
             Transform anchor = gameObject.GetComponent<Transform>();
             anchor.position = pos;
     }
+    public void SetAsPlaced() {
+        Transform selfTr = gameObject.GetComponent<Transform>();
+        selfTr.parent = loader.loaderTransform;
+        selfTr.localScale = new Vector3(1,1,1);
+        transporting = false;
+    }
+    public void SetTransprter(Transform tr) {
+        Transform selfTr = gameObject.GetComponent<Transform>();
+        selfTr.parent = tr;
+        selfTr.localScale = new Vector3(0.1f,0.1f,0.1f);//元から小さくてもいいかも
+        transporting = true;
+    }
 
     //サーバーに送信する関数を呼び出す
     public void TryClaim() {
@@ -70,18 +82,6 @@ public class CoreLocalModel : MonoBehaviour
     }
     public void TryCollect(Transform tr) {
         loader.TryCollect(id, tr);
-    }
-    public void SetAsPlaced() {
-        Transform selfTr = gameObject.GetComponent<Transform>();
-        selfTr.parent = loader.loaderTransform;
-        selfTr.localScale = new Vector3(1,1,1);
-        transporting = false;
-    }
-    public void SetTransprter(Transform tr) {
-        Transform selfTr = gameObject.GetComponent<Transform>();
-        selfTr.parent = tr;
-        selfTr.localScale = new Vector3(0.1f,0.1f,0.1f);//元から小さくてもいいかも
-        transporting = true;
     }
         
     

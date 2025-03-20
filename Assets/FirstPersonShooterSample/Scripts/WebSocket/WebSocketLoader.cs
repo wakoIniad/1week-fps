@@ -56,11 +56,15 @@ public class WebSocketLoader : MonoBehaviour
                                 break;
                             case "Breaked":
                                 if(!coreLoader.isOwned(coreId))return;
+
                                 coreLoader.ApplyBreakData(coreId);
                                 break;
                             case "Damageed":
                                 if(!coreLoader.isOwned(coreId))return;
-                                if(model.value is float hp)coreLoader.ApplyDamageData(coreId, hp);
+
+                                if(model.value is float hp) {
+                                    coreLoader.ApplyDamageData(coreId, hp);
+                                }
                                 break;
                             case "Owned":
                                 if(!coreLoader.isOwned(coreId))return;
@@ -72,29 +76,67 @@ public class WebSocketLoader : MonoBehaviour
                                     coreLoader.ApplyTransporter(coreId, playerModel.tr);
                                 }
                                 break;
+                            case "Placed":
+                                if(model.vec3 is Vector3 placedPsition) {
+                                    coreLoader.ApplyPlace(coreId);
+                                    coreLoader.ApplyPositionData(coreId, placedPsition);
+                                }
+                                break;
                         }
                     }
                     break;
                 case "Player":
                     if(model.targetPlayerId is string id) {
-                    if(model.vec3 is Vector3 vec3) {
                         switch(model.CommandType) {
                             case "Created":
-                                playerLoader.CreateModel(id, vec3);
+                                if(model.vec3 is Vector3 createdPosition) {
+                                    playerLoader.CreateModel(id, createdPosition);
+                                }
                                 break;
                             case "SetPosition":
-                                playerLoader.SetPosition(id, vec3);
+                                if(!playerLoader.isMe(id)) {
+                                    if(model.vec3 is Vector3 position) {
+                                        playerLoader.SetPosition(id, position);
+                                    }
+                                }
                                 break;
                             case "SetRotation":
-                                playerLoader.SetRotation(id, vec3);
+                                if(!playerLoader.isMe(id)) {
+                                    if(model.vec3 is Vector3 rotation) {
+                                        playerLoader.SetRotation(id, rotation);
+                                    }
+                                }
                                 break;
-                            case "Deactivate":
-                                playerLoader.Deactivate(id);
+                            case "AcceptedWarp":
+                                if(playerLoader.isMe(id)) {
+                                    if(model.vec3 is Vector3 position) {
+                                        playerLoader.SetMyPosition(position);
+                                    }
+                                }
                                 break;
-                            case "Activate":
-                                playerLoader.Activate(id);
+                            case "Died":
+                                if(playerLoader.isMe(id)) {
+                                    playerLoader.MyHealthManager.Death();
+                                } else {
+                                    playerLoader.Deactivate(id);
+                                }
                                 break;
-                        }
+                            case "Respawn":
+                                if()
+                                if(playerLoader.isMe(id)) {
+                                    playerLoader.SetMyPosition(position);
+                                } else {
+                                    playerLoader.Activate(id);
+                                    playerLoader.SetPosition(id, vec3);
+                                }
+                                break;
+                            case "Damaged":
+                                if(playerLoader.isMe(id)) {
+                                    if(model.value is float hp) 
+                                    playerLoader.SetMyHealth(hp);
+                                }
+                                break;
+                        
                     }
                     }
                     break;
@@ -115,10 +157,5 @@ public class WebSocketLoader : MonoBehaviour
  
         ws.Connect();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public SendRequest(string type, )
 }

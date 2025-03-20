@@ -12,7 +12,7 @@ public class FPSS_PlayerHealth : MonoBehaviour
     public int playerHealth = 10;
     public TMP_Text healthText;
 
-    int nowHealth;//現在の体力を入れておく
+    float nowHealth;//現在の体力を入れておく
 
     //ゲームをはじめて最初に呼ばれる
     void Start()
@@ -24,7 +24,17 @@ public class FPSS_PlayerHealth : MonoBehaviour
         respownManager = gameObject.GetComponent<PlayerRespown>();
     }
 
-
+    //マルチプレイの都合上、Damageをこっちに変える
+    public void SetHealth(float hp) {
+        nowHealth = hp;
+        //表示を更新する
+        healthText.text = "Health: " + nowHealth.ToString();
+        //ここはサーバー側の処理に変える
+        if(nowHealth <= 0)
+        {
+            Death();
+        }
+    }
     //ダメージを受けるとき
     public void Damage(int damage)
     {
@@ -44,7 +54,7 @@ public class FPSS_PlayerHealth : MonoBehaviour
     }
 
     //体力が無くなったときに
-    void Death()
+    public void Death()
     {
         nowHealth = playerHealth;
         respownManager.StartHandleRespown();
