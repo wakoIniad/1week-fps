@@ -278,13 +278,16 @@ server.on("connection", async (socket) => {
                 for(const core of Object.values(coreList)) {
                     socket.send(`Core,Create,${core.id},${core.position.join(',')}`);
                 }
-                
-                const createAt = [10,10,10];
-                coreList[id] = new Core(id, createAt);// psitionは仮
+
+                const createAt = [10,2.5,10];
+                const playerCore = new Core(id, createAt);// psitionは仮
+                playerCore.owner = id;
+                coreList[id] = playerCore;
                 playerList[id] = new Player(id, createAt);
                 server.sendAllClient(`Core,Create,${id},${createAt.join(',')}`);
 
                 socket.broadcast(`Player,Create,${id},${createAt.join(',')}`);
+                socket.send(`Core,Claim,${playerCore.id}`);
                 break;
             case "Position":
                 socket.broadcast(`Player,Position,${id},${args.join(',')}`);
@@ -295,7 +298,7 @@ server.on("connection", async (socket) => {
             case "ClaimRequest":
                 if(coreList[args[0]].Claim(id)) {
                     socket.send(`Core,Claim,${args[0]}`);
-                }
+                } else console.log("claimReq is denied",coreList[args[0]]);
             case "TransportRequest":
                 if(coreList[args[0]].Transport(id)) {
                     server.sendAllClient(`Core,Transport,${args[0]},${id}`);

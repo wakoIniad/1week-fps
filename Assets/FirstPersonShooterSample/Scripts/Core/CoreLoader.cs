@@ -27,6 +27,7 @@ public class CoreLoader : MonoBehaviour
         CoreLocalModel model = generatedObject.GetComponent<CoreLocalModel>();
         model.SetId(id);
         model.SetPosition(position);
+        model.loader = this;
         CoreList.Add(id, model);
     }
     public bool isOwned(string id) {
