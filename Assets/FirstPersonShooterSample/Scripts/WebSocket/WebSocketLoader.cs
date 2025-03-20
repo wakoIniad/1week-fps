@@ -3,12 +3,16 @@ using UnityEngine;
 using WebSocketSharp;
 using WebSocketSetting;
 using Newtonsoft.Json;
+using Unity.VisualScripting;
 
 public class WebSocketLoader : MonoBehaviour
 {
     public PlayerModelLoader playerLoader;
     public CoreLoader coreLoader;
     private WebSocket ws;
+    private float connectionKey = UnityEngine.Random.Range( 0.0f, 1.0f );
+    private Transform myTr;
+    //private string MyPlayerId;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -89,55 +93,55 @@ public class WebSocketLoader : MonoBehaviour
                     if(model.targetPlayerId is string id) {
                         switch(model.CommandType) {
                             case "Created":
-                                if(model.vec3 is Vector3 createdPosition) {
-                                    playerLoader.CreateModel(id, createdPosition);
-                                }
+                                if(model.vec3 is Vector3 createdPosition)
+                                playerLoader.CreateModel(id, createdPosition);
                                 break;
                             case "SetPosition":
                                 if(!playerLoader.isMe(id)) {
-                                    if(model.vec3 is Vector3 position) {
-                                        playerLoader.SetPosition(id, position);
-                                    }
+                                    if(model.vec3 is Vector3 position)
+                                    playerLoader.SetPosition(id, position);
                                 }
                                 break;
                             case "SetRotation":
                                 if(!playerLoader.isMe(id)) {
-                                    if(model.vec3 is Vector3 rotation) {
-                                        playerLoader.SetRotation(id, rotation);
-                                    }
+                                    if(model.vec3 is Vector3 rotation)
+                                    playerLoader.SetRotation(id, rotation);
                                 }
                                 break;
-                            case "AcceptedWarp":
-                                if(playerLoader.isMe(id)) {
-                                    if(model.vec3 is Vector3 position) {
-                                        playerLoader.SetMyPosition(position);
-                                    }
-                                }
-                                break;
-                            case "Died":
-                                if(playerLoader.isMe(id)) {
-                                    playerLoader.MyHealthManager.Death();
-                                } else {
+                            case "Deactivate"://On die
+                                if(!playerLoader.isMe(id)) {
                                     playerLoader.Deactivate(id);
                                 }
                                 break;
-                            case "Respawn":
-                                if()
-                                if(playerLoader.isMe(id)) {
-                                    playerLoader.SetMyPosition(position);
-                                } else {
+                            case "Activate"://On Respown
+                                if(!playerLoader.isMe(id)) {
                                     playerLoader.Activate(id);
-                                    playerLoader.SetPosition(id, vec3);
                                 }
                                 break;
                             case "Damaged":
                                 if(playerLoader.isMe(id)) {
-                                    if(model.value is float hp) 
+                                    if(model.value is float hp)
                                     playerLoader.SetMyHealth(hp);
                                 }
                                 break;
                         
                     }
+                    }
+                    break;
+                case "System":// server[IDasign -> CoreCreate -> CoreOwned]
+                    switch(model.CommandType) {
+                        case "IdAsigned":
+                            if(model.value is float key) {
+                                if(key == connectionKey) {
+                                    if(model.targetPlayerId is string asignedId) {
+                                        playerLoader.SetMyId(asignedId);
+                                        //頻繁に使うため保存しておく
+                                        myTr = playerLoader.GetMyTransform();
+                                        //MyPlayerId = asignedId;
+                                    }
+                                }
+                            }
+                            break;
                     }
                     break;
             }
@@ -157,5 +161,43 @@ public class WebSocketLoader : MonoBehaviour
  
         ws.Connect();
     }
-    public SendRequest(string type, )
+    string Vector3ToString(Vector3 vec3) {
+        return vec3.x+","+vec3.y+","+vec3.z;
+    }
+    public void SendMyPosition() {
+        ws.Send(
+            "rotation,"+
+            playerLoader.ThisPlayerId+
+            ","+
+            Vector3ToString(myTr.position));
+    }
+    public void SendMyRotation() {
+        ws.Send(
+            "rotation,"+
+            playerLoader.ThisPlayerId+
+            ","+
+            Vector3ToString(myTr.eulerAngles));
+    }
+    public void ActivateMe() {
+        ws.Send(
+            "activate,"+
+            playerLoader.ThisPlayerId);
+    }
+    
+    public void DeactivateMe() {
+        ws.Send(
+            "deactivate,"+
+            playerLoader.ThisPlayerId);
+    }
+    
+    public void RequestTransportCore(string coreId) {
+        ws.Send(
+            "req-transport,"+
+            playerLoader.ThisPlayerId+","+
+            coreId
+            );
+    }
+    public void GetMyId() {
+        ws.Send("id_asign,"+connectionKey);
+    }
 }

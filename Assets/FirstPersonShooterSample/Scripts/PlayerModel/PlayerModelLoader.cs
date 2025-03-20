@@ -8,11 +8,17 @@ public class PlayerModelLoader : MonoBehaviour
     public GameObject ModelPrefab;
     public Dictionary<string, PlayerLocalModel> ModelList = new Dictionary<string, PlayerLocalModel>();
     
+    public void SetMyId(string asignedId) {
+        ThisPlayerId = asignedId;
+    }
     public void SetMyHealth(float hp) {
         MyHealthManager.SetHealth(hp);
     }
     public void SetMyPosition(Vector3 position) {
         MyController.rb.position = position;
+    }
+    public Transform GetMyTransform() {
+        return MyController.transform;
     }
     public bool isMe(string id) {
         return id == ThisPlayerId;
