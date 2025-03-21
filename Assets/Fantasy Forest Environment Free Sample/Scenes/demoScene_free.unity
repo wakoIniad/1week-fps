@@ -22,7 +22,7 @@ RenderSettings:
   m_LinearFogEnd: 48.5
   m_AmbientSkyColor: {r: 0.36816174, g: 0.47877002, b: 0.5345911, a: 1}
   m_AmbientEquatorColor: {r: 0.07227186, g: 0.07227186, b: 0.07227186, a: 1}
-  m_AmbientGroundColor: {r: 0.07029571, g: 0.4528302, b: 0.010679956, a: 1}
+  m_AmbientGroundColor: {r: 0.81761, g: 0.62991965, b: 0.62991965, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.13593209, g: 0.14908051, b: 0.18238991, a: 1}
@@ -146,14 +146,14 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 0.5471698, g: 0.20131712, b: 0.20131712, a: 1}
-  m_Intensity: 2.59
+  m_Color: {r: 0.016875245, g: 0.01210394, b: 0.0754717, a: 1}
+  m_Intensity: 259
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
