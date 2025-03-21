@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7417484367406310643}
   - component: {fileID: 1245426765465032162}
   - component: {fileID: -1797086043780259721}
+  - component: {fileID: 8572784787893844161}
   m_Layer: 0
   m_Name: PlayerModelRev
   m_TagString: OtherPlayer
@@ -50,7 +51,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4092988184730329579}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -122,3 +123,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 
+--- !u!95 &8572784787893844161
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4092988184730329579}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: ab147a2e39ef2ad4aa12cbc6597a626f, type: 3}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
