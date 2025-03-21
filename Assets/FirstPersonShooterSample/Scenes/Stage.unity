@@ -426,6 +426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c405be8e161c5904e8dbecbbc7d5b191, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shooterScript: {fileID: 632390970}
   playerLoader: {fileID: 385585397}
   coreLoader: {fileID: 1069473777}
 --- !u!4 &848669895
