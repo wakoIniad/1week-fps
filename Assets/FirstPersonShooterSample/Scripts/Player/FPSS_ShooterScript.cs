@@ -14,6 +14,9 @@ public class FPSS_ShooterScript : MonoBehaviour
     public AudioSource shotAudioSource;//発射音をならすもの
     [System.NonSerialized] public bool stop;
 
+    public GameObject fireBallPrefab;
+    public int launchForce = 1;
+
 
     bool isHit;
     Ray ray;
@@ -37,7 +40,10 @@ public class FPSS_ShooterScript : MonoBehaviour
         //左クリックされたとき
         if(Input.GetMouseButtonDown(0))
         {
-            //画面中央にあたる場所から出現するレイ(直線)を求める
+            GameObject launchedObject = Instantiate(fireBallPrefab);
+            Rigidbody rb = launchedObject.GetComponent<Rigidbody>();
+            rb.AddForce(transform.forward * launchForce, ForceMode.Impulse);
+            /*//画面中央にあたる場所から出現するレイ(直線)を求める
             ray = playerCamera.GetCamera().ScreenPointToRay(new Vector3(Screen.width/2, Screen.height/2, 0));
             //レイを出してその先に何があるか調べる
             isHit = Physics.Raycast(ray, out hit, rayMaxDistance, rayLayer);
@@ -73,7 +79,7 @@ public class FPSS_ShooterScript : MonoBehaviour
                     obj.transform.position = hit.point;
                     obj.transform.rotation = Quaternion.LookRotation(-hit.normal);
                 }
-            }
+            }*/
         }
     }
 }
