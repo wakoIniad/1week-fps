@@ -15,7 +15,7 @@ public class FPSS_ShooterScript : MonoBehaviour
     [System.NonSerialized] public bool stop;
 
     public GameObject fireBallPrefab;
-    public int launchForce = 1;
+    public int launchForce = 10;
 
 
     bool isHit;
@@ -40,10 +40,10 @@ public class FPSS_ShooterScript : MonoBehaviour
         //左クリックされたとき
         if(Input.GetMouseButtonDown(0))
         {
-            GameObject launchedObject = Instantiate(fireBallPrefab);
-            launchedObject.transform.localPosition = new Vector3(2.5f,0.5f,0);
+            GameObject launchedObject = Instantiate(fireBallPrefab, gameObject.transform);
+            launchedObject.transform.localPosition = new Vector3(0,1.5f,0);
             Rigidbody rb = launchedObject.GetComponent<Rigidbody>();
-            rb.AddForce(transform.forward * launchForce, ForceMode.Impulse);
+            rb.AddForce(playerCamera.transform.forward * launchForce, ForceMode.Impulse);
             /*//画面中央にあたる場所から出現するレイ(直線)を求める
             ray = playerCamera.GetCamera().ScreenPointToRay(new Vector3(Screen.width/2, Screen.height/2, 0));
             //レイを出してその先に何があるか調べる

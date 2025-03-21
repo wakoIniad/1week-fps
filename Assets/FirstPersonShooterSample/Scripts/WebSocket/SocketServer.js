@@ -102,7 +102,7 @@ class Player {
         if(this.nowHealth <= 0){ return; }
         for(const core of Object.values(coreList)) {
             if(core.transporting && core.transporter ==  this.id) {
-                core.Damage(applicant, amount);
+                core.Damage(applicant, amount, true);
                 return;
             }
         }
@@ -203,10 +203,13 @@ class Core {
         }
         return false;
     }
-    Damage(applicant, amount) {
+    Damage(applicant, amount, proxy=false) {
         if(playerList[applicant].ghost)return;
         if(!TEST_MODE && (this.owner === null || applicant === this.owner)) return;
         if(this.nowHealth <= 0){ return; }
+        if(!proxy && this.transporting) {
+            playerList[this.transporter].Damage(applicant, amount);
+        }
 
         this.nowHealth -= amount;
 
