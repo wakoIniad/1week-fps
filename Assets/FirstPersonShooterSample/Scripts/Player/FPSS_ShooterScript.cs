@@ -41,6 +41,7 @@ public class FPSS_ShooterScript : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             GameObject launchedObject = Instantiate(fireBallPrefab);
+            launchedObject.transform.localPosition = new Vector3(2.5f,0.5f,0);
             Rigidbody rb = launchedObject.GetComponent<Rigidbody>();
             rb.AddForce(transform.forward * launchForce, ForceMode.Impulse);
             /*//画面中央にあたる場所から出現するレイ(直線)を求める

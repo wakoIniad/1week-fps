@@ -19,7 +19,7 @@
 //server.listen(PORT, () => {
 //  console.log(`listening on port ${PORT}`);
 //});
-
+const TEST_MODE = true;
 const connections = {};
 const coreList = {};
 const playerList = {};
@@ -98,9 +98,14 @@ class Player {
     }
     
     Damage(applicant, amount) {
-        //if(applicant === this.id)return;
+        if(!TEST_MODE && applicant === this.id)return;
         if(this.nowHealth <= 0){ return; }
-
+        for(const core of Object.values(coreList)) {
+            if(core.transporting && core.transporter ==  this.id) {
+                core.Damage(applicant, amount);
+                return;
+            }
+        }
         this.nowHealth -= amount;
         
         connections[this.id].send(`System,SetHealth,${this.nowHealth}`);
@@ -200,14 +205,14 @@ class Core {
     }
     Damage(applicant, amount) {
         if(playerList[applicant].ghost)return;
-        if(this.owner === null || applicant === this.owner) return;
+        if(!TEST_MODE && (this.owner === null || applicant === this.owner)) return;
         if(this.nowHealth <= 0){ return; }
 
         this.nowHealth -= amount;
 
         if(this.nowHealth <= 0)
         {
-            this.Break();
+            this.Break(applicant);
         } else {
             if(this.owner) {
                 connections[this.owner].send(`Core,Damage,${this.id},${this.nowHealth}`);
@@ -215,11 +220,19 @@ class Core {
         }
     }
     //体力が無くなったときに
-    Break()
+    Break(applicant)
     {
         if(this.owner) {
             connections[this.owner].send(`Core,Break,${this.id}`);
             this.owner = null;
+
+            if(this.Claim(applicant)) {
+                connections[applicant].send(`Core,Claim,${this.id}`);
+                if(this.Transport(applicant)) {
+                    server.sendAllClient(`Core,Transport,${this.id},${this.transporter}`);
+                }
+            }
+
         }
     }
 }
