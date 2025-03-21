@@ -26,15 +26,17 @@ public class FireBall : MonoBehaviour
             if(model)
             {
                 model.TryDamage(damage);
+                Destroy(gameObject);
             }
         }
         if(hit.gameObject.CompareTag("Core"))
         {
             //敵の体力を管理しているものがあるか
             CoreLocalModel coreModel = hit.transform.GetComponent<CoreLocalModel>();
-            if(coreModel)
+            if(coreModel && !coreModel.owned && !coreModel.transporting)
             {
                 coreModel.TryDamage(damage);
+                Destroy(gameObject);
             }
         }
         //パーティクルを出現させる
@@ -46,6 +48,5 @@ public class FireBall : MonoBehaviour
             //obj.transform.rotation = Quaternion.LookRotation(-hit.normal);
         }
         
-        Destroy(gameObject);
     }
 }

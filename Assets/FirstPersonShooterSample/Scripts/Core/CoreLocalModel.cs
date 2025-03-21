@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-
 public class CoreLocalModel : MonoBehaviour
 {
     [System.NonSerialized]public CoreLoader loader;
@@ -63,6 +62,11 @@ public class CoreLocalModel : MonoBehaviour
     public void SetTransprter(Transform tr) {
         Transform selfTr = gameObject.GetComponent<Transform>();
         selfTr.parent = tr;
+        selfTr.localPosition = new Vector3(
+            UnityEngine.Random.Range(-1,1),
+            UnityEngine.Random.Range(0,2),
+            UnityEngine.Random.Range(-1,1)
+            );
         //selfTr.localScale = new Vector3(1f,1f,1f);//元から小さくてもいいかも
         transporting = true;
     }
