@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class FPSS_ShooterScript : MonoBehaviour
 {
+    [System.NonSerialized] public WebSocketLoader webSocketLoader; 
     public int damage = 10;//ダメージ
     public GameObject hitParticlePrefab;//撃った場所に出現するパーティクル (エフェクト)
     public float rayMaxDistance = 100;//最大射程
@@ -32,7 +33,19 @@ public class FPSS_ShooterScript : MonoBehaviour
         playerCamera = FPSS_PlayerCamera.GetInstance();
     }
 
-
+    public Vector3 Shoot(Transform parent, Vector3 direction) {
+        GameObject launchedObject = Instantiate(fireBallPrefab, parent);
+        launchedObject.transform.localPosition = new Vector3(0f,1.5f,1.5f);
+        Rigidbody rb = launchedObject.GetComponent<Rigidbody>();
+        rb.AddForce(direction * launchForce, ForceMode.Impulse);
+        return launchedObject.transform.position;
+    }
+    public void ShootAt(Vector3 position, Vector3 direction) {
+        GameObject launchedObject = Instantiate(fireBallPrefab);
+        launchedObject.transform.position = position;
+        Rigidbody rb = launchedObject.GetComponent<Rigidbody>();
+        rb.AddForce(direction * launchForce, ForceMode.Impulse);
+    };
     //毎フレーム呼ばれる
     void Update()
     {
@@ -40,10 +53,8 @@ public class FPSS_ShooterScript : MonoBehaviour
         //左クリックされたとき
         if(Input.GetMouseButtonDown(0))
         {
-            GameObject launchedObject = Instantiate(fireBallPrefab, gameObject.transform);
-            launchedObject.transform.localPosition = new Vector3(0f,1.5f,1.5f);
-            Rigidbody rb = launchedObject.GetComponent<Rigidbody>();
-            rb.AddForce(playerCamera.transform.forward * launchForce, ForceMode.Impulse);
+            Vector3 pos = Shoot(gameObject.transform, playerCamera.transform.forward);
+            webSocketLoader.EntryShoot(pos, playerCamera.transform.forward);
             /*//画面中央にあたる場所から出現するレイ(直線)を求める
             ray = playerCamera.GetCamera().ScreenPointToRay(new Vector3(Screen.width/2, Screen.height/2, 0));
             //レイを出してその先に何があるか調べる

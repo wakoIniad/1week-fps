@@ -8,6 +8,7 @@ using NativeWebSocket;
 
 public class WebSocketLoader : MonoBehaviour
 {
+    public FPSS_ShooterScript shooterScript;
     public PlayerModelLoader playerLoader;
 
     public CoreLoader coreLoader;
@@ -23,7 +24,7 @@ public class WebSocketLoader : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        coreLoader.webSocketLoader = playerLoader.webSocketLoader = this;
+        shooterScript.webSocketLoader = coreLoader.webSocketLoader = playerLoader.webSocketLoader = this;
         Debug.Log("Start");
         ws = new WebSocket("ws://localhost:8080/");
         
@@ -172,6 +173,18 @@ public class WebSocketLoader : MonoBehaviour
                                 float.Parse(arg[2]))
                                 );
                             break;
+                        case "Fireball":
+                            shooterScript.ShootAt(
+                                new Vector3(
+                                float.Parse(arg[0]),
+                                float.Parse(arg[1]),
+                                float.Parse(arg[2])),
+                                new Vector3(
+                                float.Parse(arg[3]),
+                                float.Parse(arg[4]),
+                                float.Parse(arg[5]))
+                            );
+                            break;
                     }
                     break;
             }
@@ -263,6 +276,13 @@ public class WebSocketLoader : MonoBehaviour
             "PlayerDamageEntry,"+
             playerId+','+amount
         );
+    }
+    public void EntryShoot(Vector3 position, Vector3 direction) {
+        SendText(
+            "ShootEntry,"+
+            Vector3ToString(position)+','+Vector3ToString(direction)
+        );
+
     }
     public void Entry() {
         SendText("Entry");

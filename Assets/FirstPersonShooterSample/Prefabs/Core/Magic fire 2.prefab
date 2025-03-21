@@ -9707,7 +9707,7 @@ GameObject:
   - component: {fileID: 5480999038766048179}
   m_Layer: 0
   m_Name: Magic fire 2
-  m_TagString: Untagged
+  m_TagString: Core
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -362,6 +362,9 @@ server.on("connection", async (socket) => {
             case "PlayerDamageEntry":
                 playerList[args[0]].Damage(id, +args[1]);
                 break;
+            case "ShootEntry":
+                socket.broadcast(`System,Fireball,${args.join(',')}`)
+                break;
             default:
                 console.log("default:"+command);
                 break;

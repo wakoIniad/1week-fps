@@ -11,8 +11,8 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     //public Dictionary<int, CoreObjectData> ownedCores = new Dictionary<int, CoreObjectData>();
     public Dictionary<string, CoreStatusView> coreView = new Dictionary<string, CoreStatusView>();
     public List<string> keys = new List<string>();
-    private bool HandleCoreTransportFlagA = false;
-    private bool HandleCoreTransportFlagB = false;
+    //private bool HandleCoreTransportFlagA = false;
+    //private bool HandleCoreTransportFlagB = false;
     private bool HandleCoreTransportFlag = false;
     private CoreLocalModel transportTarget;
     private CoreLocalModel transportingCoreObject;
@@ -76,7 +76,7 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
                         waitForPlace[keys[i]] = false;
                     }
                     if(alphaInput[i]) {
-
+                        model.TryWarp();
                     }
                 }
             }
