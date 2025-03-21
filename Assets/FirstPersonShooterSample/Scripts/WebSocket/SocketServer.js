@@ -151,6 +151,7 @@ class Core {
         this.position = position;
         this.owner = null;
         this.transporting = false;
+        this.transporter = null;
         this.defaultHealth = 10;
         this.nowHealth = this.defaultHealth;
     }
@@ -174,6 +175,7 @@ class Core {
         if(applicant === this.owner) {
             this.position = playerList[this.owner].position;
             this.transporting = false;
+            this.transporter = null;
             return true;
         }
         return false;
@@ -182,6 +184,7 @@ class Core {
     Transport(applicant) {
         if(applicant === this.owner) {
             this.transporting = true;
+            this.transporter = applicant;
             return true;
         }
         return false;
@@ -285,7 +288,10 @@ server.on("connection", async (socket) => {
                 }
                 
                 for(const core of Object.values(coreList)) {
-                    socket.send(`Core,Create,${core.id},${core.position.join(',')}`);
+                    socket.send(`Core,Create,${core.id},${core.position.join(',')}`)
+                    if(core.transporting) {
+                        server.sendAllClient(`Core,Transport,${core.id},${core.transporter}`);
+                    };
                 }
 
                 const createAt = [10+Math.random()*10-5,2.5,10+Math.random()*10-5];
@@ -295,6 +301,9 @@ server.on("connection", async (socket) => {
                 const playerObj = new Player(id, createAt);;
                 playerList[id] = playerObj
                 server.sendAllClient(`Core,Create,${id},${createAt.join(',')}`);
+                playerCore.Transport(id);
+                server.sendAllClient(`Core,Transport,${playerCore.id},${id}`);
+
 
                 socket.broadcast(`Player,Create,${id},${createAt.join(',')}`);
                 socket.send(`Core,Claim,${playerCore.id}`);

@@ -40,9 +40,8 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
         Debug.Log("TRTargetIsNull:");
         }*/
         if(HandleCoreTransportFlag) {
-            if(Input.GetKeyDown(KeyCode.C) && transportingCoreObject == null) {
+            if(Input.GetKeyDown(KeyCode.C)) {
                 transportTarget.TryCollect();
-                transportingCoreObject = transportTarget;
                 transportTarget = null;
             }
         } else {
@@ -61,21 +60,25 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
             Input.GetKeyDown(KeyCode.Alpha8),
             Input.GetKeyDown(KeyCode.Alpha9),
             };
-        for(int i = 0; i < 10; i++) {
-            if(alphaInput[i]) {
-                CoreLocalModel model = coreLoader.GetModelById(keys[i]);
-                if(model.owned) {
-                    if(model.transporting) {
-                        transportingCoreObject.TryPlace();
+        for(int i = 0; i < Math.Min(10, keys.Count); i++) {
+            
+            CoreLocalModel model = coreLoader.GetModelById(keys[i]);
+            if(model.owned) {
+                if(model.transporting) {
+                    coreView[keys[i]].DisplayTransporting();
+                    if(alphaInput[i]) {
+                        model.TryPlace();
                         waitForPlace[keys[i]] = true;
-                    } else {
-                        //ワープ用
+                    }
+                } else {
+                    if(waitForPlace[keys[i]]) {
+                        coreView[keys[i]].DisplayPlacing();
+                        waitForPlace[keys[i]] = false;
+                    }
+                    if(alphaInput[i]) {
+
                     }
                 }
-            }
-            if(waitForPlace[keys[i]]) {
-                CoreLocalModel model = coreLoader.GetModelById(keys[i]);
-                if(model.owned && !model.transporting)coreView[keys[i]].DisplayPlacing();
             }
         }
 
