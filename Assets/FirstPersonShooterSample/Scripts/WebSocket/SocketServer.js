@@ -363,7 +363,9 @@ server.on("connection", async (socket) => {
                 playerList[args[0]].Damage(id, +args[1]);
                 break;
             case "ShootEntry":
-                socket.broadcast(`System,Fireball,${args.join(',')}`)
+                socket.broadcast(`System,Fireball,${args.join(',')}`);
+                //server.sendAllClient(`System,Fireball,${args.join(',')}`);
+                
                 break;
             default:
                 console.log("default:"+command);

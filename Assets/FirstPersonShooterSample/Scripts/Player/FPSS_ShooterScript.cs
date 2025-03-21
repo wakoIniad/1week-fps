@@ -45,7 +45,7 @@ public class FPSS_ShooterScript : MonoBehaviour
         launchedObject.transform.position = position;
         Rigidbody rb = launchedObject.GetComponent<Rigidbody>();
         rb.AddForce(direction * launchForce, ForceMode.Impulse);
-    };
+    }
     //毎フレーム呼ばれる
     void Update()
     {
