@@ -6,19 +6,22 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/FirstPersonShooterSample/Scenes/FPSS_Title.unity
+    path: Assets/FirstPersonShooterSample/Scenes/Dump/FPSS_Title.unity
     guid: 0b4f8b8a490a561498e792b525c4462c
   - enabled: 1
-    path: Assets/FirstPersonShooterSample/Scenes/FPSS_Stage1.unity
+    path: Assets/FirstPersonShooterSample/Scenes/Dump/FPSS_Stage1.unity
     guid: 5588e3c5a5bac2446a112d9d61fd8f3b
   - enabled: 1
-    path: Assets/FirstPersonShooterSample/Scenes/FPSS_Stage2.unity
+    path: Assets/FirstPersonShooterSample/Scenes/Dump/FPSS_Stage2.unity
     guid: 98a85e96081e8574da7d041b5406a4af
   - enabled: 1
-    path: Assets/FirstPersonShooterSample/Scenes/FPSS_GameOver.unity
+    path: Assets/FirstPersonShooterSample/Scenes/Dump/FPSS_GameOver.unity
     guid: 7d3c2417afd6ca44299aa7035912bae0
   - enabled: 1
-    path: Assets/FirstPersonShooterSample/Scenes/FPSS_Clear.unity
+    path: Assets/FirstPersonShooterSample/Scenes/Dump/FPSS_Clear.unity
     guid: c4269d280a4d7984c95fdce3a50a234c
+  - enabled: 1
+    path: Assets/FirstPersonShooterSample/Scenes/SceneTest/demoScene_free.unity
+    guid: 10322f02fb0d8cd4fae4908c77c9f5eb
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

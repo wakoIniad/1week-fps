@@ -310,7 +310,11 @@ server.on("connection", async (socket) => {
                     };
                 }
 
-                const createAt = [10+Math.random()*10-5,2.5,10+Math.random()*10-5];
+                const createAt = [
+                    Math.random()*50,
+                    15,
+                    Math.random()*50
+                ];
                 const playerCore = new Core(id, createAt);// psitionは仮
                 playerCore.owner = id;
                 coreList[id] = playerCore;

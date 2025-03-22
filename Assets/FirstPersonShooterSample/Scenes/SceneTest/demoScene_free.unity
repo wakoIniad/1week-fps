@@ -707,7 +707,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d96c83710f84d2f40a2ad8bf85255594, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameoverSceneName: 
+  gameoverSceneName: FPSS_GameOver
   gameManager: {fileID: 1724181669}
 --- !u!1001 &513595377
 PrefabInstance:
