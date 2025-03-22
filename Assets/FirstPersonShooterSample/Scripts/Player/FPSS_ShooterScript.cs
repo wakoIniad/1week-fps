@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class FPSS_ShooterScript : MonoBehaviour
 {
-    [System.NonSerialized] public WebSocketLoader webSocketLoader; 
+    
+    [System.NonSerialized] public GameManager gameManager;
     public int damage = 10;//ダメージ
     public GameObject hitParticlePrefab;//撃った場所に出現するパーティクル (エフェクト)
     public float rayMaxDistance = 100;//最大射程
@@ -54,7 +55,7 @@ public class FPSS_ShooterScript : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             Vector3 pos = Shoot(gameObject.transform, playerCamera.transform.forward);
-            webSocketLoader.EntryShoot(pos, playerCamera.transform.forward);
+            gameManager.webSocketLoader.EntryShoot(pos, playerCamera.transform.forward);
             /*//画面中央にあたる場所から出現するレイ(直線)を求める
             ray = playerCamera.GetCamera().ScreenPointToRay(new Vector3(Screen.width/2, Screen.height/2, 0));
             //レイを出してその先に何があるか調べる

@@ -9,7 +9,7 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class FPSS_PlayerCamera : MonoBehaviour
 {
-    public WebSocketLoader webSocketLoader;
+    [System.NonSerialized] public GameManager gameManager;
     public GameObject playerBody;//プレイヤー本体をいれておく
     public float speed = 2;//視点移動の速度
     public float angle = 130;//縦方向に視点を動かせる角度
@@ -92,7 +92,7 @@ public class FPSS_PlayerCamera : MonoBehaviour
             ( Mathf.Abs(lastSynchronizedAngleA - camRot) > 10 ||
               Mathf.Abs(lastSynchronizedAngleB - plyrRot) > 10 )
         ) {
-            webSocketLoader.SendMyRotation();
+            gameManager.webSocketLoader.SendMyRotation();
             lastSynchronizedTime = time;
             lastSynchronizedAngleA = camRot;
             lastSynchronizedAngleB = plyrRot;

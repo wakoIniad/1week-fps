@@ -6,7 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class FPSS_PlayerController : MonoBehaviour
 {
-    public WebSocketLoader webSocketLoader;
+    
+    [System.NonSerialized] public GameManager gameManager;
     public float walkSpeed = 2;
     public float runSpeed = 4;
     public float jumpSpeed = 8;
@@ -59,7 +60,7 @@ public class FPSS_PlayerController : MonoBehaviour
                 ?Vector3.Distance(lastSynchronizetPosition, transform.position) > 0.5f
                 :true
             ) {
-                webSocketLoader.SendMyPosition();
+                gameManager.webSocketLoader.SendMyPosition();
                 lastSynchronizedTime = time;
                 lastSynchronizetPosition = transform.position;
             }

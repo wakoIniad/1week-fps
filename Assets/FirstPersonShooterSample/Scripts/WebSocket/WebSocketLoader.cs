@@ -8,10 +8,10 @@ using NativeWebSocket;
 
 public class WebSocketLoader : MonoBehaviour
 {
-    public FPSS_ShooterScript shooterScript;
     public PlayerModelLoader playerLoader;
-
     public CoreLoader coreLoader;
+    public GameManager gameManager;
+
     private WebSocket ws;
     private Transform myTr;
     //private string MyPlayerId;
@@ -24,7 +24,7 @@ public class WebSocketLoader : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        shooterScript.webSocketLoader = coreLoader.webSocketLoader = playerLoader.webSocketLoader = this;
+        gameManager.webSocketLoader = coreLoader.webSocketLoader = playerLoader.webSocketLoader = this;
         Debug.Log("Start");
         ws = new WebSocket("ws://localhost:8080/");
         
@@ -174,7 +174,7 @@ public class WebSocketLoader : MonoBehaviour
                                 );
                             break;
                         case "Fireball":
-                            shooterScript.ShootAt(
+                            gameManager.ShooterScript.ShootAt(
                                 new Vector3(
                                 float.Parse(arg[0]),
                                 float.Parse(arg[1]),
