@@ -10,7 +10,7 @@ public class WebSocketLoader : MonoBehaviour
 {
     public PlayerModelLoader playerLoader;
     public CoreLoader coreLoader;
-    public GameManager gameManager;
+    public PlayerManager playerManager;
 
     private WebSocket ws;
     private Transform myTr;
@@ -24,7 +24,7 @@ public class WebSocketLoader : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        gameManager.webSocketLoader = coreLoader.webSocketLoader = playerLoader.webSocketLoader = this;
+        playerManager.webSocketLoader = coreLoader.webSocketLoader = playerLoader.webSocketLoader = this;
         Debug.Log("Start");
         ws = new WebSocket("ws://localhost:8080/");
         
@@ -174,7 +174,7 @@ public class WebSocketLoader : MonoBehaviour
                                 );
                             break;
                         case "Fireball":
-                            gameManager.ShooterScript.ShootAt(
+                            playerManager.ShooterScript.ShootAt(
                                 new Vector3(
                                 float.Parse(arg[0]),
                                 float.Parse(arg[1]),

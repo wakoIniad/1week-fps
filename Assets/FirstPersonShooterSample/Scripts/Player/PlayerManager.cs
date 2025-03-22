@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class PlayerManager : MonoBehaviour
 {
     [System.NonSerialized] public WebSocketLoader webSocketLoader;
     public bool ControllStop = false;
@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public FPSS_ShooterScript ShooterScript;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
-        PlayerController.gameManager = ShooterScript.gameManager = PlayerCamera.gameManager = this;
+        PlayerController.playerManager = ShooterScript.playerManager = PlayerCamera.playerManager = this;
     }
     public void EnterUIMde()
     {
