@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     [System.NonSerialized] public WebSocketLoader webSocketLoader;
+    [System.NonSerialized] public PlayerModelLoader playerLoader;
     public bool ControllStop = false;
     public ToggleCursor CursorSetting;
     public FPSS_PlayerCamera PlayerCamera;
@@ -32,5 +33,13 @@ public class PlayerManager : MonoBehaviour
         PlayerCamera.stop = false;
         PlayerController.stop = false;
         ShooterScript.stop = false;
+    }
+    private bool displayedWall = false;
+    void Update() {
+        
+        if(!displayedWall && webSocketLoader.EntryAccepted && PlayerController.isGround) {
+            webSocketLoader.gameManager.wallActivater.DisplayWall();
+            displayedWall = true;
+        }
     }
 }

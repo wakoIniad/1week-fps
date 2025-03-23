@@ -20,7 +20,7 @@ public class FPSS_PlayerController : MonoBehaviour
     bool dashInput;
 
     //状態
-    bool isGround;//地上に立っているか
+    [System.NonSerialized] public bool isGround;//地上に立っているか
 
     //その他
     float moveSpeed;//現在の移動速度を入れておく

@@ -15,17 +15,20 @@ public class WebSocketLoader : MonoBehaviour
 
     private WebSocket ws;
     private Transform myTr;
+    [System.NonSerialized] public bool EntryAccepted = false;
     //private string MyPlayerId;
     void Update()
     {
         #if !UNITY_WEBGL || UNITY_EDITOR
         ws.DispatchMessageQueue();
         #endif
+
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         playerManager.webSocketLoader = coreLoader.webSocketLoader = playerLoader.webSocketLoader = this;
+        playerManager.playerLoader = playerLoader;
         Debug.Log("Start");
         ws = new WebSocket("ws://localhost:8080/");
         
@@ -173,6 +176,7 @@ public class WebSocketLoader : MonoBehaviour
                                 float.Parse(arg[1]),
                                 float.Parse(arg[2]))
                                 );
+                            EntryAccepted = true;
                             break;
                         case "Fireball":
                             playerManager.ShooterScript.ShootAt(
