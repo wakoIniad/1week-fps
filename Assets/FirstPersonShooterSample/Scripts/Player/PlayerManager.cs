@@ -8,9 +8,12 @@ public class PlayerManager : MonoBehaviour
     public FPSS_PlayerCamera PlayerCamera;
     public FPSS_PlayerController PlayerController;
     public FPSS_ShooterScript ShooterScript;
+    public FPSS_PlayerHealth playerHealth;
+    public FPSS_PlayerCoreManager playerCore;
+    public PlayerRespawn playerRespawn;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
-        PlayerController.playerManager = ShooterScript.playerManager = PlayerCamera.playerManager = this;
+        playerCore.playerManager = playerHealth.playerManager = playerRespawn.playerManager = PlayerController.playerManager = ShooterScript.playerManager = PlayerCamera.playerManager = this;
     }
     public void EnterUIMde()
     {

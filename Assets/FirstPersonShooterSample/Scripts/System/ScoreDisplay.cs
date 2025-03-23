@@ -8,7 +8,7 @@ public class ScoreDisplay : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        displayTarget.text = gameManager.score.ToString();
+        displayTarget.text = "#"+gameManager.score.ToString();
     }
 
 }

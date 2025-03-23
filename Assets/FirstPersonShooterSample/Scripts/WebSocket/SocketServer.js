@@ -108,6 +108,8 @@ class Player {
         }
         this.nowHealth -= amount;
         
+        if(this.nowHealth <= 0)
+        connections[this.id].send(`System,Rank,${GetRank()}`);
         connections[this.id].send(`System,SetHealth,${this.nowHealth}`);
         if(this.nowHealth <= 0)
         {
@@ -238,6 +240,13 @@ class Core {
 
         }
     }
+}
+function GetRank() {
+    let counter = 1;
+    for(const player of Object.values(playerList)) {
+        if(!player.gameOver)counter++;
+    }
+    return counter;
 }
 
 const WebSocket = require("ws");
@@ -370,6 +379,9 @@ server.on("connection", async (socket) => {
                 socket.broadcast(`System,Fireball,${args.join(',')}`);
                 //server.sendAllClient(`System,Fireball,${args.join(',')}`);
                 
+                break;
+            case "GetRank":
+                socket.send(`System,Rank,${GetRank()}`);
                 break;
             default:
                 console.log("default:"+command);

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 public class FPSS_PlayerHealth : MonoBehaviour
 {
-    PlayerRespown respownManager;
+    [System.NonSerialized] public PlayerManager playerManager;
     public int playerHealth = 10;
     public TMP_Text healthText;
 
@@ -21,7 +21,6 @@ public class FPSS_PlayerHealth : MonoBehaviour
         nowHealth = playerHealth;
         //表示を更新する
         healthText.text = "Health: " + nowHealth.ToString();
-        respownManager = gameObject.GetComponent<PlayerRespown>();
     }
 
     //マルチプレイの都合上、Damageをこっちに変える
@@ -57,7 +56,7 @@ public class FPSS_PlayerHealth : MonoBehaviour
     public void Death()
     {
         nowHealth = playerHealth;
-        respownManager.StartHandleRespown();
+        playerManager.playerRespawn.StartHandleRespown();
     }
 
     //すり抜ける当たり判定にあたったとき

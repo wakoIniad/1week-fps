@@ -1,27 +1,21 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerRespown : MonoBehaviour
+public class PlayerRespawn : MonoBehaviour
 {
     public string gameoverSceneName = "";
-    FPSS_PlayerCoreManager coreManager;
     private bool waitingRespawn = false;
-    private Rigidbody rb;
-    private FPSS_PlayerHealth healthManager;
-    public GameManager gameManager;
+    [System.NonSerialized] public PlayerManager playerManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        coreManager = gameObject.GetComponent<FPSS_PlayerCoreManager>();
-        healthManager = gameObject.GetComponent<FPSS_PlayerHealth>();
-        rb = gameObject.GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
         if(waitingRespawn) {
-            if(coreManager.CoreCount() == 0) {
+            if(playerManager.playerCore.CoreCount() == 0) {
                 EndHandleRespown();
                 if(string.IsNullOrEmpty(gameoverSceneName)) {
                     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -33,23 +27,23 @@ public class PlayerRespown : MonoBehaviour
 
     }
     public void StartHandleRespown() {
-        gameManager.EnterUIMde();
+        playerManager.EnterUIMde();
         waitingRespawn = true;
-        coreManager.OnCoreStatusViewClicked += SpawnAnchorSelected;
+        playerManager.playerCore.OnCoreStatusViewClicked += SpawnAnchorSelected;
     }
     public void SpawnAnchorSelected(string id) {
         Debug.Log("test:"+id);
         if(waitingRespawn) {
-            CoreLocalModel core = coreManager.coreLoader.GetModelById(id);
+            CoreLocalModel core = playerManager.playerCore.coreLoader.GetModelById(id);
             core.TryRespawn();
             //healthManager.nowH
         }
         EndHandleRespown();
     }
     public void EndHandleRespown() {
-        gameManager.ExitUIMde();
+        playerManager.ExitUIMde();
         waitingRespawn = false;
-        coreManager.OnCoreStatusViewClicked -= SpawnAnchorSelected;
+        playerManager.playerCore.OnCoreStatusViewClicked -= SpawnAnchorSelected;
 
     }
 

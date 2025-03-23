@@ -64,7 +64,8 @@ public class PlayerModelLoader : MonoBehaviour
     void Update() {
         
         if(Input.GetKeyDown(KeyCode.T)) {
-            thisPlayerModel.TryDamage(2);
+//            thisPlayerModel.TryDamage(2);
+            webSocketLoader.TestDamage(2);
         }
     }
 }

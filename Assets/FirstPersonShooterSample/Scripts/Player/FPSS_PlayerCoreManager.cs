@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FPSS_PlayerCoreManager : MonoBehaviour
 {
+    [System.NonSerialized] public PlayerManager playerManager;
     public event Action<string> OnCoreStatusViewClicked;
     public CoreLoader coreLoader;
     public Transform coreStatusViewContainer;
@@ -15,7 +16,6 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     //private bool HandleCoreTransportFlagB = false;
     private bool HandleCoreTransportFlag = false;
     private CoreLocalModel transportTarget;
-    private CoreLocalModel transportingCoreObject;
     private Dictionary<string,bool> waitForPlace = new Dictionary<string,bool>();
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

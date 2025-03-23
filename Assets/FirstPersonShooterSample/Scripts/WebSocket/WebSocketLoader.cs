@@ -11,6 +11,7 @@ public class WebSocketLoader : MonoBehaviour
     public PlayerModelLoader playerLoader;
     public CoreLoader coreLoader;
     public PlayerManager playerManager;
+    public GameManager gameManager;
 
     private WebSocket ws;
     private Transform myTr;
@@ -185,6 +186,9 @@ public class WebSocketLoader : MonoBehaviour
                                 float.Parse(arg[5]))
                             );
                             break;
+                        case "Rank":
+                            gameManager.score = int.Parse(arg[0]);
+                            break;
                     }
                     break;
             }
@@ -275,6 +279,12 @@ public class WebSocketLoader : MonoBehaviour
         SendText(
             "PlayerDamageEntry,"+
             playerId+','+amount
+        );
+    }
+    public void TestDamage(float amount) {
+        SendText(
+            "PlayerDamageEntry,1,"+
+            amount
         );
     }
     public void EntryShoot(Vector3 position, Vector3 direction) {
