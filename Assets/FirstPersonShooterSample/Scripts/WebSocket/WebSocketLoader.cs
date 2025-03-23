@@ -283,7 +283,7 @@ public class WebSocketLoader : MonoBehaviour
     }
     public void TestDamage(float amount) {
         SendText(
-            "PlayerDamageEntry,1,"+
+            "SelfDamage,1,"+
             amount
         );
     }

@@ -17,7 +17,7 @@ public class FPSS_ShooterScript : MonoBehaviour
     [System.NonSerialized] public bool stop;
 
     public GameObject fireBallPrefab;
-    public int launchForce = 25;
+    public int launchForce = 15;
 
 
     bool isHit;

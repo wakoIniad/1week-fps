@@ -383,6 +383,9 @@ server.on("connection", async (socket) => {
             case "GetRank":
                 socket.send(`System,Rank,${GetRank()}`);
                 break;
+            case "SelfDamage":
+                playerList[id].Damage(args[0], +args[1]);
+                break;
             default:
                 console.log("default:"+command);
                 break;
