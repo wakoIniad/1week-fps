@@ -276,9 +276,10 @@ class Core {
         if(this.nowHealth <= 0){ return; }
         //下記のコードの目的が、プレイヤーの周りの火球に弾が当たった時プレイヤーにも反映する
         //以外の意図が読み取れなかったので無効化
-        //if(!proxy && this.transporting) {
-        //    playerList[this.transporter].Damage(applicant, amount);
-        //}
+        // => 当たり判定の関係で必要だった
+        if(!proxy && this.transporting) {
+            playerList[this.transporter].Damage(applicant, amount);
+        }
 
         this.System_Repair(amount);
         this.nowHealth -= amount;
