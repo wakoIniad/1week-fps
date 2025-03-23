@@ -12,7 +12,7 @@ public class ImageBar : MonoBehaviour
     private RectTransform rectTransform;
     private RectMask2D edgeMask;
     private RectMask2D minusEdgeMask;
-    private float lastValue = 0;
+    private float lastValue = -1;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -35,19 +35,21 @@ public class ImageBar : MonoBehaviour
         if(edgeMaskObject != null && lastValue != -1) {
             float delta = remainingPercentage - lastValue;
             RectMask2D edgeTarget = edgeMask;
-            if(delta < 0 && minusEdgeMask) {
-                minusEdgeMaskObject.SetActive(true);
-                edgeTarget = minusEdgeMask;
-                delta *= -1;
-            } else {
-                minusEdgeMaskObject.SetActive(false); 
+            if(minusEdgeMask) {
+                if(delta < 0) {
+                    minusEdgeMaskObject.SetActive(true);
+                    edgeTarget = minusEdgeMask;
+                    delta *= -1;
+                } else {
+                    minusEdgeMaskObject.SetActive(false); 
+                }
             }
             edgeTarget.padding = 
             edgeMaskMap *
-            rectTransform.sizeDelta.y * (remainingPercentage-delta)
+            rectTransform.sizeDelta.y * (remainingPercentage-delta-4)
             +
             MaskMap * 
-            rectTransform.sizeDelta.y * (1-remainingPercentage-delta);
+            rectTransform.sizeDelta.y * (1-remainingPercentage-delta-4);
         }
         lastValue = remainingPercentage;
     }

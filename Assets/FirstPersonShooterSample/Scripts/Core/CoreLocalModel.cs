@@ -43,6 +43,9 @@ public class CoreLocalModel : MonoBehaviour
     }*/
 
     //体力が無くなったときに
+    public void ApplyHealth() {
+        loader.ApplyHealth(id, nowHealth);
+    }
     void Break()
     {
         //if(owned) owned = false;
@@ -82,7 +85,6 @@ public class CoreLocalModel : MonoBehaviour
     public void UpdateFactor() {
         repairFactorPerSec = transporting ? repairAmountOnTransportingPerSec: repairAmountOnPlacedPerSec;
         //切り替え時に、表示を更新
-        loader.ApplyHealth(id, nowHealth);
     }
     public void SetTransprter(Transform tr) {
         Transform selfTr = gameObject.GetComponent<Transform>();

@@ -66,6 +66,7 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
             if(model.owned) {
                 if(model.transporting) {
                     coreView[keys[i]].DisplayTransporting();
+                    model.ApplyHealth();
                     if(alphaInput[i]) {
                         model.TryPlace();
                         waitForPlace[keys[i]] = true;
@@ -73,6 +74,7 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
                 } else {
                     if(waitForPlace[keys[i]]) {
                         coreView[keys[i]].DisplayPlacing();
+                        model.ApplyHealth();
                         waitForPlace[keys[i]] = false;
                     }
                     if(alphaInput[i]) {
