@@ -11,7 +11,7 @@ public class PlayerRespawn : MonoBehaviour
     void Start()
     {
     }
-    [System.NonSerialized] public float RespownWaitingHeight = 1000;
+    [System.NonSerialized] public float RespownWaitingHeight = -100;
     private bool Scanned = false;
     // Update is called once per frame
     void Update()
@@ -47,7 +47,7 @@ public class PlayerRespawn : MonoBehaviour
 
     }
     public void StartHandleRespown() {
-        playerManager.playerLoader.SetMyPosition(new Vector3(0,-RespownWaitingHeight,0));
+        playerManager.playerLoader.SetMyPosition(new Vector3(0,RespownWaitingHeight,0));
         playerManager.EnterUIMde();
         waitingRespawn = true;
         playerManager.playerCore.OnCoreStatusViewClicked += SpawnAnchorSelected;
