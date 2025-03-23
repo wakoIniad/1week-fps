@@ -30,8 +30,7 @@ public class WebSocketLoader : MonoBehaviour
         playerManager.webSocketLoader = coreLoader.webSocketLoader = playerLoader.webSocketLoader = this;
         playerManager.playerLoader = playerLoader;
         Debug.Log("Start");
-        ws = new WebSocket("ws://localhost:8080/");
-        
+        ws = new WebSocket("wss://earwig-ruling-forcibly.ngrok-free.app");
 
         ws.OnOpen += () =>
         {

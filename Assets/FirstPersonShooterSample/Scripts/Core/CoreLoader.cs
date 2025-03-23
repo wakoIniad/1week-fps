@@ -65,6 +65,9 @@ public class CoreLoader : MonoBehaviour
             if(OnOwnedCoreHealthChanged != null)OnOwnedCoreHealthChanged.Invoke(targetCoreId, CoreList[targetCoreId].nowHealth);
         }
     }
+    public void RefreshHpber(string targetCoreId) {
+        if(OnOwnedCoreHealthChanged != null)OnOwnedCoreHealthChanged.Invoke(targetCoreId, CoreList[targetCoreId].nowHealth);
+    }
     public void ApplyBreakData(string targetCoreId) {
         if(CoreList[targetCoreId].owned) {
             if(OnOwnedCoreBreaked != null)OnOwnedCoreBreaked.Invoke(targetCoreId);

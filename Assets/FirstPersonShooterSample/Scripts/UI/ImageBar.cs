@@ -46,10 +46,10 @@ public class ImageBar : MonoBehaviour
             }
             edgeTarget.padding = 
             edgeMaskMap *
-            rectTransform.sizeDelta.y * (remainingPercentage-delta-4)
+            (rectTransform.sizeDelta.y-4) * (remainingPercentage-delta)
             +
             MaskMap * 
-            rectTransform.sizeDelta.y * (1-remainingPercentage-delta-4);
+            (rectTransform.sizeDelta.y-4) * (1-remainingPercentage-delta);
         }
         lastValue = remainingPercentage;
     }

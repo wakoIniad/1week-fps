@@ -85,7 +85,7 @@ const CORE_REPAIR_FACTOR_ON_PLACED = base;
 const CORE_DEFAULT_HEALTH = 100;
 const PLAYER_DEFAULT_HEALTH = 10;
 const REVIVAL_HEALTH_RATE = 0.2;
-const CORE_WARP_COST = 20;//消費するHP
+const CORE_WARP_COST = 50;//消費するHP
 class Player {
     constructor(id, position) {
         this.id = id;
@@ -342,7 +342,10 @@ async function connect() {
   return contract.address.toHuman();
 }
 
-const server = new WebSocket.Server({ port: 8080 });
+const server = new WebSocket.Server({ 
+    host: 'localhost',
+    port: 8080 
+});
 
 server.sendAllClient = text => {
     Object.values(connections).forEach( socket => {
@@ -399,7 +402,7 @@ server.on("connection", async (socket) => {
                 //setTimeout(()=>{
                 const createAt = [
                     Math.random()*50,
-                    15,
+                    24,
                     Math.random()*50
                 ];
                 const playerCore = new Core(id, createAt);// psitionは仮
