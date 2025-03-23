@@ -67,5 +67,8 @@ public class PlayerModelLoader : MonoBehaviour
 //            thisPlayerModel.TryDamage(2);
             webSocketLoader.TestDamage(2);
         }
+        if(Input.GetKeyDown(KeyCode.E)) {
+            webSocketLoader.TestDamageCore(2);
+        }
     }
 }

@@ -194,7 +194,7 @@ public class WebSocketLoader : MonoBehaviour
                             gameManager.score = int.Parse(arg[0]);
                             break;
                         case "CoreIsFull":
-                            coreLoader.ApplyHealth(arg[0], float.Parse(arg[1]));
+                            coreLoader.ApplyHealth(arg[0], CoreLocalModel.defaultHealth);
                             break;
                         case "Information":
                             /*(
@@ -205,8 +205,11 @@ public class WebSocketLoader : MonoBehaviour
                             ) = arg;*/
                             PlayerLocalModel.defaultHealth = float.Parse(arg[0]);
                             CoreLocalModel.defaultHealth = float.Parse(arg[1]);
-                            CoreLocalModel.repairAmountOnPlacedPerSec = float.Parse(arg[0]);
-                            CoreLocalModel.repairAmountOnTransportingPerSec = float.Parse(arg[0]);
+                            CoreLocalModel.repairAmountOnPlacedPerSec = float.Parse(arg[2]);
+                            CoreLocalModel.repairAmountOnTransportingPerSec = float.Parse(arg[3]);
+                            break;
+                        case "Revival":
+                            
                             break;
                     }
                     break;
@@ -303,6 +306,12 @@ public class WebSocketLoader : MonoBehaviour
     public void TestDamage(float amount) {
         SendText(
             "SelfDamage,1,"+
+            amount
+        );
+    }
+    public void TestDamageCore(float amount) {
+        SendText(
+            "SelfDamageCore,1,"+playerLoader.thisPlayerModel.id+","+
             amount
         );
     }

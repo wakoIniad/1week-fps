@@ -12,6 +12,9 @@ public class CoreStatusView : MonoBehaviour
     public TextMeshProUGUI healthText;
     public Button button;
     private int coreId;
+    void Start() {
+        usingBar = fireImageBar;
+    }
 
     public void Remove() {
         Destroy(gameObject);
@@ -20,7 +23,10 @@ public class CoreStatusView : MonoBehaviour
         //Texture2D texture = ImageToExpressfireHP.texture;
         healthText.text = hp.ToString();
         float healthPercentage = hp/CoreLocalModel.defaultHealth;
-        usingBar.UpdateBar(healthPercentage);
+        //if(!usingBar) {
+        //    Debug.Log(healthText.text);
+        //}
+        fireImageBar.UpdateBar(healthPercentage);
     }
     //AI
     Texture2D CombineTextures(Texture2D baseTex, Texture2D overlayTex, Vector2 pivot)
@@ -63,15 +69,15 @@ public class CoreStatusView : MonoBehaviour
     }
     public void DisplayTransporting() {
         //image.color = Color.blue;
-        warpIconImageBar.gameObject.SetActive(false);
         fireImageBar.gameObject.SetActive(true);
         usingBar = fireImageBar;
+        warpIconImageBar.gameObject.SetActive(false);
     }
     public void DisplayPlacing() {
         //image.color = Color.white;
-        fireImageBar.gameObject.SetActive(false);
         warpIconImageBar.gameObject.SetActive(true);
         usingBar = warpIconImageBar;
+        fireImageBar.gameObject.SetActive(false);
     }
     public void SetId(int id) {
         coreId = id;

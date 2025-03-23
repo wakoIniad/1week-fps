@@ -109,20 +109,29 @@ class Player {
         
         if(this.nowHealth <= 0)
         connections[this.id].send(`System,Rank,${GetRank()}`);
-        connections[this.id].send(`System,SetHealth,${this.nowHealth}`);
         if(this.nowHealth <= 0)
         {
-            this.Kill();
+            const revival = this.Kill(applicant);
+            if(!revival) {
+                connections[this.id].send(`System,SetHealth,${this.nowHealth}`);
+            }
+        } else {
+            connections[this.id].send(`System,SetHealth,${this.nowHealth}`);
         }
     }
+    System_RevivalByCore() {
+        connections[this.id].broadcast(`System,Revival,${this.id}`);
+    }
     //体力が無くなったときに
-    Kill()
+    Kill(applicant)
     {
         //コアを持っていたらコアが身代わりになる
         for(const core of Object.values(coreList)) {
             if(core.transporting && core.transporter ==  this.id) {
+                //this.Respawn(core.id);
                 core.Break(applicant);
-                return;
+                this.System_RevivalByCore();
+                return true;
             }
         }
         
@@ -174,9 +183,9 @@ class Core {
         //this.warpCoolTime = 10;
     }
     System_Repair() {//Call before Damage()
-        if(this.transporting)return;
+        //if(this.transporting)return;
 
-        if(this.lastRepaired !== null) {//元々体力が満タンではない
+        if(this.nowHealth < this.defaultHealth) {//元々体力が満タンではない
             const elapsedTime = Date.now() - this.lastRepaired;
             let repairFactor = this.transporting 
                 ? this.repairAmountOnTransportingPerSec
@@ -186,7 +195,7 @@ class Core {
         }
         if(this.nowHealth > this.defaultHealth) {
             this.nowHealth = this.defaultHealth;
-            connections[this.owner].send(`System,CoreIsFull,${this.id},${this.defaultHealth}`);
+            //connections[this.owner].send(`System,CoreIsFull,${this.id}`);
         } else {
             //this.lastRepaired = Date.now();
         }
@@ -441,6 +450,10 @@ server.on("connection", async (socket) => {
                 break;
             case "SelfDamage":
                 playerList[id].Damage(args[0], +args[1]);
+                break;
+            
+            case "SelfDamageCore":
+                coreList[args[1]].Damage(args[0], +args[2]);
                 break;
             default:
                 console.log("default:"+command);
