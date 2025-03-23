@@ -217,11 +217,13 @@ class Core {
         this.position = position;
     }
     UseHealth(amount) {
+        this.System_Repair(amount);
         if(this.nowHealth > amount) {
-            this.System_Repair(amount);
             this.nowHealth -= amount;
             connections[this.owner].send(`Core,Damage,${this.id},${this.nowHealth}`);
+            return true;
         }
+        return false;
     }
     Warp(applicant) {
         if(applicant === this.owner) {
@@ -230,9 +232,7 @@ class Core {
             //    this.lastWarpedTime = Date.now();
             //    return true;
             //}
-            
-            if(this.nowHealth > this.warpCost) {        
-                this.UseHealth(this.warpCost);
+            if(this.UseHealth(this.warpCost)) {  
                 playerList[applicant].position = this.position;
                 this.lastWarpedTime = Date.now();
                 return true;
