@@ -92,7 +92,7 @@ public class WebSocketLoader : MonoBehaviour
                             break;
                         case "Damage":
                             //if(!coreLoader.isOwned(coreId))return;
-                            coreLoader.ApplyDamageData(coreId, float.Parse(arg[1]));
+                            coreLoader.ApplyHealth(coreId, float.Parse(arg[1]));
                             break;
                         case "Claim":
                             //if(!coreLoader.isOwned(coreId))return;
@@ -192,6 +192,21 @@ public class WebSocketLoader : MonoBehaviour
                             break;
                         case "Rank":
                             gameManager.score = int.Parse(arg[0]);
+                            break;
+                        case "CoreIsFull":
+                            coreLoader.ApplyHealth(arg[0], float.Parse(arg[1]));
+                            break;
+                        case "Information":
+                            /*(
+                                string playerDefaultHealth,
+                                string coreDefaultHealth,
+                                string coreRepairFactorOnPlaced,
+                                string coreRepairFactorOnTransporting
+                            ) = arg;*/
+                            PlayerLocalModel.defaultHealth = float.Parse(arg[0]);
+                            CoreLocalModel.defaultHealth = float.Parse(arg[1]);
+                            CoreLocalModel.repairAmountOnPlacedPerSec = float.Parse(arg[0]);
+                            CoreLocalModel.repairAmountOnTransportingPerSec = float.Parse(arg[0]);
                             break;
                     }
                     break;

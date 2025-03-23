@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerLocalModel : MonoBehaviour
 {
     [System.NonSerialized] public PlayerModelLoader loader;
+    [System.NonSerialized] public static float defaultHealth;
     public string id;
     public void SetId(string settingId) {
         id = settingId;

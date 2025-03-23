@@ -80,12 +80,17 @@ function makeId() {
     });
 });*/
 
+const CORE_REPAIR_FACTOR_ON_TRANSPORTING = 1.5;
+const CORE_REPAIR_FACTOR_ON_PLACED = 1;
+const CORE_DEFAULT_HEALTH = 100;
+const PLAYER_DEFAULT_HEALTH = 10;
+const CORE_WARP_COST = 2;//消費するHP
 class Player {
     constructor(id, position) {
         this.id = id;
         this.position = position;
         this.rotation = [0,0,0];
-        this.defaultHealth = 10;
+        this.defaultHealth = PLAYER_DEFAULT_HEALTH;
         this.nowHealth = this.defaultHealth;
         this.gameOver = false;
         this.ghost = false;// リスポーン待機時等
@@ -100,12 +105,6 @@ class Player {
     Damage(applicant, amount) {
         if(!TEST_MODE && applicant === this.id)return;
         if(this.nowHealth <= 0){ return; }
-        for(const core of Object.values(coreList)) {
-            if(core.transporting && core.transporter ==  this.id) {
-                core.Damage(applicant, amount, true);
-                return;
-            }
-        }
         this.nowHealth -= amount;
         
         if(this.nowHealth <= 0)
@@ -119,6 +118,13 @@ class Player {
     //体力が無くなったときに
     Kill()
     {
+        //コアを持っていたらコアが身代わりになる
+        for(const core of Object.values(coreList)) {
+            if(core.transporting && core.transporter ==  this.id) {
+                core.Break(applicant);
+                return;
+            }
+        }
         
         connections[this.id].broadcast(`Player,Deactivate,${this.id}`);
         const killedAt = this.position;
@@ -151,7 +157,6 @@ class Player {
         }
     }
 }
-
 class Core {
     constructor(id, position) {
         this.id = id;
@@ -159,10 +164,34 @@ class Core {
         this.owner = null;
         this.transporting = false;
         this.transporter = null;
-        this.defaultHealth = 10;
+        this.defaultHealth = CORE_DEFAULT_HEALTH;
         this.nowHealth = this.defaultHealth;
-        this.lastWarpedTime = Date.now();
-        this.warpCoolTime = 10;
+        //this.lastWarpedTime = Date.now();
+        this.lastRepaired = null;
+        this.repairAmountOnPlacedPerSec = CORE_REPAIR_FACTOR_ON_PLACED;
+        this.repairAmountOnTransportingPerSec = CORE_REPAIR_FACTOR_ON_TRANSPORTING;
+        this.warpCost = CORE_WARP_COST;//(Health)
+        //this.warpCoolTime = 10;
+    }
+    System_Repair() {//Call before Damage()
+        if(this.transporting)return;
+
+        if(this.lastRepaired !== null) {//元々体力が満タンではない
+            const elapsedTime = Date.now() - this.lastRepaired;
+            let repairFactor = this.transporting 
+                ? this.repairAmountOnTransportingPerSec
+                : this.repairAmountOnPlacedPerSec;
+            //コアの設置＆移動開始時には必ず呼び出す
+            this.nowHealth += repairFactor * elapsedTime/1000;
+        }
+        if(this.nowHealth > this.defaultHealth) {
+            this.nowHealth = this.defaultHealth;
+            connections[this.owner].send(`System,CoreIsFull,${this.id},${this.defaultHealth}`);
+        } else {
+            //this.lastRepaired = Date.now();
+        }
+        //絶対にダメージなどHPに変更を加える前に呼ぶ
+        this.lastRepaired = Date.now();
     }
     Unclaim(position) {
         const lastOwner = this.owner;
@@ -175,7 +204,14 @@ class Core {
     }
     Warp(applicant) {
         if(applicant === this.owner) {
-            if(Date.now() - this.lastWarpedTime > this.warpCoolTime * 1000) {
+            //if(Date.now() - this.lastWarpedTime > this.warpCoolTime * 1000) {
+            //    playerList[applicant].position = this.position;
+            //    this.lastWarpedTime = Date.now();
+            //    return true;
+            //}
+            
+            if(this.nowHealth > this.warpCost) {        
+                this.Damage(this.warpCost);
                 playerList[applicant].position = this.position;
                 this.lastWarpedTime = Date.now();
                 return true;
@@ -185,6 +221,7 @@ class Core {
     }
     Place(applicant) {
         if(applicant === this.owner) {
+            this.System_Repair();
             this.position = playerList[this.owner].position;
             this.transporting = false;
             this.transporter = null;
@@ -194,7 +231,9 @@ class Core {
 
     }
     Transport(applicant) {
+        
         if(applicant === this.owner) {
+            this.System_Repair();
             this.transporting = true;
             this.transporter = applicant;
             return true;
@@ -214,10 +253,13 @@ class Core {
         if(playerList[applicant].ghost)return;
         if(!TEST_MODE && (this.owner === null || applicant === this.owner)) return;
         if(this.nowHealth <= 0){ return; }
-        if(!proxy && this.transporting) {
-            playerList[this.transporter].Damage(applicant, amount);
-        }
+        //下記のコードの目的が、プレイヤーの周りの火球に弾が当たった時プレイヤーにも反映する
+        //以外の意図が読み取れなかったので無効化
+        //if(!proxy && this.transporting) {
+        //    playerList[this.transporter].Damage(applicant, amount);
+        //}
 
+        this.System_Repair(amount);
         this.nowHealth -= amount;
 
         if(this.nowHealth <= 0)
@@ -305,6 +347,15 @@ server.on("connection", async (socket) => {
         switch(command) {
             case "Entry":
                 socket.send(`System,AsignId,${id}`);
+                socket.send(`System,Information,${
+                    PLAYER_DEFAULT_HEALTH
+                },${
+                    CORE_DEFAULT_HEALTH
+                },${
+                    CORE_REPAIR_FACTOR_ON_PLACED
+                },${
+                    CORE_REPAIR_FACTOR_ON_TRANSPORTING
+                }`);
                 
                 for(const player of Object.values(playerList)) {
                     if(player.ghost ) {

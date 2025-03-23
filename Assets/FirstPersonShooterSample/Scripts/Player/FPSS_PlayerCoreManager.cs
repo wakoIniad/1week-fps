@@ -22,7 +22,7 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     {
         coreLoader.OnCoreOwned += AddCore;
         coreLoader.OnOwnedCoreBreaked += RemoveCore;
-        coreLoader.OnOwnedCoreDamaged += DamageCore;
+        coreLoader.OnOwnedCoreHealthChanged += DamageCore;
     }
 
     // Update is called once per frame

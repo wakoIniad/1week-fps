@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 public class PlayerModelLoader : MonoBehaviour
 {
-    [System.NonSerialized]public WebSocketLoader webSocketLoader;
+    [System.NonSerialized] public WebSocketLoader webSocketLoader;
     public PlayerLocalModel thisPlayerModel;
     public FPSS_PlayerHealth MyHealthManager;
     public FPSS_PlayerController MyController;

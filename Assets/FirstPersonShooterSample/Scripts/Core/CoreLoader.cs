@@ -8,7 +8,7 @@ public class CoreLoader : MonoBehaviour
 {
     //public string playerId = "temp";
     [System.NonSerialized] public WebSocketLoader webSocketLoader;
-    public event Action<string, float> OnOwnedCoreDamaged;
+    public event Action<string, float> OnOwnedCoreHealthChanged;
     public event Action<string> OnOwnedCoreBreaked;
     public event Action<string> OnCoreOwned;
     [System.NonSerialized] public Transform loaderTransform;
@@ -58,10 +58,10 @@ public class CoreLoader : MonoBehaviour
             CoreList[targetCoreId].SetAsOwned();
             if(OnCoreOwned != null)OnCoreOwned.Invoke(targetCoreId);
     }
-    public void ApplyDamageData(string targetCoreId, float damage) {
+    public void ApplyHealth(string targetCoreId, float damage) {
         CoreList[targetCoreId].SetHealth(damage);
         if(CoreList[targetCoreId].owned) {
-            if(OnOwnedCoreDamaged != null)OnOwnedCoreDamaged.Invoke(targetCoreId, CoreList[targetCoreId].nowHealth);
+            if(OnOwnedCoreHealthChanged != null)OnOwnedCoreHealthChanged.Invoke(targetCoreId, CoreList[targetCoreId].nowHealth);
         }
     }
     public void ApplyBreakData(string targetCoreId) {

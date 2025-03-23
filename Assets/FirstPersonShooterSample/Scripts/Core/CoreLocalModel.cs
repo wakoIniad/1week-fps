@@ -2,10 +2,14 @@ using UnityEngine;
 using System;
 public class CoreLocalModel : MonoBehaviour
 {
-    [System.NonSerialized]public CoreLoader loader;
+    [System.NonSerialized] public CoreLoader loader;
     //設定はサーバー側にあるため、変更次第書き換えるようにする。
     [System.NonSerialized] public static float defaultHealth = 10;
     [System.NonSerialized] public static float warpCoolTime;
+    
+    [System.NonSerialized] public static float repairAmountOnPlacedPerSec = 1f;
+    [System.NonSerialized] public static float repairAmountOnTransportingPerSec = 1.5f;
+    private float repairFactorPerSec = 1;
     public bool owned = false;
     public float nowHealth = 10;
     public string id;
@@ -13,6 +17,16 @@ public class CoreLocalModel : MonoBehaviour
     
     public void SetHealth(float hp) {
         nowHealth = hp;
+    }
+    private float displayTimer = 0;
+    void Update() {
+        if(nowHealth < defaultHealth) {
+            displayTimer += Time.deltaTime;
+            nowHealth += Time.deltaTime * repairFactorPerSec;
+            if(displayTimer > 0.5f) {
+                loader.ApplyHealth(id, nowHealth);
+            }
+        }
     }
     /*public void Damage(float damage)
     {
@@ -60,6 +74,11 @@ public class CoreLocalModel : MonoBehaviour
         selfTr.parent = loader.loaderTransform;
         selfTr.localScale = new Vector3(0.3f,0.3f,0.3f);
         transporting = false;
+        
+        UpdateFactor();
+    }
+    public void UpdateFactor() {
+        repairFactorPerSec = transporting ? repairAmountOnTransportingPerSec: repairAmountOnPlacedPerSec;
     }
     public void SetTransprter(Transform tr) {
         Transform selfTr = gameObject.GetComponent<Transform>();
@@ -71,6 +90,8 @@ public class CoreLocalModel : MonoBehaviour
             );
         selfTr.localScale = new Vector3(0.1f,0.1f,0.1f);//元から小さくてもいいかも
         transporting = true;
+        
+        UpdateFactor();
     }
 
     //サーバーに送信する関数を呼び出す
