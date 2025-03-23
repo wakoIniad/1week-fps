@@ -79,7 +79,7 @@ function makeId() {
       console.log('ws close');
     });
 });*/
-const base = 4;
+const base = 2;
 const CORE_REPAIR_FACTOR_ON_TRANSPORTING = base*1.5;
 const CORE_REPAIR_FACTOR_ON_PLACED = base;
 const CORE_DEFAULT_HEALTH = 100;
