@@ -11,9 +11,12 @@ public class CoreStatusView : MonoBehaviour
     public Image image;
     public TextMeshProUGUI healthText;
     public Button button;
-    private int coreId;
-    void Start() {
-        usingBar = fireImageBar;
+    public int coreId;
+    void Awake() {
+        DisplayPlacing();
+        if(!usingBar) {
+            Debug.Log("USINGBAR"+coreId);
+        }
     }
 
     public void Remove() {
@@ -26,7 +29,10 @@ public class CoreStatusView : MonoBehaviour
         //if(!usingBar) {
         //    Debug.Log(healthText.text);
         //}
-        fireImageBar.UpdateBar(healthPercentage);
+        if(!usingBar) {
+            Debug.Log("USINGBAR__"+coreId);
+        }
+        usingBar.UpdateBar(healthPercentage);
     }
     //AI
     Texture2D CombineTextures(Texture2D baseTex, Texture2D overlayTex, Vector2 pivot)

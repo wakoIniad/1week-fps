@@ -6,7 +6,7 @@ using UnityEngine;
 //横方向の回転はカメラで行っている
 //カメラの回転角を制限することでカメラが一回転することを防ぐ
 
-//[RequireComponent(typeof(Camera))]
+[RequireComponent(typeof(Camera))]
 public class FPSS_PlayerCamera : MonoBehaviour
 {
     [System.NonSerialized] public PlayerManager playerManager;

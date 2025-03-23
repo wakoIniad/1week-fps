@@ -36,7 +36,15 @@ public class PlayerManager : MonoBehaviour
     }
     private bool displayedWall = false;
     void Update() {
-        
+        if(!webSocketLoader.EntryAccepted) {
+            Debug.Log("ENTRY??");
+        }
+        if(displayedWall) {
+            Debug.Log("displayedWall??");
+        }
+        if(!PlayerController.isGround) {
+            Debug.Log("ISGROUND");
+        }
         if(!displayedWall && webSocketLoader.EntryAccepted && PlayerController.isGround) {
             webSocketLoader.gameManager.wallActivater.DisplayWall();
             displayedWall = true;

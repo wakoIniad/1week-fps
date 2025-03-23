@@ -84,6 +84,7 @@ const CORE_REPAIR_FACTOR_ON_TRANSPORTING = 1.5;
 const CORE_REPAIR_FACTOR_ON_PLACED = 1;
 const CORE_DEFAULT_HEALTH = 100;
 const PLAYER_DEFAULT_HEALTH = 10;
+const REVIVAL_HEALTH_RATE = 0.2;
 const CORE_WARP_COST = 2;//消費するHP
 class Player {
     constructor(id, position) {
@@ -94,6 +95,7 @@ class Player {
         this.nowHealth = this.defaultHealth;
         this.gameOver = false;
         this.ghost = false;// リスポーン待機時等
+        this.revivalHealthRate = REVIVAL_HEALTH_RATE;
     }
     setPosition(position) {
         this.position = position;
@@ -108,18 +110,20 @@ class Player {
         this.nowHealth -= amount;
         
         if(this.nowHealth <= 0)
-        connections[this.id].send(`System,Rank,${GetRank()}`);
-        if(this.nowHealth <= 0)
         {
             const revival = this.Kill(applicant);
+            console.log('revival',revival);
+            connections[this.id].send(`System,SetHealth,${this.nowHealth}`);
             if(!revival) {
-                connections[this.id].send(`System,SetHealth,${this.nowHealth}`);
+                connections[this.id].send(`System,Rank,${GetRank()}`);
             }
         } else {
             connections[this.id].send(`System,SetHealth,${this.nowHealth}`);
         }
     }
     System_RevivalByCore() {
+        
+        this.nowHealth = this.revivalHealthRate * this.defaultHealth;
         connections[this.id].broadcast(`System,Revival,${this.id}`);
     }
     //体力が無くなったときに
@@ -129,7 +133,7 @@ class Player {
         for(const core of Object.values(coreList)) {
             if(core.transporting && core.transporter ==  this.id) {
                 //this.Respawn(core.id);
-                core.Break(applicant);
+                core.Damage(applicant, CORE_DEFAULT_HEALTH);
                 this.System_RevivalByCore();
                 return true;
             }
@@ -151,6 +155,7 @@ class Player {
         if(gameOver) {
             this.gameOver = true;
         }
+        return false;
     }
     Respawn(targetCoreId) {
         if(coreList[targetCoreId].Warp(this.id)) {
@@ -284,9 +289,9 @@ class Core {
     Break(applicant)
     {
         if(this.owner) {
+            this.nowHealth = 0;
             connections[this.owner].send(`Core,Break,${this.id}`);
             this.owner = null;
-
             if(this.Claim(applicant)) {
                 connections[applicant].send(`Core,Claim,${this.id}`);
                 if(this.Transport(applicant)) {
@@ -383,7 +388,7 @@ server.on("connection", async (socket) => {
                         server.sendAllClient(`Core,Transport,${core.id},${core.transporter}`);
                     };
                 }
-
+                //setTimeout(()=>{
                 const createAt = [
                     Math.random()*50,
                     15,
@@ -400,8 +405,10 @@ server.on("connection", async (socket) => {
 
 
                 socket.broadcast(`Player,Create,${id},${createAt.join(',')}`);
-                socket.send(`Core,Claim,${playerCore.id}`);
                 socket.send(`System,SetPosition,${playerObj.position.join(',')}`);
+                socket.send(`Core,Claim,${playerCore.id}`);
+                console.log("SYSTEM_ENTRY_END");
+                //},100);
                 break;
             case "Position":
                 playerList[id].setPosition(args);

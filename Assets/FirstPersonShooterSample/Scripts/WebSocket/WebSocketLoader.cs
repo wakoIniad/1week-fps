@@ -15,7 +15,7 @@ public class WebSocketLoader : MonoBehaviour
 
     private WebSocket ws;
     private Transform myTr;
-    [System.NonSerialized] public bool EntryAccepted = false;
+    public bool EntryAccepted = false;
     //private string MyPlayerId;
     void Update()
     {
@@ -193,9 +193,9 @@ public class WebSocketLoader : MonoBehaviour
                         case "Rank":
                             gameManager.score = int.Parse(arg[0]);
                             break;
-                        case "CoreIsFull":
+                        /*case "CoreIsFull":
                             coreLoader.ApplyHealth(arg[0], CoreLocalModel.defaultHealth);
-                            break;
+                            break;*/
                         case "Information":
                             /*(
                                 string playerDefaultHealth,

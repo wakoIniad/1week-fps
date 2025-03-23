@@ -26,6 +26,7 @@ public class CoreLoader : MonoBehaviour
         GameObject generatedObject = Instantiate(CoreObjectPrefab);
         CoreLocalModel model = generatedObject.GetComponent<CoreLocalModel>();
         model.SetId(id);
+        //model.SetHealth(CoreLocalModel.defaultHealth);
         model.SetPosition(position);
         model.loader = this;
         CoreList.Add(id, model);

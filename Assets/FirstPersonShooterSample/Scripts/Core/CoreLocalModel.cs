@@ -4,17 +4,15 @@ public class CoreLocalModel : MonoBehaviour
 {
     [System.NonSerialized] public CoreLoader loader;
     //設定はサーバー側にあるため、変更次第書き換えるようにする。
-    [System.NonSerialized] public static float defaultHealth = 100;
-    [System.NonSerialized] public static float warpCoolTime;
-    
-    [System.NonSerialized] public static float repairAmountOnPlacedPerSec = 1f;
-    [System.NonSerialized] public static float repairAmountOnTransportingPerSec = 1.5f;
+    public static float defaultHealth;
+    public static float warpCoolTime;
+    public static float repairAmountOnPlacedPerSec = 1f;
+    public static float repairAmountOnTransportingPerSec = 1.5f;
     private float repairFactorPerSec = 1;
     public bool owned = false;
-    public float nowHealth = 10;
+    public float nowHealth = -1;
     public string id;
     public bool transporting = false;
-    
     public void SetHealth(float hp) {
         nowHealth = hp;
     }
