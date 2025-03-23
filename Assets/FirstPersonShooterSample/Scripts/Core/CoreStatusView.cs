@@ -25,14 +25,14 @@ public class CoreStatusView : MonoBehaviour
     public void DisplayCoreHealth(float hp) {
         //Texture2D texture = ImageToExpressfireHP.texture;
         healthText.text = Mathf.CeilToInt(hp).ToString();
-        float healthPercentage = hp/100;
+        float healthPercentage = hp/CoreLocalModel.defaultHealth;
         //if(!usingBar) {
         //    Debug.Log(healthText.text);
         //}
         if(!usingBar) {
             Debug.Log("USINGBAR__"+coreId);
         }
-        usingBar.UpdateBar(healthPercentage*healthPercentage);
+        usingBar.UpdateBar(Mathf.Pow(healthPercentage,1.5f));
     }
     //AI
     Texture2D CombineTextures(Texture2D baseTex, Texture2D overlayTex, Vector2 pivot)

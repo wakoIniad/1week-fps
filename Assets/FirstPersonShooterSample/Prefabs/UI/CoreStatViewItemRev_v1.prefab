@@ -278,7 +278,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &9030080909555358112
 RectTransform:
   m_ObjectHideFlags: 0
@@ -292,7 +292,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3897871418443377401}
-  m_Father: {fileID: 1832001109011806067}
+  m_Father: {fileID: 7028568355137375083}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -422,7 +422,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7028568355137375083}
-  - {fileID: 9030080909555358112}
   - {fileID: 2273243897857940556}
   - {fileID: 1144597639121312527}
   m_Father: {fileID: 0}
@@ -637,7 +636,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4015857988310863673
 RectTransform:
   m_ObjectHideFlags: 0
@@ -764,6 +763,10 @@ PrefabInstance:
       propertyPath: edgeMaskObject
       value: 
       objectReference: {fileID: 6296331343066703327}
+    - target: {fileID: 2204960662124518463, guid: 9bdb421a9907dba4ca90e48cfd9b8b4e, type: 3}
+      propertyPath: minusEdgeMaskObject
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5998616848326190707, guid: 9bdb421a9907dba4ca90e48cfd9b8b4e, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -921,6 +924,10 @@ PrefabInstance:
       propertyPath: edgeMaskObject
       value: 
       objectReference: {fileID: 1122993886887468570}
+    - target: {fileID: 5298675351033875107, guid: a014508f3c93afd4ea35d93b9866ef6c, type: 3}
+      propertyPath: minusEdgeMaskObject
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5334054409537074093, guid: a014508f3c93afd4ea35d93b9866ef6c, type: 3}
       propertyPath: m_SizeDelta.x
       value: 100
@@ -944,6 +951,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2590175585154082552, guid: a014508f3c93afd4ea35d93b9866ef6c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4575235711489366869}
+    - targetCorrespondingSourceObject: {fileID: 2590175585154082552, guid: a014508f3c93afd4ea35d93b9866ef6c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9030080909555358112}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a014508f3c93afd4ea35d93b9866ef6c, type: 3}
 --- !u!114 &860458553125791536 stripped

@@ -24,7 +24,8 @@ public class ImageBar : MonoBehaviour
             edgeMaskMap = new Vector4(MaskMap.z, MaskMap.w, MaskMap.x, MaskMap.y);
         }
         if(minusEdgeMaskObject) {
-            minusEdgeMask = edgeMaskObject.GetComponent<RectMask2D>();   
+            minusEdgeMask = edgeMaskObject.GetComponent<RectMask2D>();  
+            minusEdgeMaskObject.SetActive(false); 
         }
     }
 
@@ -35,8 +36,11 @@ public class ImageBar : MonoBehaviour
             float delta = remainingPercentage - lastValue;
             RectMask2D edgeTarget = edgeMask;
             if(delta < 0 && minusEdgeMask) {
+                minusEdgeMaskObject.SetActive(true);
                 edgeTarget = minusEdgeMask;
                 delta *= -1;
+            } else {
+                minusEdgeMaskObject.SetActive(false); 
             }
             edgeTarget.padding = 
             edgeMaskMap *

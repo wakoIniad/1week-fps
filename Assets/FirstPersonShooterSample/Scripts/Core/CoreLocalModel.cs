@@ -23,8 +23,8 @@ public class CoreLocalModel : MonoBehaviour
         if(owned && nowHealth < defaultHealth) {
             displayTimer += Time.deltaTime;
             //nowHealth += Time.deltaTime * repairFactorPerSec;
-            if(displayTimer > 1f) {
-                nowHealth += 1f * repairFactorPerSec;
+            if(displayTimer > 0.25f) {
+                nowHealth += 0.25f * repairFactorPerSec;
                 loader.ApplyHealth(id, nowHealth);
                 displayTimer = 0;
             }
