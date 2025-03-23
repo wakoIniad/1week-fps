@@ -3,7 +3,9 @@ using System;
 public class CoreLocalModel : MonoBehaviour
 {
     [System.NonSerialized]public CoreLoader loader;
-    public static float defaultHealth = 10;
+    //設定はサーバー側にあるため、変更次第書き換えるようにする。
+    [System.NonSerialized] public static float defaultHealth = 10;
+    [System.NonSerialized] public static float warpCoolTime;
     public bool owned = false;
     public float nowHealth = 10;
     public string id;

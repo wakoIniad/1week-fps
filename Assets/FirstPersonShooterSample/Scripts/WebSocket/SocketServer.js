@@ -161,6 +161,8 @@ class Core {
         this.transporter = null;
         this.defaultHealth = 10;
         this.nowHealth = this.defaultHealth;
+        this.lastWarpedTime = Date.now();
+        this.warpCoolTime = 10;
     }
     Unclaim(position) {
         const lastOwner = this.owner;
@@ -173,8 +175,11 @@ class Core {
     }
     Warp(applicant) {
         if(applicant === this.owner) {
-            playerList[applicant].position = this.position;
-            return true;
+            if(Date.now() - this.lastWarpedTime > this.warpCoolTime * 1000) {
+                playerList[applicant].position = this.position;
+                this.lastWarpedTime = Date.now();
+                return true;
+            }
         }
         return false;
     }

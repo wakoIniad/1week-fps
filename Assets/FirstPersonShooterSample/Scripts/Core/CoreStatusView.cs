@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 public class CoreStatusView : MonoBehaviour
 {
-    
     public ImageBar fireImageBar;
+    public ImageBar warpIconImageBar;
+    private ImageBar usingBar;
     public Image image;
     public TextMeshProUGUI healthText;
     public Button button;
@@ -19,7 +20,7 @@ public class CoreStatusView : MonoBehaviour
         //Texture2D texture = ImageToExpressfireHP.texture;
         healthText.text = hp.ToString();
         float healthPercentage = hp/CoreLocalModel.defaultHealth;
-        fireImageBar.UpdateBar(healthPercentage);
+        usingBar.UpdateBar(healthPercentage);
     }
     //AI
     Texture2D CombineTextures(Texture2D baseTex, Texture2D overlayTex, Vector2 pivot)
@@ -62,9 +63,15 @@ public class CoreStatusView : MonoBehaviour
     }
     public void DisplayTransporting() {
         //image.color = Color.blue;
+        warpIconImageBar.gameObject.SetActive(false);
+        fireImageBar.gameObject.SetActive(true);
+        usingBar = fireImageBar;
     }
     public void DisplayPlacing() {
-        image.color = Color.white;
+        //image.color = Color.white;
+        fireImageBar.gameObject.SetActive(false);
+        warpIconImageBar.gameObject.SetActive(true);
+        usingBar = warpIconImageBar;
     }
     public void SetId(int id) {
         coreId = id;
