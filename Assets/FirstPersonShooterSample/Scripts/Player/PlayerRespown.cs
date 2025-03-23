@@ -11,7 +11,7 @@ public class PlayerRespawn : MonoBehaviour
     void Start()
     {
     }
-    [System.NonSerialized] public float RespownWaitingHeight = -100;
+    [System.NonSerialized] public float RespownWaitingHeight = -1000;
     private bool Scanned = false;
     // Update is called once per frame
     void Update()
