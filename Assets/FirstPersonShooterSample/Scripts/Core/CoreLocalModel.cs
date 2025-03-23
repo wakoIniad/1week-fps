@@ -3,7 +3,7 @@ using System;
 public class CoreLocalModel : MonoBehaviour
 {
     [System.NonSerialized]public CoreLoader loader;
-    public float defaultHealth = 10;
+    public static float defaultHealth = 10;
     public bool owned = false;
     public float nowHealth = 10;
     public string id;

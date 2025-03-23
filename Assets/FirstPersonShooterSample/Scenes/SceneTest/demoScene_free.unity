@@ -584,7 +584,7 @@ PrefabInstance:
     - target: {fileID: 4380945146625926848, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: coreStatusViewPrefab
       value: 
-      objectReference: {fileID: 3862065602819351815, guid: 0386ae022cb95b84f82efba3edd29c6d, type: 3}
+      objectReference: {fileID: 6284984699519583452, guid: e9e1c162ee44fea40b95de3ccf443cf4, type: 3}
     - target: {fileID: 4716061619079642398, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: webSocketLoader
       value: 
@@ -627,7 +627,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8225744800476634716, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -16
       objectReference: {fileID: 0}
     - target: {fileID: 8225744800476634716, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: m_LocalPosition.z
