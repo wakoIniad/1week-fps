@@ -627,7 +627,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8225744800476634716, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -16
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8225744800476634716, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1160,6 +1160,7 @@ MonoBehaviour:
   coreLoader: {fileID: 341430992}
   playerManager: {fileID: 2060108085}
   gameManager: {fileID: 1724181671}
+  EntryAccepted: 0
 --- !u!4 &795691033
 Transform:
   m_ObjectHideFlags: 0

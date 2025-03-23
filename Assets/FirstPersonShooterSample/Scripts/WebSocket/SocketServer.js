@@ -79,13 +79,13 @@ function makeId() {
       console.log('ws close');
     });
 });*/
-
-const CORE_REPAIR_FACTOR_ON_TRANSPORTING = 1.5;
-const CORE_REPAIR_FACTOR_ON_PLACED = 1;
+const base = 4;
+const CORE_REPAIR_FACTOR_ON_TRANSPORTING = base*1.5;
+const CORE_REPAIR_FACTOR_ON_PLACED = base;
 const CORE_DEFAULT_HEALTH = 100;
 const PLAYER_DEFAULT_HEALTH = 10;
 const REVIVAL_HEALTH_RATE = 0.2;
-const CORE_WARP_COST = 2;//消費するHP
+const CORE_WARP_COST = 20;//消費するHP
 class Player {
     constructor(id, position) {
         this.id = id;
@@ -216,6 +216,13 @@ class Core {
         this.nowHealth = 0;
         this.position = position;
     }
+    UseHealth(amount) {
+        if(this.nowHealth > amount) {
+            this.System_Repair(amount);
+            this.nowHealth -= amount;
+            connections[this.owner].send(`Core,Damage,${this.id},${this.nowHealth}`);
+        }
+    }
     Warp(applicant) {
         if(applicant === this.owner) {
             //if(Date.now() - this.lastWarpedTime > this.warpCoolTime * 1000) {
@@ -225,7 +232,7 @@ class Core {
             //}
             
             if(this.nowHealth > this.warpCost) {        
-                this.Damage(this.warpCost);
+                this.UseHealth(this.warpCost);
                 playerList[applicant].position = this.position;
                 this.lastWarpedTime = Date.now();
                 return true;
