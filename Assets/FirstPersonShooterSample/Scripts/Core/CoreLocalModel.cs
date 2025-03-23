@@ -8,7 +8,7 @@ public class CoreLocalModel : MonoBehaviour
     public static float warpCoolTime;
     public static float repairAmountOnPlacedPerSec = 1f;
     public static float repairAmountOnTransportingPerSec = 1.5f;
-    private float repairFactorPerSec = 1;
+    private float repairFactorPerSec = 1f;
     public bool owned = false;
     public float nowHealth = -1;
     public string id;
@@ -18,11 +18,15 @@ public class CoreLocalModel : MonoBehaviour
     }
     private float displayTimer = 0;
     void Update() {
-        if(nowHealth < defaultHealth) {
+        //Debug.Log(repairAmountOnPlacedPerSec+","+repairAmountOnTransportingPerSec+","+defaultHealth);
+        //Debug.Log(CoreLocalModel.repairAmountOnPlacedPerSec+","+CoreLocalModel.repairAmountOnTransportingPerSec+","+CoreLocalModel.defaultHealth);
+        if(owned && nowHealth < defaultHealth) {
             displayTimer += Time.deltaTime;
-            nowHealth += Time.deltaTime * repairFactorPerSec;
-            if(displayTimer > 0.5f) {
+            //nowHealth += Time.deltaTime * repairFactorPerSec;
+            if(displayTimer > 1f) {
+                nowHealth += 1f * repairFactorPerSec;
                 loader.ApplyHealth(id, Mathf.CeilToInt(nowHealth));
+                displayTimer = 0;
             }
         }
     }

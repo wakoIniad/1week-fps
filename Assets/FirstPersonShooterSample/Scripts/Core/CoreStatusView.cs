@@ -25,7 +25,7 @@ public class CoreStatusView : MonoBehaviour
     public void DisplayCoreHealth(float hp) {
         //Texture2D texture = ImageToExpressfireHP.texture;
         healthText.text = hp.ToString();
-        float healthPercentage = hp/CoreLocalModel.defaultHealth;
+        float healthPercentage = hp/100;
         //if(!usingBar) {
         //    Debug.Log(healthText.text);
         //}
