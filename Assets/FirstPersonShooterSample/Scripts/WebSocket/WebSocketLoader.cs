@@ -8,6 +8,7 @@ using NativeWebSocket;
 
 public class WebSocketLoader : MonoBehaviour
 {
+    public NoticeBar noticeBarToDisplayConnectionStatus;
     public OnepointSE BGM;
     public PlayerModelLoader playerLoader;
     public CoreLoader coreLoader;
@@ -224,11 +225,14 @@ public class WebSocketLoader : MonoBehaviour
         ws.OnError += (e) =>
         {
             Debug.Log("WebSocket Error Message: " + e);
+            noticeBarToDisplayConnectionStatus.StartAnimation("NetworkError");
         };
  
         ws.OnClose += (e) =>
         {
             Debug.Log("WebSocket Close");
+            //noticeBarToDisplayConnectionStatus.StartAnimation("Disconnected");
+
         };
  
         ws.Connect();
@@ -244,6 +248,7 @@ public class WebSocketLoader : MonoBehaviour
             await ws.SendText(text);
         } else {
             Debug.Log(ws.State);
+            noticeBarToDisplayConnectionStatus.StartAnimation("Disconnected");
         }
     }
     string Vector3ToString(Vector3 vec3) {
