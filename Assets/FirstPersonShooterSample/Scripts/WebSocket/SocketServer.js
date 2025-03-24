@@ -19,7 +19,7 @@
 //server.listen(PORT, () => {
 //  console.log(`listening on port ${PORT}`);
 //});
-const TEST_MODE = true;
+const TEST_MODE = false;
 const connections = {};
 const coreList = {};
 const playerList = {};
