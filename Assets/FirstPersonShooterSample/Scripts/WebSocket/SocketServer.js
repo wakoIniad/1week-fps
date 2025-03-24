@@ -443,7 +443,7 @@ server.on("connection", async (socket) => {
                     for(const core of cores) {
                         if(core.owner !== id)flag = false;
                     }
-                    if(flag && cores.length > 2) {
+                    if(flag && cores.length >= 2) {
                         //socket.send(`System,SetHealth,${this.nowHealth}`);
                         socket.send(`System,Rank,${1}`);
                         //Object.values(playerList).filter(p=>!p.gameOver).map(p=>{
