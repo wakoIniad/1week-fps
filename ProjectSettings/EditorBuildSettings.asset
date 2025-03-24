@@ -5,20 +5,23 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/FirstPersonShooterSample/Scenes/Dump/FPSS_Title.unity
     guid: 0b4f8b8a490a561498e792b525c4462c
-  - enabled: 1
+  - enabled: 0
     path: Assets/FirstPersonShooterSample/Scenes/Dump/FPSS_Stage1.unity
     guid: 5588e3c5a5bac2446a112d9d61fd8f3b
-  - enabled: 1
+  - enabled: 0
     path: Assets/FirstPersonShooterSample/Scenes/Dump/FPSS_Stage2.unity
     guid: 98a85e96081e8574da7d041b5406a4af
-  - enabled: 1
+  - enabled: 0
     path: Assets/FirstPersonShooterSample/Scenes/Dump/FPSS_Clear.unity
     guid: c4269d280a4d7984c95fdce3a50a234c
   - enabled: 1
-    path: Assets/FirstPersonShooterSample/Scenes/SceneTest/demoScene_free.unity
+    path: Assets/FirstPersonShooterSample/Scenes/Title.unity
+    guid: faaa96014af6f0646a987ace4a07bcb7
+  - enabled: 1
+    path: Assets/FirstPersonShooterSample/Scenes/SceneTest/BattleField.unity
     guid: 10322f02fb0d8cd4fae4908c77c9f5eb
   - enabled: 1
     path: Assets/FirstPersonShooterSample/Scenes/FPSS_GameOver.unity
