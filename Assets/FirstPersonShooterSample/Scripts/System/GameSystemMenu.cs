@@ -3,6 +3,7 @@ using UnityEngine;
 public class GameSystemMenu : MonoBehaviour
 {
     public GameObject panelObject;
+    public GameObject reticle;
     public PlayerManager playerManager;
     private bool displaying = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -20,8 +21,10 @@ public class GameSystemMenu : MonoBehaviour
             panelObject.SetActive(displaying);
             if(displaying) {
                 playerManager.EnterUIMde();
+                reticle.SetActive(false);
             } else {
                 playerManager.ExitUIMde();
+                reticle.SetActive(true);
             }
         }
     }
