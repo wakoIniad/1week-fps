@@ -44,7 +44,14 @@ public class PlayerModelLoader : MonoBehaviour
     }
     
     public void SetPosition(string id, Vector3 position) {
-        GetModelById(id).SetPosition(position);
+        PlayerLocalModel targetModel;
+        try {
+            targetModel = GetModelById(id);
+        } catch {
+            CreateModel(id, position);
+            targetModel = GetModelById(id);
+        }
+        targetModel.SetPosition(position);
     }
     public void SetRotation(string id, Vector3 rotation) {
         GetModelById(id).SetRotate(rotation);
