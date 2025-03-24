@@ -210,6 +210,9 @@ public class WebSocketLoader : MonoBehaviour
                         case "Revival":
                             
                             break;
+                        case "GameEnd":
+                            playerManager.playerRespawn.GotoEndScene();
+                            break;
                     }
                     break;
             }

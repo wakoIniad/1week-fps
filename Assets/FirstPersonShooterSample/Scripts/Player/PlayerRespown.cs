@@ -13,6 +13,11 @@ public class PlayerRespawn : MonoBehaviour
     }
     [System.NonSerialized] public float RespownWaitingHeight = -1000;
     private bool Scanned = false;
+    public void GotoEndScene() {
+        if(!string.IsNullOrEmpty(gameoverSceneName)) {
+            SceneManager.LoadScene(gameoverSceneName);
+        }
+    }
     // Update is called once per frame
     void Update()
     {

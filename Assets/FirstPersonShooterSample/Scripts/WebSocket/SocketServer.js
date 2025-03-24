@@ -154,6 +154,12 @@ class Player {
         }
         if(gameOver) {
             this.gameOver = true;
+            let restPlayer = Object.values(playerList).filter(p=>!p.gameOver);
+            //誰かがゲームオーバーしてまだ残ってる時点で二人以上いる。
+            if(restPlayer.length === 1){
+                connections[restPlayer[0].id].send(`System,Rank,${1}`);
+                connections[restPlayer[0].id].send(`System,GameEnd`);
+            }
         }
         return false;
     }
@@ -432,6 +438,24 @@ server.on("connection", async (socket) => {
             case "ClaimRequest":
                 if(coreList[args[0]].Claim(id)) {
                     socket.send(`Core,Claim,${args[0]}`);
+                    let flag = true;
+                    const cores = Object.values(coreList);
+                    for(const core of cores) {
+                        if(core.owner !== id)flag = false;
+                    }
+                    if(flag && cores.length > 2) {
+                        //socket.send(`System,SetHealth,${this.nowHealth}`);
+                        socket.send(`System,Rank,${1}`);
+                        //Object.values(playerList).filter(p=>!p.gameOver).map(p=>{
+                        //    return {
+                        //        cores.filter(c => c.owner === p.id)
+                        //    };
+                        //})
+                        for(const player of Object.values(playerList).filter(p=>!p.gameOver)) {
+                            connections[player.id].send(`System,Rank,${2}`);
+                        }
+                        socket.send(`System,GameEnd`);
+                    }
                 } else console.log("claimReq is denied",coreList[args[0]]);
                 break;
             case "TransportRequest":
