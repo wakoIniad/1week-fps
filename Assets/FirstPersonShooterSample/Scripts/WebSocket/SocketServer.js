@@ -358,6 +358,11 @@ server.sendAllClient = text => {
         socket.send(text);
     });
 }
+function broadcast(exclude, text) {
+    Object.entries(connections).forEach( ([id, socket]) => {
+        if(id!==exclude)socket.send(text);
+    });
+}
 server.on("connection", async (socket) => {
     connectionCounter++;
     console.log("connected");
@@ -422,6 +427,7 @@ server.on("connection", async (socket) => {
 
 
                 socket.broadcast(`Player,Create,${id},${createAt.join(',')}`);
+                //broadcast(id,`Player,Create,${id},${createAt.join(',')}`);
                 socket.send(`System,SetPosition,${playerObj.position.join(',')}`);
                 socket.send(`Core,Claim,${playerCore.id}`);
                 console.log("SYSTEM_ENTRY_END");

@@ -66,9 +66,9 @@ public class WebSocketLoader : MonoBehaviour
             string[] arg = {};
             if(splitted.Length > 2)arg = splitted[2..];
             
-            Debug.Log("Header-Target: " + Target);
-            Debug.Log("Header-Command: " + CommandType);
-            Debug.Log("arg: " + arg);
+            //Debug.Log("Header-Target: " + Target);
+            //Debug.Log("Header-Command: " + CommandType);
+            //Debug.Log("arg: " + arg);
             /*Debug.Log("Header-Target: " + model.Target);
             Debug.Log("Header-Command: " + model.CommandType);
             Debug.Log("coreId: " + model.targetCoreId);
