@@ -283,7 +283,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u6A39\u6D77"
+  m_text: Hitodama
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 37e0ed68f7c756c4b864d5a103070f0b, type: 2}
   m_sharedMaterial: {fileID: 3138401368380469465, guid: 37e0ed68f7c756c4b864d5a103070f0b, type: 2}
