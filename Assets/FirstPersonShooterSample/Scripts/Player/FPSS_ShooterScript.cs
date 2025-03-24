@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class FPSS_ShooterScript : MonoBehaviour
 {
-    
+    public OnepointSE se;
     [System.NonSerialized] public PlayerManager playerManager;
     public int damage = 10;//ダメージ
     public GameObject hitParticlePrefab;//撃った場所に出現するパーティクル (エフェクト)
@@ -54,6 +54,7 @@ public class FPSS_ShooterScript : MonoBehaviour
         //左クリックされたとき
         if(Input.GetMouseButtonDown(0))
         {
+            se.play();
             Vector3 pos = Shoot(gameObject.transform, playerCamera.transform.forward);
             playerManager.webSocketLoader.EntryShoot(pos, playerCamera.transform.forward);
             /*//画面中央にあたる場所から出現するレイ(直線)を求める

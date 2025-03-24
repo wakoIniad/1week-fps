@@ -8,6 +8,7 @@ using NativeWebSocket;
 
 public class WebSocketLoader : MonoBehaviour
 {
+    public OnepointSE BGM;
     public PlayerModelLoader playerLoader;
     public CoreLoader coreLoader;
     public PlayerManager playerManager;

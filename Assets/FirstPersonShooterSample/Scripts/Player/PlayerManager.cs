@@ -39,6 +39,7 @@ public class PlayerManager : MonoBehaviour
         if(!displayedWall && webSocketLoader.EntryAccepted && PlayerController.isGround) {
             webSocketLoader.gameManager.wallActivater.DisplayWall();
             displayedWall = true;
+            webSocketLoader.BGM.play();
         }
     }
 }
