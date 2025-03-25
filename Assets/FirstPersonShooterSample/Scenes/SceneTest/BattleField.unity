@@ -1163,6 +1163,10 @@ PrefabInstance:
       propertyPath: fireBallPrefab
       value: 
       objectReference: {fileID: 1975959190090480, guid: 15c28b7be890d724a989cee16543a8e1, type: 3}
+    - target: {fileID: 2186381297886541441, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
+      propertyPath: fireBallHologramPrefab
+      value: 
+      objectReference: {fileID: 1975959190090480, guid: 2efb783e7dc5f9744a9ba9205f7e4ac6, type: 3}
     - target: {fileID: 2846770226700898275, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: coreMapUI
       value: 
