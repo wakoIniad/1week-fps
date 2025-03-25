@@ -40,6 +40,7 @@ public class PlayerManager : MonoBehaviour
             webSocketLoader.gameManager.wallActivater.DisplayWall();
             displayedWall = true;
             webSocketLoader.BGM.play();
+            webSocketLoader.SendMyPosition();
         }
     }
 }

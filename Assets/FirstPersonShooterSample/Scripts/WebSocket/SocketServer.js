@@ -232,7 +232,7 @@ class Core {
         return false;
     }
     Warp(applicant) {
-        if(applicant === this.owner) {
+        if(applicant === this.owner && !this.transporting) {
             //if(Date.now() - this.lastWarpedTime > this.warpCoolTime * 1000) {
             //    playerList[applicant].position = this.position;
             //    this.lastWarpedTime = Date.now();

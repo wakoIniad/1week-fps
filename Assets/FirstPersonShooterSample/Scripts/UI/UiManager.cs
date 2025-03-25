@@ -39,17 +39,23 @@ public class UiManager : MonoBehaviour
     }
     void UpdateUIMode() {
         if(coreMapUI.active || systemMenuUI.active) {
-            playerManager.EnterUIMde();
-            battleUIContainer.SetActive(false);
+            StartUIMode();
         } else {
-            playerManager.ExitUIMde();
-            battleUIContainer.SetActive(true);
+            EndUIMode();
         }
+    }
+    void EndUIMode() {
+        playerManager.ExitUIMde();
+        battleUIContainer.SetActive(true);
+    }
+    void StartUIMode() {
+        playerManager.EnterUIMde();
+        battleUIContainer.SetActive(false);
     }
     
     public void OnWarpAnchorCoreSelected(string id) {
         playerManager.playerCore.coreLoader.TryWarp(id);
         coreMapUI.DeactivateUI();
-        playerManager.ExitUIMde();
+        EndUIMode();
     }
 }
