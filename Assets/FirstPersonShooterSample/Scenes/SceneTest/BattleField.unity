@@ -1162,6 +1162,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 795691032}
     - target: {fileID: 4380945146625926848, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
+      propertyPath: respawnUI
+      value: 
+      objectReference: {fileID: 1920755514}
+    - target: {fileID: 4380945146625926848, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: coreLoader
       value: 
       objectReference: {fileID: 341430992}
@@ -1199,6 +1203,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5668350724422297069, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6180736888603759493, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6321597359760546053, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
@@ -1592,7 +1600,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 0.20125782, g: 0.20125782, b: 0.20125782, a: 0.392}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3504,7 +3512,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Select Respawn
+  m_text: "\u5730\u70B9\u3092\u9078\u3093\u3067"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bad81d6f2b2706049b5c1f9fd818b6f1, type: 2}
   m_sharedMaterial: {fileID: -6214241318220856438, guid: bad81d6f2b2706049b5c1f9fd818b6f1, type: 2}
@@ -4801,7 +4809,7 @@ GameObject:
   - component: {fileID: 1920755513}
   - component: {fileID: 1920755514}
   m_Layer: 5
-  m_Name: RespawnUI
+  m_Name: CoreMapUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4843,12 +4851,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40cbbebff2c5bf4449d4e62488467769, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  active: 0
   battleUIObject: {fileID: 1064853321}
   systemUIObject: {fileID: 29988430}
   respawnUIObject: {fileID: 1920755512}
   mapObject: {fileID: 1951856931}
   coreLoader: {fileID: 341430992}
-  respawnPointIconPrefab: {fileID: 3580947730096868770, guid: 5da2aae78e335c94d8bf91b3e4ec7542, type: 3}
+  respawnPointIconPrefab: {fileID: 6447915616392592800, guid: 3cc1daa963af9da49a74b0082fb2a161, type: 3}
   MAP_SIZE: 64
   WARP_COST: 50
 --- !u!1 &1951856931

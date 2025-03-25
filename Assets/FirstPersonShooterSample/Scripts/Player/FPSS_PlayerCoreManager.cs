@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FPSS_PlayerCoreManager : MonoBehaviour
 {
+    public RespawnUI respawnUI;
     [System.NonSerialized] public PlayerManager playerManager;
     public event Action<string> OnCoreStatusViewClicked;
     public CoreLoader coreLoader;
@@ -26,6 +27,10 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     }
 
     // Update is called once per frame
+    void OnWarpAnchorSelected(string id) {
+        coreLoader.TryWarp(id);
+        respawnUI.DeactivateUI();
+    }
     void Update()
     {
         //和集合で全ての範囲を取る
@@ -47,6 +52,17 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
         } else {
             transportTarget = null;
         }
+        if(Input.GetKeyDown(KeyCode.M)) {
+            if(respawnUI.active) {
+                respawnUI.DeactivateUI();
+                respawnUI.OnRespawnAnchorSelected -= OnWarpAnchorSelected;
+                playerManager.ExitUIMde();
+            } else {
+                respawnUI.ActivateUI();
+                respawnUI.OnRespawnAnchorSelected += OnWarpAnchorSelected;
+                playerManager.EnterUIMde();
+            }
+        }
         //if(transportingCoreObject != null) {//transporting属性が消えてたらnullにするので大丈夫
         bool[] alphaInput = {
             Input.GetKeyDown(KeyCode.Alpha0),
@@ -60,6 +76,7 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
             Input.GetKeyDown(KeyCode.Alpha8),
             Input.GetKeyDown(KeyCode.Alpha9),
             };
+            
         for(int i = 0; i < Math.Min(10, keys.Count); i++) {
             
             CoreLocalModel model = coreLoader.GetModelById(keys[i]);

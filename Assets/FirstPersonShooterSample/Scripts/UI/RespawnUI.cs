@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 
 public class RespawnUI : MonoBehaviour
 {
+    public bool active = false;
     public GameObject battleUIObject;
     public GameObject systemUIObject;
     
@@ -21,11 +22,13 @@ public class RespawnUI : MonoBehaviour
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     Dictionary<string, GameObject> icons;
+
     public void ActivateUI() {
         mapRectTransform = mapObject.GetComponent<RectTransform>();
         battleUIObject.SetActive(false);
         systemUIObject.SetActive(false);
         respawnUIObject.SetActive(true);
+        active = true;
         CoreLocalModel[] cores = new CoreLocalModel[coreLoader.CoreList.Count];
         coreLoader.CoreList.Values.CopyTo(cores,0);
         float mapDisplayWidth = mapRectTransform.sizeDelta.x;
@@ -48,7 +51,7 @@ public class RespawnUI : MonoBehaviour
             );
             button.onClick.AddListener(() => {
                 if(CheckHealth(core.id, core.nowHealth)) {
-                    OnRespawnAnchorSelected.Invoke(core.id);
+                    if(OnRespawnAnchorSelected!=null)OnRespawnAnchorSelected.Invoke(core.id);
                 }
             });
             CheckHealth(core.id, core.nowHealth);
@@ -89,6 +92,7 @@ public class RespawnUI : MonoBehaviour
     public void DeactivateUI() {
         battleUIObject.SetActive(true);
         respawnUIObject.SetActive(false);
+        active = false;
         string[] keys = new string[icons.Count];
         icons.Keys.CopyTo(keys,0);
         for(int i = 0;i < icons.Count; i++) {
