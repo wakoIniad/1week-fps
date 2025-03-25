@@ -18,6 +18,7 @@ public class FPSS_ShooterScript : MonoBehaviour
     [System.NonSerialized] public bool stop;
 
     public GameObject fireBallPrefab;
+    public GameObject fireBallHologramPrefab;
     public int launchForce = 1;//8;//15;
 
 
@@ -43,7 +44,8 @@ public class FPSS_ShooterScript : MonoBehaviour
         return launchedObject.transform.position;
     }
     public void ShootAt(Vector3 position, Vector3 direction) {
-        GameObject launchedObject = Instantiate(fireBallPrefab);
+        //ダメージなどの処理は特にない見た目だけの火の玉を出す
+        GameObject launchedObject = Instantiate(fireBallHologramPrefab);
         launchedObject.transform.position = position;
         Rigidbody rb = launchedObject.GetComponent<Rigidbody>();
         rb.AddForce(direction * launchForce, ForceMode.Impulse);

@@ -19392,11 +19392,10 @@ GameObject:
   - component: {fileID: 198993423900235080}
   - component: {fileID: 199087449348766326}
   - component: {fileID: -707433955754367348}
-  - component: {fileID: -505427838935213083}
   - component: {fileID: -5714653470356606632}
   - component: {fileID: -3211384032140441119}
   m_Layer: 0
-  m_Name: Magic fire pro red
+  m_Name: FireballHologramPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24254,20 +24253,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.3
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-505427838935213083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1975959190090480}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34b1cbb72d3e5d242b42825716a7b2d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitParticlePrefab: {fileID: 0}
-  damage: 10
 --- !u!54 &-5714653470356606632
 Rigidbody:
   m_ObjectHideFlags: 0
