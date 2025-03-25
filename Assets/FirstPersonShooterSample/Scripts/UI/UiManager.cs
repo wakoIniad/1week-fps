@@ -25,14 +25,16 @@ public class UiManager : MonoBehaviour
             UpdateUIMode();
         }
         if(Input.GetKeyDown(KeyCode.M)) {
-            coreMapUI.toggleVisibility();
-            if(systemMenuUI.active)systemMenuUI.DeactivateUI();
-            if(coreMapUI.active) {
-                coreMapUI.OnRespawnAnchorSelected += OnWarpAnchorCoreSelected;
-            } else {
-                coreMapUI.OnRespawnAnchorSelected -= OnWarpAnchorCoreSelected;
+            if(!systemMenuUI.active) {
+                coreMapUI.toggleVisibility();
+                if(systemMenuUI.active)systemMenuUI.DeactivateUI();
+                if(coreMapUI.active) {
+                    coreMapUI.OnRespawnAnchorSelected += OnWarpAnchorCoreSelected;
+                } else {
+                    coreMapUI.OnRespawnAnchorSelected -= OnWarpAnchorCoreSelected;
+                }
+                UpdateUIMode();
             }
-            UpdateUIMode();
         }
     }
     void UpdateUIMode() {
