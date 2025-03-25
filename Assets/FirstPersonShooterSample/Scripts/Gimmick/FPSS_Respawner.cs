@@ -33,23 +33,23 @@ public class FPSS_Respawner : MonoBehaviour
     //毎フレーム呼ばれる
     void Update()
     {
-        //指定した高さより低い場所にいる時
-        if(rh)
-        {
-            if (transform.position.y <= rh.GetRespawnHeight())
-            {
-                Respawn();
-                return;
-            }
-        }
-        else//RespawnHeightがなかった時
-        {
-            if (transform.position.y <= autoRespownHeight) 
-            {
-                Respawn();
-                return;
-            }
-        }
+        ////指定した高さより低い場所にいる時
+        //if(rh)
+        //{
+        //    if (transform.position.y <= rh.GetRespawnHeight())
+        //    {
+        //        Respawn();
+        //        return;
+        //    }
+        //}
+        //else//RespawnHeightがなかった時
+        //{
+        //    if (transform.position.y <= autoRespownHeight) 
+        //    {
+        //        Respawn();
+        //        return;
+        //    }
+        //}
     }
 
     //リスポーンする

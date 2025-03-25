@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 //プレイヤーを動かす
@@ -5,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class FPSS_PlayerController : MonoBehaviour
 {
+    
+    [System.NonSerialized] public PlayerManager playerManager;
     public float walkSpeed = 2;
     public float runSpeed = 4;
     public float jumpSpeed = 8;
@@ -17,17 +20,20 @@ public class FPSS_PlayerController : MonoBehaviour
     bool dashInput;
 
     //状態
-    bool isGround;//地上に立っているか
+    [System.NonSerialized] public bool isGround;//地上に立っているか
 
     //その他
     float moveSpeed;//現在の移動速度を入れておく
-    Rigidbody rb;//PlayerのRigidbodyを入れておくもの
+    [System.NonSerialized] public Rigidbody rb;//PlayerのRigidbodyを入れておくもの
     RaycastHit groundHit;//地面確認時の結果を入れておくもの
 
     public float dashInputSpeed = 0.5f;
     float dashInputTimer = -1f;
 
-    public bool stop;
+    [System.NonSerialized] public bool stop;
+    float time = 0;
+    float lastSynchronizedTime = 0;
+    Vector3 lastSynchronizetPosition;
 
 
     //ゲームをはじめて最初に呼ばれる
@@ -40,12 +46,25 @@ public class FPSS_PlayerController : MonoBehaviour
 
     //毎フレーム呼ばれる
     void Update()
-    {
+    {   
+        time += Time.deltaTime;
         if(stop)return;
         //機能ごとに分けてわかりやすく
         UpdateGround();
         UpdateInput();
         UpdateMove();
+        if(xAxis != 0 || yAxis != 0) {
+            if(
+                time - lastSynchronizedTime >= 0.5 &&
+                lastSynchronizetPosition != null 
+                ?Vector3.Distance(lastSynchronizetPosition, transform.position) > 0.1f
+                :true
+            ) {
+                playerManager.webSocketLoader.SendMyPosition();
+                lastSynchronizedTime = time;
+                lastSynchronizetPosition = transform.position;
+            }
+        }
 
     }
 

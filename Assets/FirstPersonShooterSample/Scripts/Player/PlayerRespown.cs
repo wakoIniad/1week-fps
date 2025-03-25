@@ -1,27 +1,29 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerRespown : MonoBehaviour
+public class PlayerRespawn : MonoBehaviour
 {
+    public RespawnUI respawnUI;
     public string gameoverSceneName = "";
-    FPSS_PlayerCoreManager coreManager;
     private bool waitingRespawn = false;
-    private Rigidbody rb;
-    private FPSS_PlayerHealth healthManager;
-    public GameManager gameManager;
+
+    [System.NonSerialized] public PlayerManager playerManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        coreManager = gameObject.GetComponent<FPSS_PlayerCoreManager>();
-        healthManager = gameObject.GetComponent<FPSS_PlayerHealth>();
-        rb = gameObject.GetComponent<Rigidbody>();
     }
-
+    [System.NonSerialized] public float RespownWaitingHeight = -1000;
+    private bool Scanned = false;
+    public void GotoEndScene() {
+        if(!string.IsNullOrEmpty(gameoverSceneName)) {
+            SceneManager.LoadScene(gameoverSceneName);
+        }
+    }
     // Update is called once per frame
     void Update()
     {
         if(waitingRespawn) {
-            if(coreManager.CoreCount() == 0) {
+            if(playerManager.playerCore.CoreCount() == 0) {
                 EndHandleRespown();
                 if(string.IsNullOrEmpty(gameoverSceneName)) {
                     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -31,25 +33,48 @@ public class PlayerRespown : MonoBehaviour
             }
         }
 
+        ////指定した高さより低い場所にいる時
+        //if(rh)
+        //{
+        //    if (transform.position.y <= rh.GetRespawnHeight())
+        //    {
+        //        Respawn();
+        //        return;
+        //    }
+        //}
+        //else//RespawnHeightがなかった時
+        //{
+        //    if (transform.position.y <= autoRespownHeight) 
+        //    {
+        //        Respawn();
+        //        return;
+        //    }
+        //}
+
     }
     public void StartHandleRespown() {
-        gameManager.EnterUIMde();
+        playerManager.playerLoader.SetMyPosition(new Vector3(0,RespownWaitingHeight,0));
+        playerManager.EnterUIMde();
         waitingRespawn = true;
-        coreManager.OnCoreStatusViewClicked += SpawnAnchorSelected;
+        //playerManager.playerCore.OnCoreStatusViewClicked += SpawnAnchorSelected;
+        respawnUI.ActivateUI();
+        respawnUI.OnRespawnAnchorSelected += SpawnAnchorSelected;
     }
-    public void SpawnAnchorSelected(int id) {
+    public void SpawnAnchorSelected(string id) {
         Debug.Log("test:"+id);
         if(waitingRespawn) {
-            CoreObjectData core = coreManager.coreLoader.GetCoreById(id);
-            core.TryWarp(rb);
+            CoreLocalModel core = playerManager.playerCore.coreLoader.GetModelById(id);
+            core.TryRespawn();
             //healthManager.nowH
         }
         EndHandleRespown();
     }
     public void EndHandleRespown() {
-        gameManager.ExitUIMde();
+        playerManager.ExitUIMde();
         waitingRespawn = false;
-        coreManager.OnCoreStatusViewClicked -= SpawnAnchorSelected;
+        playerManager.playerCore.OnCoreStatusViewClicked -= SpawnAnchorSelected;
+        respawnUI.DeactivateUI();
+        respawnUI.OnRespawnAnchorSelected -= SpawnAnchorSelected;
 
     }
 

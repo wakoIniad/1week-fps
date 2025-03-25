@@ -9,12 +9,13 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class FPSS_PlayerCamera : MonoBehaviour
 {
+    [System.NonSerialized] public PlayerManager playerManager;
     public GameObject playerBody;//プレイヤー本体をいれておく
     public float speed = 2;//視点移動の速度
     public float angle = 130;//縦方向に視点を動かせる角度
     public bool reverseX = false;//横方向の向きを反転させるか
     public bool reverseY = false;//縦方向の向きを反転させるか
-    public bool stop = false;
+    [System.NonSerialized] public bool stop = false;
 
 
     float camRot;//現在のカメラの角度を入れておく
@@ -30,6 +31,10 @@ public class FPSS_PlayerCamera : MonoBehaviour
     //他スクリプトから簡単にアクセスできるようになる
     //その代わり一つしか存在できない
     private static FPSS_PlayerCamera instance;
+    float time = 0;
+    float lastSynchronizedTime = 0;
+    float lastSynchronizedAngleA = 0;
+    float lastSynchronizedAngleB = 0;
     public static FPSS_PlayerCamera GetInstance()
     {
         return instance;
@@ -56,6 +61,7 @@ public class FPSS_PlayerCamera : MonoBehaviour
     //毎フレーム呼ばれる
     void Update()
     {
+        time += Time.deltaTime;
         if(stop)return;
         //入力を取得
         //Unity > ProjectSettings > InputManagerに設定がある
@@ -81,6 +87,16 @@ public class FPSS_PlayerCamera : MonoBehaviour
         }
 
         cameraTransform.localRotation = Quaternion.AngleAxis(camRot, Vector3.right);
+        if(
+            time - lastSynchronizedTime > 0.5 && 
+            ( Mathf.Abs(lastSynchronizedAngleA - camRot) > 10 ||
+              Mathf.Abs(lastSynchronizedAngleB - plyrRot) > 10 )
+        ) {
+            playerManager.webSocketLoader.SendMyRotation();
+            lastSynchronizedTime = time;
+            lastSynchronizedAngleA = camRot;
+            lastSynchronizedAngleB = plyrRot;
+        }
     }
 
     public Camera GetCamera()
