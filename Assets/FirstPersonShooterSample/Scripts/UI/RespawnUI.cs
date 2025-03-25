@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 public class RespawnUI : MonoBehaviour
 {
     public bool active = false;
+    public PlayerModelLoader playerModelLoader;
     public GameObject battleUIObject;
     public GameObject systemUIObject;
     
@@ -19,6 +20,7 @@ public class RespawnUI : MonoBehaviour
     public float MAP_SIZE = 64;
     public float WARP_COST = 50;
     public event Action<string> OnRespawnAnchorSelected; 
+    public GameObject playerIcon;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     Dictionary<string, GameObject> icons;
@@ -36,18 +38,18 @@ public class RespawnUI : MonoBehaviour
         icons = new Dictionary<string, GameObject>();
 
         //中心が0になる為、それの調整用。
-        float offset = scale/2;
+        float offset = mapDisplayWidth/2;
         for(int i = 0;i < cores.Length; i++) {
             CoreLocalModel core = cores[i];
-            if(!core.owned)continue;
+            if(!core.owned || core.transporting)continue;
             GameObject icon = Instantiate(respawnPointIconPrefab, mapObject.transform);
             icons[core.id] = icon;
             Button button = icon.GetComponent<Button>();
             Vector3 corePosition = core.GetPosition();
             icon.transform.localPosition = new Vector3(
                 corePosition.x * scale - offset,
-                corePosition.y * scale - offset,
-                corePosition.z * scale - offset
+                corePosition.z * scale - offset,
+                corePosition.y * scale - offset
             );
             button.onClick.AddListener(() => {
                 if(CheckHealth(core.id, core.nowHealth)) {
@@ -58,6 +60,17 @@ public class RespawnUI : MonoBehaviour
         }
         coreLoader.OnOwnedCoreBreaked += OnCoreBreak;
         coreLoader.OnOwnedCoreHealthChanged += OnHealthChange;
+        Transform playerTransform = playerModelLoader.GetMyTransform();
+        if(playerModelLoader.MyHealthManager.playerHealth == 0) {
+            playerIcon.SetActive(false);
+        } else {
+            playerIcon.SetActive(true);
+            playerIcon.transform.localPosition = new Vector3(
+                    playerTransform.position.x * scale - offset,
+                    playerTransform.position.z * scale - offset,
+                    playerTransform.position.y * scale - offset
+            );
+        }
     }
     bool CheckHealth(string id, float health) {
         Image[] imgs = icons[id].GetComponentsInChildren<Image>();
@@ -84,10 +97,12 @@ public class RespawnUI : MonoBehaviour
         }
     }
     void OnCoreBreak(string id) {
-        Destroy(icons[id]);
+        //運搬中のコアのアイコンはないため
+        if(icons.ContainsKey(id))Destroy(icons[id]);
     }
     void OnHealthChange(string id, float hp) {
-        CheckHealth(id, hp);
+        //運搬中のコアのアイコンはないため
+        if(icons.ContainsKey(id))CheckHealth(id, hp);
     }
     public void DeactivateUI() {
         battleUIObject.SetActive(true);
@@ -98,7 +113,7 @@ public class RespawnUI : MonoBehaviour
         for(int i = 0;i < icons.Count; i++) {
             Destroy(icons[keys[i]]);
         }
-        icons = new Dictionary<string, GameObject>();
+        //icons = new Dictionary<string, GameObject>();
         coreLoader.OnOwnedCoreBreaked -= OnCoreBreak;
         coreLoader.OnOwnedCoreHealthChanged -= OnHealthChange;
     }

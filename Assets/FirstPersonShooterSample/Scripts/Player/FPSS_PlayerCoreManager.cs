@@ -30,6 +30,7 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     void OnWarpAnchorSelected(string id) {
         coreLoader.TryWarp(id);
         respawnUI.DeactivateUI();
+        playerManager.ExitUIMde();
     }
     void Update()
     {
