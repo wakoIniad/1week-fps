@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FPSS_PlayerCoreManager : MonoBehaviour
 {
-    public RespawnUI respawnUI;
+    public CoreMapUI coreMapUI;
     [System.NonSerialized] public PlayerManager playerManager;
     public event Action<string> OnCoreStatusViewClicked;
     public CoreLoader coreLoader;
@@ -27,11 +27,11 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void OnWarpAnchorSelected(string id) {
-        coreLoader.TryWarp(id);
-        respawnUI.DeactivateUI();
-        playerManager.ExitUIMde();
-    }
+    //public void OnWarpAnchorSelected(string id) {
+    //    coreLoader.TryWarp(id);
+    //    coreMapUI.DeactivateUI();
+    //    playerManager.ExitUIMde();
+    //}
     void Update()
     {
         //和集合で全ての範囲を取る
@@ -53,17 +53,17 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
         } else {
             transportTarget = null;
         }
-        if(Input.GetKeyDown(KeyCode.M)) {
-            if(respawnUI.active) {
-                respawnUI.DeactivateUI();
-                respawnUI.OnRespawnAnchorSelected -= OnWarpAnchorSelected;
-                playerManager.ExitUIMde();
-            } else {
-                respawnUI.ActivateUI();
-                respawnUI.OnRespawnAnchorSelected += OnWarpAnchorSelected;
-                playerManager.EnterUIMde();
-            }
-        }
+        //if(Input.GetKeyDown(KeyCode.M)) {
+        //    if(coreMapUI.active) {
+        //        coreMapUI.DeactivateUI();
+        //        coreMapUI.OnRespawnAnchorSelected -= OnWarpAnchorSelected;
+        //        playerManager.ExitUIMde();
+        //    } else {
+        //        coreMapUI.ActivateUI();
+        //        coreMapUI.OnRespawnAnchorSelected += OnWarpAnchorSelected;
+        //        playerManager.EnterUIMde();
+        //    }
+        //}
         //if(transportingCoreObject != null) {//transporting属性が消えてたらnullにするので大丈夫
         bool[] alphaInput = {
             Input.GetKeyDown(KeyCode.Alpha0),

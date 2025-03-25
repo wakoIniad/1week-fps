@@ -65,7 +65,8 @@ public class FPSS_PlayerController : MonoBehaviour
                 lastSynchronizetPosition = transform.position;
             }
         }
-
+        
+        
     }
 
 

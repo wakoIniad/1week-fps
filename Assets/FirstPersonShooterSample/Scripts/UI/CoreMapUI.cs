@@ -4,14 +4,15 @@ using System;
 using UnityEngine.UI;
 using Unity.VisualScripting;
 
-public class RespawnUI : MonoBehaviour
+public class CoreMapUI : MonoBehaviour
 {
     public bool active = false;
+    public GameObject containerObject;
     public PlayerModelLoader playerModelLoader;
     public GameObject battleUIObject;
     public GameObject systemUIObject;
     
-    public GameObject respawnUIObject;
+    //public GameObject coreMapUIObject;
     public GameObject mapObject;
     public CoreLoader coreLoader;
     public GameObject respawnPointIconPrefab;
@@ -27,9 +28,9 @@ public class RespawnUI : MonoBehaviour
 
     public void ActivateUI() {
         mapRectTransform = mapObject.GetComponent<RectTransform>();
-        battleUIObject.SetActive(false);
-        systemUIObject.SetActive(false);
-        respawnUIObject.SetActive(true);
+        //battleUIObject.SetActive(false);
+        //systemUIObject.SetActive(false);
+        containerObject.SetActive(true);
         active = true;
         CoreLocalModel[] cores = new CoreLocalModel[coreLoader.CoreList.Count];
         coreLoader.CoreList.Values.CopyTo(cores,0);
@@ -105,8 +106,8 @@ public class RespawnUI : MonoBehaviour
         if(icons.ContainsKey(id))CheckHealth(id, hp);
     }
     public void DeactivateUI() {
-        battleUIObject.SetActive(true);
-        respawnUIObject.SetActive(false);
+        //battleUIObject.SetActive(true);
+        containerObject.SetActive(false);
         active = false;
         string[] keys = new string[icons.Count];
         icons.Keys.CopyTo(keys,0);
@@ -116,6 +117,13 @@ public class RespawnUI : MonoBehaviour
         //icons = new Dictionary<string, GameObject>();
         coreLoader.OnOwnedCoreBreaked -= OnCoreBreak;
         coreLoader.OnOwnedCoreHealthChanged -= OnHealthChange;
+    }
+    public void toggleVisibility() {
+        if(active) {
+            DeactivateUI();
+        } else {
+            ActivateUI();
+        }
     }
  
     // Update is called once per frame
