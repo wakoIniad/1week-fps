@@ -14,7 +14,7 @@ public class ImageBar : MonoBehaviour
     private RectMask2D minusEdgeMask;
     private float lastValue = -1;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void GetData()
     {
         mask = maskObject.GetComponent<RectMask2D>();   
         rectTransform = maskObject.GetComponent<RectTransform>();
@@ -28,9 +28,16 @@ public class ImageBar : MonoBehaviour
             minusEdgeMaskObject.SetActive(false); 
         }
     }
+    void Start() {
+        GetData();
+    }
 
     public void UpdateBar(float remainingPercentage) {
-        mask.padding = MaskMap * 
+        //テスト用。後で消す。
+        //if(!gameObject.activeInHierarchy)return;
+        if(!mask)GetData();
+        float scale = maskObject.transform.parent.localScale.y;
+        mask.padding = scale * MaskMap * 
         rectTransform.sizeDelta.y * (1-remainingPercentage);
         if(edgeMaskObject != null && lastValue != -1) {
             float delta = remainingPercentage - lastValue;
@@ -44,12 +51,17 @@ public class ImageBar : MonoBehaviour
                     minusEdgeMaskObject.SetActive(false); 
                 }
             }
+            
+            //Debug.Log("M-Lossy:"+maskObject.transform.parent.lossyScale.y);
+            //Debug.Log("M-LossyParent:"+maskObject.transform.parent.lossyScale.y);
+            //Debug.Log("M-local:"+maskObject.transform.localScale.y);
+            //Debug.Log("M-localParent:"+maskObject.transform.parent.localScale.y);
             edgeTarget.padding = 
             edgeMaskMap *
-            (rectTransform.sizeDelta.y-8) * (remainingPercentage-delta)
+            (rectTransform.sizeDelta.y-8) * (remainingPercentage-delta) * scale
             +
             MaskMap * 
-            (rectTransform.sizeDelta.y-8) * (1-remainingPercentage-delta);
+            (rectTransform.sizeDelta.y-8) * (1-remainingPercentage-delta) * scale;
         }
         lastValue = remainingPercentage;
     }

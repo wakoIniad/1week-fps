@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class RespawnUI : MonoBehaviour
 {
@@ -13,11 +14,13 @@ public class RespawnUI : MonoBehaviour
     public CoreLoader coreLoader;
     public GameObject respawnPointIconPrefab;
     RectTransform mapRectTransform;
+    //下記2変数はサーバーと（手動で）同期するように！
     public float MAP_SIZE = 64;
+    public float WARP_COST = 50;
     public event Action<string> OnRespawnAnchorSelected; 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-
+    Dictionary<string, GameObject> icons;
     public void ActivateUI() {
         mapRectTransform = mapObject.GetComponent<RectTransform>();
         battleUIObject.SetActive(false);
@@ -27,7 +30,8 @@ public class RespawnUI : MonoBehaviour
         coreLoader.CoreList.Values.CopyTo(cores,0);
         float mapDisplayWidth = mapRectTransform.sizeDelta.x;
         float scale = mapDisplayWidth/MAP_SIZE;
-        Dictionary<string, GameObject> icons = new Dictionary<string, GameObject>();
+        icons = new Dictionary<string, GameObject>();
+
         //中心が0になる為、それの調整用。
         float offset = scale/2;
         for(int i = 0;i < cores.Length; i++) {
@@ -42,15 +46,57 @@ public class RespawnUI : MonoBehaviour
                 corePosition.y * scale - offset,
                 corePosition.z * scale - offset
             );
-            button.onClick.AddListener(() => OnRespawnAnchorSelected.Invoke(core.id));
+            button.onClick.AddListener(() => {
+                if(CheckHealth(core.id, core.nowHealth)) {
+                    OnRespawnAnchorSelected.Invoke(core.id);
+                }
+            });
+            CheckHealth(core.id, core.nowHealth);
         }
-        coreLoader.OnOwnedCoreBreaked += (id) => {
-            Destroy(icons[id]);
-        };
+        coreLoader.OnOwnedCoreBreaked += OnCoreBreak;
+        coreLoader.OnOwnedCoreHealthChanged += OnHealthChange;
+    }
+    bool CheckHealth(string id, float health) {
+        Image[] imgs = icons[id].GetComponentsInChildren<Image>();
+        ImageBar bar = icons[id].GetComponent<ImageBar>();
+        //Debug.Log("Lossy:"+bar.maskObject.transform.parent.lossyScale.y);
+        //Debug.Log("LossyParent:"+bar.maskObject.transform.parent.lossyScale.y);
+        //Debug.Log("local:"+bar.maskObject.transform.localScale.y);
+        //Debug.Log("localParent:"+bar.maskObject.transform.parent.localScale.y);
+        
+        bar.UpdateBar(health/CoreLocalModel.defaultHealth);
+        
+        if(health < WARP_COST) {
+            for(int i = 0;i < imgs.Length; i++) {
+                Image img = imgs[i];
+                img.color = new Color(128, 0, 0);
+            }
+            return false;
+        } else {
+            for(int i = 0;i < imgs.Length; i++) {
+                Image img = imgs[i];
+                img.color = new Color(255, 255, 255);
+            }
+            return true;
+        }
+    }
+    void OnCoreBreak(string id) {
+        Destroy(icons[id]);
+    }
+    void OnHealthChange(string id, float hp) {
+        CheckHealth(id, hp);
     }
     public void DeactivateUI() {
         battleUIObject.SetActive(true);
         respawnUIObject.SetActive(false);
+        string[] keys = new string[icons.Count];
+        icons.Keys.CopyTo(keys,0);
+        for(int i = 0;i < icons.Count; i++) {
+            Destroy(icons[keys[i]]);
+        }
+        icons = new Dictionary<string, GameObject>();
+        coreLoader.OnOwnedCoreBreaked -= OnCoreBreak;
+        coreLoader.OnOwnedCoreHealthChanged -= OnHealthChange;
     }
  
     // Update is called once per frame
