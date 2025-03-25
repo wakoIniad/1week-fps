@@ -1201,11 +1201,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5076734036872923043, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5076734036872923043, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: m_IsTrigger
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5155200136381265698, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 5174545643518490596, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: m_Enabled
