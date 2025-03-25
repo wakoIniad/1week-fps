@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,7 +18,8 @@ public class FPSS_ShooterScript : MonoBehaviour
     [System.NonSerialized] public bool stop;
 
     public GameObject fireBallPrefab;
-    public int launchForce = 4;//8;//15;
+    public GameObject fireBallHologramPrefab;
+    public int launchForce = 1;//8;//15;
 
 
     bool isHit;
@@ -36,15 +38,20 @@ public class FPSS_ShooterScript : MonoBehaviour
 
     public Vector3 Shoot(Transform parent, Vector3 direction) {
         GameObject launchedObject = Instantiate(fireBallPrefab, parent);
-        launchedObject.transform.localPosition = new Vector3(0f,1.5f,1.5f);
+        launchedObject.transform.position = parent.transform.position + direction * 1.5f;
         Rigidbody rb = launchedObject.GetComponent<Rigidbody>();
-        rb.AddForce(direction * launchForce, ForceMode.Impulse);
+        StartCoroutine(AddForceLate(rb, direction));
         return launchedObject.transform.position;
     }
     public void ShootAt(Vector3 position, Vector3 direction) {
-        GameObject launchedObject = Instantiate(fireBallPrefab);
+        //ダメージなどの処理は特にない見た目だけの火の玉を出す
+        GameObject launchedObject = Instantiate(fireBallHologramPrefab);
         launchedObject.transform.position = position;
         Rigidbody rb = launchedObject.GetComponent<Rigidbody>();
+        rb.AddForce(direction * launchForce, ForceMode.Impulse);
+    }
+    IEnumerator AddForceLate(Rigidbody rb, Vector3 direction) {
+        yield return new WaitForSeconds(0.4f);
         rb.AddForce(direction * launchForce, ForceMode.Impulse);
     }
     //毎フレーム呼ばれる
@@ -55,7 +62,7 @@ public class FPSS_ShooterScript : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             se.play();
-            Vector3 pos = Shoot(gameObject.transform, playerCamera.transform.forward);
+            Vector3 pos = Shoot(playerCamera.transform, playerCamera.transform.forward);
             playerManager.webSocketLoader.EntryShoot(pos, playerCamera.transform.forward);
             /*//画面中央にあたる場所から出現するレイ(直線)を求める
             ray = playerCamera.GetCamera().ScreenPointToRay(new Vector3(Screen.width/2, Screen.height/2, 0));

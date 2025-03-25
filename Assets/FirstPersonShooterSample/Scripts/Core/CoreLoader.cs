@@ -75,6 +75,7 @@ public class CoreLoader : MonoBehaviour
         //プライヤーが移動中の場合落ちる  -> すぐ拾えちゃうので破壊した人に所有権が変わるようにする
         //CoreList[targetCoreId].TryPlace();
         CoreList[targetCoreId].SetAsNotowned();
+        Debug.Log("APPLY_BREAK_DATA:"+targetCoreId);
     }
     public void ApplyPositionData(string targetCoreId, Vector3 pos) {
         CoreList[targetCoreId].SetPosition(pos);

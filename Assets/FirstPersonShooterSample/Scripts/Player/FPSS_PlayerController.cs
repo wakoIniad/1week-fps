@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 //プレイヤーを動かす
@@ -7,11 +9,16 @@ using UnityEngine;
 public class FPSS_PlayerController : MonoBehaviour
 {
     
+    public TimerProgressRing timerProgressRing;
+    public GameObject angelModeTensionRod;
     [System.NonSerialized] public PlayerManager playerManager;
-    public float walkSpeed = 2;
-    public float runSpeed = 4;
+    //移動速度を早くしすぎると、通信の遅延の不快感を軽減するための、火の玉が発射前に
+    //少し残るやつが残りすぎに感じちゃう
+    public float walkSpeed = 2;//3;
+    public float runSpeed = 4;//5;
     public float jumpSpeed = 8;
     public LayerMask groundLayer = 0b0001;//地面として扱うものの設定
+    public float anglelModeTime = 16;
 
     //入力
     float xAxis;
@@ -65,7 +72,26 @@ public class FPSS_PlayerController : MonoBehaviour
                 lastSynchronizetPosition = transform.position;
             }
         }
-
+        
+        if(Input.GetKeyDown(KeyCode.P) && isGround) {
+            playerManager.webSocketLoader.EntryAngel();
+        }
+    }
+    public void AngelMode() {
+        Vector3 temp = angelModeTensionRod.transform.localScale;
+        angelModeTensionRod.transform.localScale
+            = new Vector3(temp.x,10,temp.z);
+        rb.position += new Vector3(0,1,0);
+        rb.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.VelocityChange);
+        StartCoroutine(HeadingTowardsDeath());
+        timerProgressRing.waitTime = anglelModeTime;
+        timerProgressRing.StartTimer();
+    }
+    IEnumerator HeadingTowardsDeath() {
+        yield return new WaitForSeconds(anglelModeTime);
+        Vector3 temp = angelModeTensionRod.transform.localScale;
+        angelModeTensionRod.transform.localScale
+            = new Vector3(temp.x,1,temp.z);
     }
 
 

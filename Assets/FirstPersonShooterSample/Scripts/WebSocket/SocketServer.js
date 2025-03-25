@@ -86,6 +86,12 @@ const CORE_DEFAULT_HEALTH = 100;
 const PLAYER_DEFAULT_HEALTH = 10;
 const REVIVAL_HEALTH_RATE = 0.2;
 const CORE_WARP_COST = 50;//消費するHP
+const ANGEL_MODE_TIME = 16;
+const CORE_ANGEL_COST = 1;//4;//放棄するコア数
+
+const SYSTEM_PLAYER_NAME = "SYSTEM";
+//コアが破壊された後にだれにも移送されずに同じ人に再取得されるのを防ぐ時間
+const CORE_SYSTEM_PROTECT_TIME = 10;
 class Player {
     constructor(id, position) {
         this.id = id;
@@ -96,6 +102,7 @@ class Player {
         this.gameOver = false;
         this.ghost = false;// リスポーン待機時等
         this.revivalHealthRate = REVIVAL_HEALTH_RATE;
+        this.lastAngelMode = Date.now() - ANGEL_MODE_TIME * 1000;
     }
     setPosition(position) {
         this.position = position;
@@ -133,7 +140,7 @@ class Player {
         for(const core of Object.values(coreList)) {
             if(core.transporting && core.transporter ==  this.id) {
                 //this.Respawn(core.id);
-                core.Damage(applicant, CORE_DEFAULT_HEALTH);
+                core.Break(applicant);
                 this.System_RevivalByCore();
                 return true;
             }
@@ -191,6 +198,8 @@ class Core {
         this.repairAmountOnPlacedPerSec = CORE_REPAIR_FACTOR_ON_PLACED;
         this.repairAmountOnTransportingPerSec = CORE_REPAIR_FACTOR_ON_TRANSPORTING;
         this.warpCost = CORE_WARP_COST;//(Health)
+        this.lastBreaked = Date.now() - 10000;
+        this.lastOwner = null;
         //this.warpCoolTime = 10;
     }
     System_Repair() {//Call before Damage()
@@ -214,13 +223,16 @@ class Core {
         this.lastRepaired = Date.now();
     }
     Unclaim(position) {
-        const lastOwner = this.owner;
-        connections[lastOwner].send(`Core,Break,${this.id}`);
+        this.lastOwner = this.owner;
+        //connections[this.lastOwner].send(`Core,Damage,${this.id},${0}`);
+        connections[this.lastOwner].send(`Core,Break,${this.id}`);
         server.sendAllClient(`Core,Place,${this.id},${position.join(',')}`);
         this.owner = null;
         this.transporting = false;
         this.nowHealth = 0;
         this.position = position;
+        this.lastBreaked = Date.now();
+        console.log("Unclaim",this.id,this.owner);
     }
     UseHealth(amount) {
         this.System_Repair(amount);
@@ -232,7 +244,7 @@ class Core {
         return false;
     }
     Warp(applicant) {
-        if(applicant === this.owner) {
+        if(applicant === this.owner && !this.transporting) {
             //if(Date.now() - this.lastWarpedTime > this.warpCoolTime * 1000) {
             //    playerList[applicant].position = this.position;
             //    this.lastWarpedTime = Date.now();
@@ -268,7 +280,8 @@ class Core {
         return false;
     }
     Claim(applicant) {
-        if(playerList[applicant].ghost)return;
+        if(playerList[applicant].ghost)return false;
+        if(Date.now() - this.lastBreaked < CORE_SYSTEM_PROTECT_TIME*1000 && this.lastOwner === applicant)return false;
         if(this.nowHealth <= 0){
             this.nowHealth = this.defaultHealth;
             this.owner = applicant;
@@ -305,14 +318,17 @@ class Core {
         if(this.owner) {
             this.nowHealth = 0;
             connections[this.owner].send(`Core,Break,${this.id}`);
+            this.lastOwner = this.owner;
             this.owner = null;
-            if(this.Claim(applicant)) {
-                connections[applicant].send(`Core,Claim,${this.id}`);
-                if(this.Transport(applicant)) {
-                    server.sendAllClient(`Core,Transport,${this.id},${this.transporter}`);
+            if(applicant) {
+                if(this.Claim(applicant)) {
+                    connections[applicant].send(`Core,Claim,${this.id}`);
+                    if(this.Transport(applicant)) {
+                        server.sendAllClient(`Core,Transport,${this.id},${applicant}`);
+                    }
                 }
             }
-
+            this.lastBreaked = Date.now();
         }
     }
 }
@@ -323,6 +339,7 @@ function GetRank() {
     }
     return counter;
 }
+playerList["GameOwner"] = new Player(SYSTEM_PLAYER_NAME, [-1000,-1000,-1000]);
 
 const WebSocket = require("ws");
 
@@ -358,10 +375,8 @@ server.sendAllClient = text => {
         socket.send(text);
     });
 }
-function broadcast(exclude, text) {
-    Object.entries(connections).forEach( ([id, socket]) => {
-        if(id!==exclude)socket.send(text);
-    });
+function getOwnedCores(id) {
+    return Object.values(coreList).filter( (core) => core.owner === id );
 }
 server.on("connection", async (socket) => {
     connectionCounter++;
@@ -369,9 +384,9 @@ server.on("connection", async (socket) => {
     const id = makeId();
     connections[id] = socket;
     socket.broadcast = (text) => {
-        Object.keys(connections).forEach( key => {
+        Object.entries(connections).forEach( ([key, connection]) => {
             if(key !== id) {
-                connections[key].send(text);
+                connection.send(text);
             }
         });
     }
@@ -394,6 +409,7 @@ server.on("connection", async (socket) => {
                 }`);
                 
                 for(const player of Object.values(playerList)) {
+                    if(player.id === SYSTEM_PLAYER_NAME)continue;
                     if(player.ghost ) {
                         if(!player.gameOver) {
                             socket.send(`Player,Create,${player.id},${player.position.join(',')}`);
@@ -506,6 +522,18 @@ server.on("connection", async (socket) => {
             
             case "SelfDamageCore":
                 coreList[args[1]].Damage(args[0], +args[2]);
+                break;
+            case "AngelEntry":
+                if(Date.now() - playerList[id].lastAngelMode < ANGEL_MODE_TIME * 1000)break;
+                const ownedCores = getOwnedCores(id);
+                if(ownedCores.length >= CORE_ANGEL_COST) {
+                    for(let i = 0;i < CORE_ANGEL_COST;i++) {
+                        //AngelModeになるとコアを落とす。取られる可能性有
+                        ownedCores[i].Unclaim(playerList[id].position);
+                    }
+                    playerList[id].lastAngelMode = Date.now();
+                    socket.send("System,Angel");
+                }
                 break;
             default:
                 console.log("default:"+command);

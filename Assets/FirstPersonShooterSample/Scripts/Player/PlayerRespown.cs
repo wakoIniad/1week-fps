@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerRespawn : MonoBehaviour
 {
-    public RespawnUI respawnUI;
+    public CoreMapUI coreMapUI;
     public string gameoverSceneName = "";
     private bool waitingRespawn = false;
 
@@ -57,8 +57,8 @@ public class PlayerRespawn : MonoBehaviour
         playerManager.EnterUIMde();
         waitingRespawn = true;
         //playerManager.playerCore.OnCoreStatusViewClicked += SpawnAnchorSelected;
-        respawnUI.ActivateUI();
-        respawnUI.OnRespawnAnchorSelected += SpawnAnchorSelected;
+        coreMapUI.ActivateUI();
+        coreMapUI.OnRespawnAnchorSelected += SpawnAnchorSelected;
     }
     public void SpawnAnchorSelected(string id) {
         Debug.Log("test:"+id);
@@ -73,8 +73,8 @@ public class PlayerRespawn : MonoBehaviour
         playerManager.ExitUIMde();
         waitingRespawn = false;
         playerManager.playerCore.OnCoreStatusViewClicked -= SpawnAnchorSelected;
-        respawnUI.DeactivateUI();
-        respawnUI.OnRespawnAnchorSelected -= SpawnAnchorSelected;
+        coreMapUI.DeactivateUI();
+        coreMapUI.OnRespawnAnchorSelected -= SpawnAnchorSelected;
 
     }
 
