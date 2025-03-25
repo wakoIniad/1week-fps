@@ -17,28 +17,30 @@ public class RespawnUI : MonoBehaviour
     public event Action<string> OnRespawnAnchorSelected; 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        mapRectTransform = mapObject.GetComponent<RectTransform>();
-    }
+
     public void ActivateUI() {
+        mapRectTransform = mapObject.GetComponent<RectTransform>();
         battleUIObject.SetActive(false);
         systemUIObject.SetActive(false);
+        respawnUIObject.SetActive(true);
         CoreLocalModel[] cores = new CoreLocalModel[coreLoader.CoreList.Count];
         coreLoader.CoreList.Values.CopyTo(cores,0);
         float mapDisplayWidth = mapRectTransform.sizeDelta.x;
         float scale = mapDisplayWidth/MAP_SIZE;
         Dictionary<string, GameObject> icons = new Dictionary<string, GameObject>();
+        //中心が0になる為、それの調整用。
+        float offset = scale/2;
         for(int i = 0;i < cores.Length; i++) {
             CoreLocalModel core = cores[i];
+            if(!core.owned)continue;
             GameObject icon = Instantiate(respawnPointIconPrefab, mapObject.transform);
             icons[core.id] = icon;
             Button button = icon.GetComponent<Button>();
             Vector3 corePosition = core.GetPosition();
             icon.transform.localPosition = new Vector3(
-                corePosition.x * scale,
-                corePosition.y * scale,
-                corePosition.z * scale
+                corePosition.x * scale - offset,
+                corePosition.y * scale - offset,
+                corePosition.z * scale - offset
             );
             button.onClick.AddListener(() => OnRespawnAnchorSelected.Invoke(core.id));
         }
@@ -48,6 +50,7 @@ public class RespawnUI : MonoBehaviour
     }
     public void DeactivateUI() {
         battleUIObject.SetActive(true);
+        respawnUIObject.SetActive(false);
     }
  
     // Update is called once per frame
