@@ -34,19 +34,4 @@ public class SystemMenuUI : MonoBehaviour
             reticle.SetActive(true);
         }
     }
-    // Update is called once per frame
-    void Update()
-    {
-        //if(Input.GetKeyDown(KeyCode.Escape)) {
-        //    displaying = !displaying;
-        //    panelObject.SetActive(displaying);
-        //    if(displaying) {
-        //        playerManager.EnterUIMde();
-        //        reticle.SetActive(false);
-        //    } else {
-        //        playerManager.ExitUIMde();
-        //        reticle.SetActive(true);
-        //    }
-        //}
-    }
 }

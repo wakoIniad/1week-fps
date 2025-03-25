@@ -9,8 +9,6 @@ public class CoreMapUI : MonoBehaviour
     public bool active = false;
     public GameObject containerObject;
     public PlayerModelLoader playerModelLoader;
-    public GameObject battleUIObject;
-    public GameObject systemUIObject;
     
     //public GameObject coreMapUIObject;
     public GameObject mapObject;
@@ -28,8 +26,6 @@ public class CoreMapUI : MonoBehaviour
 
     public void ActivateUI() {
         mapRectTransform = mapObject.GetComponent<RectTransform>();
-        //battleUIObject.SetActive(false);
-        //systemUIObject.SetActive(false);
         containerObject.SetActive(true);
         active = true;
         CoreLocalModel[] cores = new CoreLocalModel[coreLoader.CoreList.Count];
@@ -76,10 +72,6 @@ public class CoreMapUI : MonoBehaviour
     bool CheckHealth(string id, float health) {
         Image[] imgs = icons[id].GetComponentsInChildren<Image>();
         ImageBar bar = icons[id].GetComponent<ImageBar>();
-        //Debug.Log("Lossy:"+bar.maskObject.transform.parent.lossyScale.y);
-        //Debug.Log("LossyParent:"+bar.maskObject.transform.parent.lossyScale.y);
-        //Debug.Log("local:"+bar.maskObject.transform.localScale.y);
-        //Debug.Log("localParent:"+bar.maskObject.transform.parent.localScale.y);
         
         bar.UpdateBar(health/CoreLocalModel.defaultHealth);
         
@@ -106,7 +98,6 @@ public class CoreMapUI : MonoBehaviour
         if(icons.ContainsKey(id))CheckHealth(id, hp);
     }
     public void DeactivateUI() {
-        //battleUIObject.SetActive(true);
         containerObject.SetActive(false);
         active = false;
         string[] keys = new string[icons.Count];
