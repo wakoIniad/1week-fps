@@ -33,8 +33,6 @@ public class ImageBar : MonoBehaviour
     }
 
     public void UpdateBar(float remainingPercentage) {
-        //テスト用。後で消す。
-        //if(!gameObject.activeInHierarchy)return;
         if(!mask)GetData();
         float scale = maskObject.transform.parent.localScale.y;
         mask.padding = scale * MaskMap * 
