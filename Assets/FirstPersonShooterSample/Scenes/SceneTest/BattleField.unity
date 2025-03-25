@@ -2766,7 +2766,6 @@ MonoBehaviour:
   coreLoader: {fileID: 341430992}
   playerManager: {fileID: 2060108085}
   gameManager: {fileID: 1724181671}
-  PlayerPositionAnchor: {fileID: 1679195338}
   EntryAccepted: 0
 --- !u!4 &795691033
 Transform:
@@ -4716,7 +4715,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4153616622095022462, guid: d459c38262f0fec4c986650421b12fde, type: 3}
       propertyPath: m_FillAmount
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4204410098543047430, guid: d459c38262f0fec4c986650421b12fde, type: 3}
       propertyPath: m_Pivot.x
@@ -4801,6 +4800,10 @@ PrefabInstance:
     - target: {fileID: 8535725375220328512, guid: d459c38262f0fec4c986650421b12fde, type: 3}
       propertyPath: m_Name
       value: EngelModeBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535725375220328512, guid: d459c38262f0fec4c986650421b12fde, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5040,11 +5043,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e15129ae150e3534d931c5882b5f4e9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &1679195338 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6321597359760546053, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
-  m_PrefabInstance: {fileID: 474093379}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1724181668
 GameObject:
   m_ObjectHideFlags: 0
