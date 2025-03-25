@@ -32,6 +32,7 @@ public class TimerProgressRing : MonoBehaviour
 
     public void StartTimer()
     {
+        progressRing.fillAmount = 0;
         progress = true;
         gameObject.SetActive(true);
     }
