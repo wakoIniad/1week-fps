@@ -39,7 +39,7 @@ public class FPSS_ShooterScript : MonoBehaviour
         GameObject launchedObject = Instantiate(fireBallPrefab, parent);
         launchedObject.transform.position = parent.transform.position + direction * 1.5f;
         Rigidbody rb = launchedObject.GetComponent<Rigidbody>();
-        AddForceLate(rb, direction);
+        StartCoroutine(AddForceLate(rb, direction));
         return launchedObject.transform.position;
     }
     public void ShootAt(Vector3 position, Vector3 direction) {
@@ -49,7 +49,7 @@ public class FPSS_ShooterScript : MonoBehaviour
         rb.AddForce(direction * launchForce, ForceMode.Impulse);
     }
     IEnumerator AddForceLate(Rigidbody rb, Vector3 direction) {
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.4f);
         rb.AddForce(direction * launchForce, ForceMode.Impulse);
     }
     //毎フレーム呼ばれる

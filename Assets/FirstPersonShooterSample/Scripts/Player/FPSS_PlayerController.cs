@@ -8,8 +8,10 @@ public class FPSS_PlayerController : MonoBehaviour
 {
     
     [System.NonSerialized] public PlayerManager playerManager;
-    public float walkSpeed = 2;
-    public float runSpeed = 4;
+    //移動速度を早くしすぎると、通信の遅延の不快感を軽減するための、火の玉が発射前に
+    //少し残るやつが残りすぎに感じちゃう
+    public float walkSpeed = 2;//3;
+    public float runSpeed = 4;//5;
     public float jumpSpeed = 8;
     public LayerMask groundLayer = 0b0001;//地面として扱うものの設定
 
