@@ -57,7 +57,7 @@ public class FPSS_PlayerController : MonoBehaviour
             if(
                 time - lastSynchronizedTime >= 0.5 &&
                 lastSynchronizetPosition != null 
-                ?Vector3.Distance(lastSynchronizetPosition, transform.position) > 0.5f
+                ?Vector3.Distance(lastSynchronizetPosition, transform.position) > 0.1f
                 :true
             ) {
                 playerManager.webSocketLoader.SendMyPosition();

@@ -401,6 +401,7 @@ server.on("connection", async (socket) => {
                         }
                     } else {
                         socket.send(`Player,Create,${player.id},${player.position.join(',')}`);
+                        socket.send(`Player,Rotation,${player.id},${player.rotation.join(',')}`);
                     }
                 }
                 
@@ -475,11 +476,14 @@ server.on("connection", async (socket) => {
                 }
                 break;
             case "RespawnRequest":
-                playerList[id].Respawn(args[0]);
+                if(playerList[id].Respawn(args[0])) {
+                    socket.broadcast(`Player,Position,${id},${playerList[id].position.join(',')}`);
+                }
                 break;
             case "WarpRequest":
                 if(coreList[args[0]].Warp(id)) {
                     socket.send("System,SetPosition,"+playerList[id].position.join(','));
+                    socket.broadcast(`Player,Position,${id},${playerList[id].position.join(',')}`);
                 };
                 break;
             case "CoreDamageEntry":

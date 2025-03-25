@@ -14,7 +14,7 @@ public class CoreLoader : MonoBehaviour
     [System.NonSerialized] public Transform loaderTransform;
     public GameObject CoreObjectPrefab;
     
-    Dictionary<string, CoreLocalModel> CoreList = new Dictionary<string, CoreLocalModel>();
+    public Dictionary<string, CoreLocalModel> CoreList = new Dictionary<string, CoreLocalModel>();
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     void Start()
