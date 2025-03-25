@@ -90,6 +90,8 @@ const ANGEL_MODE_TIME = 16;
 const CORE_ANGEL_COST = 1;//4;//放棄するコア数
 
 const SYSTEM_PLAYER_NAME = "SYSTEM";
+//コアが破壊された後にだれにも移送されずに同じ人に再取得されるのを防ぐ時間
+const CORE_SYSTEM_PROTECT_TIME = 10;
 class Player {
     constructor(id, position) {
         this.id = id;
@@ -138,7 +140,7 @@ class Player {
         for(const core of Object.values(coreList)) {
             if(core.transporting && core.transporter ==  this.id) {
                 //this.Respawn(core.id);
-                core.Break(applicant);
+                core.Damage(applicant, CORE_DEFAULT_HEALTH);
                 this.System_RevivalByCore();
                 return true;
             }
@@ -196,6 +198,8 @@ class Core {
         this.repairAmountOnPlacedPerSec = CORE_REPAIR_FACTOR_ON_PLACED;
         this.repairAmountOnTransportingPerSec = CORE_REPAIR_FACTOR_ON_TRANSPORTING;
         this.warpCost = CORE_WARP_COST;//(Health)
+        this.lastBreaked = Date.now() - 10000;
+        this.lastOwner = null;
         //this.warpCoolTime = 10;
     }
     System_Repair() {//Call before Damage()
@@ -219,14 +223,16 @@ class Core {
         this.lastRepaired = Date.now();
     }
     Unclaim(position) {
-        const lastOwner = this.owner;
-        connections[lastOwner].send(`Core,Damage,${this.id},${0}`);
-        connections[lastOwner].send(`Core,Break,${this.id}`);
+        this.lastOwner = this.owner;
+        //connections[this.lastOwner].send(`Core,Damage,${this.id},${0}`);
+        connections[this.lastOwner].send(`Core,Break,${this.id}`);
         server.sendAllClient(`Core,Place,${this.id},${position.join(',')}`);
         this.owner = null;
         this.transporting = false;
         this.nowHealth = 0;
         this.position = position;
+        this.lastBreaked = Date.now();
+        console.log("Unclaim",this.id,this.owner);
     }
     UseHealth(amount) {
         this.System_Repair(amount);
@@ -274,7 +280,8 @@ class Core {
         return false;
     }
     Claim(applicant) {
-        if(playerList[applicant].ghost)return;
+        if(playerList[applicant].ghost)return false;
+        if(Date.now() - this.lastBreaked < CORE_SYSTEM_PROTECT_TIME*1000 && this.lastOwner === applicant)return false;
         if(this.nowHealth <= 0){
             this.nowHealth = this.defaultHealth;
             this.owner = applicant;
@@ -311,6 +318,7 @@ class Core {
         if(this.owner) {
             this.nowHealth = 0;
             connections[this.owner].send(`Core,Break,${this.id}`);
+            this.lastOwner = this.owner;
             this.owner = null;
             if(applicant) {
                 if(this.Claim(applicant)) {
@@ -320,7 +328,7 @@ class Core {
                     }
                 }
             }
-
+            this.lastBreaked = Date.now();
         }
     }
 }
