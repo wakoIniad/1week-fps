@@ -140,7 +140,7 @@ class Player {
         for(const core of Object.values(coreList)) {
             if(core.transporting && core.transporter ==  this.id) {
                 //this.Respawn(core.id);
-                core.Damage(applicant, CORE_DEFAULT_HEALTH);
+                core.Break(applicant);
                 this.System_RevivalByCore();
                 return true;
             }
