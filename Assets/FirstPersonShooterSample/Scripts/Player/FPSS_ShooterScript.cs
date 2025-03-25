@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,7 +18,7 @@ public class FPSS_ShooterScript : MonoBehaviour
     [System.NonSerialized] public bool stop;
 
     public GameObject fireBallPrefab;
-    public int launchForce = 4;//8;//15;
+    public int launchForce = 1;//8;//15;
 
 
     bool isHit;
@@ -38,13 +39,17 @@ public class FPSS_ShooterScript : MonoBehaviour
         GameObject launchedObject = Instantiate(fireBallPrefab, parent);
         launchedObject.transform.position = parent.transform.position + direction * 1.5f;
         Rigidbody rb = launchedObject.GetComponent<Rigidbody>();
-        rb.AddForce(direction * launchForce, ForceMode.Impulse);
+        AddForceLate(rb, direction);
         return launchedObject.transform.position;
     }
     public void ShootAt(Vector3 position, Vector3 direction) {
         GameObject launchedObject = Instantiate(fireBallPrefab);
         launchedObject.transform.position = position;
         Rigidbody rb = launchedObject.GetComponent<Rigidbody>();
+        rb.AddForce(direction * launchForce, ForceMode.Impulse);
+    }
+    IEnumerator AddForceLate(Rigidbody rb, Vector3 direction) {
+        yield return new WaitForSeconds(0.3f);
         rb.AddForce(direction * launchForce, ForceMode.Impulse);
     }
     //毎フレーム呼ばれる

@@ -14,6 +14,7 @@ public class WebSocketLoader : MonoBehaviour
     public CoreLoader coreLoader;
     public PlayerManager playerManager;
     public GameManager gameManager;
+    public Transform PlayerPositionAnchor;
 
     private WebSocket ws;
     private Transform myTr;
@@ -257,7 +258,7 @@ public class WebSocketLoader : MonoBehaviour
     public void SendMyPosition() {
         SendText(
             "Position,"+
-            Vector3ToString(myTr.position));
+            Vector3ToString(PlayerPositionAnchor.position));
     }
     public void SendMyRotation() {
         SendText(

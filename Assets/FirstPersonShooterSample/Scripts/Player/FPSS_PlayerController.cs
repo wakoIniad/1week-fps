@@ -66,7 +66,13 @@ public class FPSS_PlayerController : MonoBehaviour
             }
         }
         
-        
+        if(Input.GetKeyDown(KeyCode.P)) {
+            Vector3 temp = playerManager.playerLoader.thisPlayerModel.transform.localScale;
+            playerManager.playerLoader.thisPlayerModel.transform.localScale
+                = new Vector3(temp.x,10,temp.z);
+            rb.position += new Vector3(0,1,0);
+            rb.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.VelocityChange);
+        }
     }
 
 
