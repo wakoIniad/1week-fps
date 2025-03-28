@@ -160,7 +160,7 @@ class Player {
             }
         }
         if(defenceZonePlayers.includes(this.id)) {
-            defenceZoneClaiming = defenceZoneClaiming.filter(id => id !== this.id);
+            defenceZonePlayers = defenceZonePlayers.filter(id => id !== this.id);
             checkDefenceZone();
         }
         if(gameOver) {
