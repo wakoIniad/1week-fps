@@ -20,6 +20,7 @@ public class FPSS_ShooterScript : MonoBehaviour
     public GameObject fireBallPrefab;
     public GameObject fireBallHologramPrefab;
     public int launchForce = 1;//8;//15;
+    public GameObject fireballContainer;
 
 
     bool isHit;
@@ -41,6 +42,7 @@ public class FPSS_ShooterScript : MonoBehaviour
         launchedObject.transform.position = parent.transform.position + direction * 1.5f;
         Rigidbody rb = launchedObject.GetComponent<Rigidbody>();
         StartCoroutine(AddForceLate(rb, direction));
+        launchedObject.transform.parent = fireballContainer.transform;
         return launchedObject.transform.position;
     }
     public void ShootAt(Vector3 position, Vector3 direction) {
@@ -48,6 +50,7 @@ public class FPSS_ShooterScript : MonoBehaviour
         GameObject launchedObject = Instantiate(fireBallHologramPrefab);
         launchedObject.transform.position = position;
         Rigidbody rb = launchedObject.GetComponent<Rigidbody>();
+        launchedObject.transform.parent = fireballContainer.transform;
         rb.AddForce(direction * launchForce, ForceMode.Impulse);
     }
     IEnumerator AddForceLate(Rigidbody rb, Vector3 direction) {

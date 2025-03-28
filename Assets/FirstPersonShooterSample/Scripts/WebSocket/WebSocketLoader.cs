@@ -14,6 +14,7 @@ public class WebSocketLoader : MonoBehaviour
     public CoreLoader coreLoader;
     public PlayerManager playerManager;
     public GameManager gameManager;
+    public DefenceZone defenceZone;
     //public Transform PlayerPositionAnchor;
 
     private WebSocket ws;
@@ -219,6 +220,12 @@ public class WebSocketLoader : MonoBehaviour
                         case "Angel":
                             playerManager.PlayerController.AngelMode();
                             break;
+                        case "ClaimingDefenceZone":
+                            defenceZone.StartClaiming();
+                            break;
+                        case "CancelClaimingDefenceZone":
+                            defenceZone.EndClaiming();
+                            break;
                     }
                     break;
             }
@@ -340,6 +347,16 @@ public class WebSocketLoader : MonoBehaviour
     public void EntryAngel() {
         SendText(
             "AngelEntry"
+        );
+    }
+    public void EnterDefenceZone() {
+        SendText(
+            "EnterDefenceZone"
+        );
+    }
+    public void ExitDefenceZone() {
+        SendText(
+            "ExitDefenceZone"
         );
     }
 }

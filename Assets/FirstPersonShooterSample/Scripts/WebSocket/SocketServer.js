@@ -159,6 +159,10 @@ class Player {
                 }
             }
         }
+        if(defenceZonePlayers.includes(this.id)) {
+            defenceZoneClaiming = defenceZoneClaiming.filter(id => id !== this.id);
+            checkDefenceZone();
+        }
         if(gameOver) {
             this.gameOver = true;
             let restPlayer = Object.values(playerList).filter(p=>!p.gameOver);
@@ -378,6 +382,8 @@ server.sendAllClient = text => {
 function getOwnedCores(id) {
     return Object.values(coreList).filter( (core) => core.owner === id );
 }
+let defenceZonePlayers = [];
+let defenceZoneClaiming = null;
 server.on("connection", async (socket) => {
     connectionCounter++;
     console.log("connected");
@@ -422,7 +428,7 @@ server.on("connection", async (socket) => {
                 }
                 
                 for(const core of Object.values(coreList)) {
-                    socket.send(`Core,Create,${core.id},${core.position.join(',')}`)
+                    socket.send(`Core,Create,${core.id},${core.position.join(',')}`);
                     if(core.transporting) {
                         server.sendAllClient(`Core,Transport,${core.id},${core.transporter}`);
                     };
@@ -436,7 +442,7 @@ server.on("connection", async (socket) => {
                 const playerCore = new Core(id, createAt);// psitionは仮
                 playerCore.owner = id;
                 coreList[id] = playerCore;
-                const playerObj = new Player(id, createAt);;
+                const playerObj = new Player(id, createAt);
                 playerList[id] = playerObj
                 server.sendAllClient(`Core,Create,${id},${createAt.join(',')}`);
                 playerCore.Transport(id);
@@ -535,6 +541,14 @@ server.on("connection", async (socket) => {
                     socket.send("System,Angel");
                 }
                 break;
+            case "EnterDefenceZone":
+                defenceZonePlayers.push(id);
+                checkDefenceZone();
+                break;
+            case "ExitDefenceZone":
+                defenceZonePlayers = defenceZonePlayers.filter(f=>f!==id);
+                checkDefenceZone();
+                break;
             default:
                 console.log("default:"+command);
                 break;
@@ -546,3 +560,24 @@ server.on("connection", async (socket) => {
 //      delete connections[id];
     });
 });
+function checkDefenceZone() {
+    if(defenceZonePlayers.length === 1) {
+        connections[defenceZonePlayers[0]].send("System,ClaimingDefenceZone");
+        defenceZoneClaiming = defenceZonePlayers[0];
+        setTimeout(()=>{
+            if(!defenceZoneClaiming)return;
+            const coreId = defenceZoneClaiming+"$"+Date.now();
+            const createAt = playerList[defenceZoneClaiming].position;
+            const playerCore = new Core(coreId, createAt);// psitionは仮
+            coreList[coreId] = playerCore;
+            playerCore.owner = defenceZoneClaiming;
+            server.sendAllClient(`Core,Create,${coreId},${createAt.join(',')}`);
+            playerCore.Transport(defenceZoneClaiming);
+            connections[defenceZoneClaiming].send(`Core,Claim,${defenceZoneClaiming}`);
+            server.sendAllClient(`Core,Transport,${coreId},${defenceZoneClaiming}`);
+        },32*1000);
+    } else if(defenceZoneClaiming) {
+        connections[defenceZoneClaiming].send("System,CancelClaimingDefenceZone");
+        defenceZoneClaiming = null;
+    }
+}
