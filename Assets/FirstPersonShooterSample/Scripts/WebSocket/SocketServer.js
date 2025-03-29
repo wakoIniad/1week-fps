@@ -560,11 +560,12 @@ server.on("connection", async (socket) => {
 //      delete connections[id];
     });
 });
+let timeout = null;
 function checkDefenceZone() {
     if(defenceZonePlayers.length === 1) {
         connections[defenceZonePlayers[0]].send("System,ClaimingDefenceZone");
         defenceZoneClaiming = defenceZonePlayers[0];
-        setTimeout(()=>{
+        timeout = setTimeout(()=>{
             if(!defenceZoneClaiming)return;
             const coreId = defenceZoneClaiming+"$"+Date.now();
             const createAt = playerList[defenceZoneClaiming].position;
@@ -579,5 +580,7 @@ function checkDefenceZone() {
     } else if(defenceZoneClaiming) {
         connections[defenceZoneClaiming].send("System,CancelClaimingDefenceZone");
         defenceZoneClaiming = null;
+        if(timeout)clearTimeout(timeout);
+        timeout = null;
     }
 }
