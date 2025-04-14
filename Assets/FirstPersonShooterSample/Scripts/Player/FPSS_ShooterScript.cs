@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class FPSS_ShooterScript : MonoBehaviour
 {
+    public TouchPad pad;
     public OnepointSE se;
     [System.NonSerialized] public PlayerManager playerManager;
     public int damage = 10;//ダメージ
@@ -62,7 +63,7 @@ public class FPSS_ShooterScript : MonoBehaviour
     {
         if(stop)return;
         //左クリックされたとき
-        if(Input.GetMouseButtonDown(0))
+        if(playerManager.touchMode ? pad.touched: Input.GetMouseButtonDown(0))
         {
             se.play();
             Vector3 pos = Shoot(playerCamera.transform, playerCamera.transform.forward);

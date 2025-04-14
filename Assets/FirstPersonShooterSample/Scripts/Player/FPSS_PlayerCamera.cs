@@ -8,7 +8,10 @@ using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
 public class FPSS_PlayerCamera : MonoBehaviour
-{
+{   
+    public TouchPad movePad;
+    Vector2 lastPos = new Vector2(0,0);
+    Vector2 refPos = new Vector2(0,0);
     [System.NonSerialized] public PlayerManager playerManager;
     public GameObject playerBody;//プレイヤー本体をいれておく
     public float speed = 2;//視点移動の速度
@@ -64,15 +67,31 @@ public class FPSS_PlayerCamera : MonoBehaviour
         time += Time.deltaTime;
         if(stop)return;
         //入力を取得
+        float xInput = 0;
+        float yInput = 0;
+        bool moved = false;
+        if(playerManager.touchMode) {
+
+            if(movePad.isHeld) {
+                xInput = Input.GetAxis("Mouse X")-refPos.x;
+                yInput = -(Input.GetAxis("Mouse Y")+refPos.y);
+                lastPos = new Vector2(xInput, yInput);
+                moved = true;
+            }
+            if(movePad.touchEnd)refPos = lastPos;
+        } else {
+            xInput = Input.GetAxis("Mouse X");
+            yInput = -Input.GetAxis("Mouse Y");
+            moved = true;
+        }
         //Unity > ProjectSettings > InputManagerに設定がある
-        float xInput = Input.GetAxis("Mouse X");
-        float yInput = -Input.GetAxis("Mouse Y");
-
+        Debug.Log(lastPos);
         float plyrRot = 0;
-
-        //マウスが動いたぶん角度を変更
-        plyrRot = xInput * speed * (reverseX ? -1 : 1);
-        camRot += yInput * speed * (reverseY ? -1 : 1);
+        if(moved) {
+            //マウスが動いたぶん角度を変更
+            plyrRot = xInput * speed * (reverseX ? -1 : 1);
+            camRot += yInput * speed * (reverseY ? -1 : 1);
+        }
 
         //カメラの角度を制限する
         camRot = Mathf.Clamp(camRot, -angle/2, angle/2);

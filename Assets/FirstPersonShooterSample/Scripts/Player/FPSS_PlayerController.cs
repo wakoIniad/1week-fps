@@ -9,6 +9,10 @@ using UnityEngine;
 public class FPSS_PlayerController : MonoBehaviour
 {
     
+    public TouchPad padW;
+    public TouchPad padA;
+    public TouchPad padS;
+    public TouchPad padD;
     public TimerProgressRing timerProgressRing;
     public GameObject angelModeTensionRod;
     [System.NonSerialized] public PlayerManager playerManager;
@@ -109,22 +113,22 @@ public class FPSS_PlayerController : MonoBehaviour
     {
         //横方向の移動を-1～+1の値で表す
         xAxis = 0;
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || padA.isHeld)
         {
             xAxis -= 1;
         }
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || padD.isHeld)
         {
             xAxis += 1;
         }
 
         //前方向の移動を-1～+1の値で表す
         yAxis = 0;
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || padS.isHeld)
         {
             yAxis -= 1;
         }
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || padW.isHeld)
         {
             yAxis += 1;
             //if(dashInputTimer != -1 && dashInputTimer < dashInputSpeed) {
