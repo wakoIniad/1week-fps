@@ -63,7 +63,7 @@ public class FPSS_ShooterScript : MonoBehaviour
     {
         if(stop)return;
         //左クリックされたとき
-        if(playerManager.touchMode ? pad.touched: Input.GetMouseButtonDown(0))
+        if(GameManager.touchMode ? pad.touched: Input.GetMouseButtonDown(0))
         {
             se.play();
             Vector3 pos = Shoot(playerCamera.transform, playerCamera.transform.forward);

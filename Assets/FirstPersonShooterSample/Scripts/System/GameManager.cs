@@ -5,7 +5,14 @@ public class GameManager : MonoBehaviour
 {
     public WallActivater wallActivater;
     public int score;
+    
+    public bool touchModeSetting = true;
+    public static bool touchMode = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Awake () {
+        touchMode = touchModeSetting;  
+    }
+
     void Start()
     {
         SceneManager.activeSceneChanged += ActiveSceenChanged;

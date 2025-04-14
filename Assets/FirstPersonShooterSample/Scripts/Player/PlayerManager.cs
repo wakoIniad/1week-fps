@@ -13,7 +13,6 @@ public class PlayerManager : MonoBehaviour
     public FPSS_PlayerCoreManager playerCore;
     public PlayerRespawn playerRespawn;
     
-    public bool touchMode = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
         playerCore.playerManager = playerHealth.playerManager = playerRespawn.playerManager = PlayerController.playerManager = ShooterScript.playerManager = PlayerCamera.playerManager = this;

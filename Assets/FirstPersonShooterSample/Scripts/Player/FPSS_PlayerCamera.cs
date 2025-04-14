@@ -72,7 +72,7 @@ public class FPSS_PlayerCamera : MonoBehaviour
         time += Time.deltaTime;
         if(stop)return;
         //入力を取得
-        if(playerManager.touchMode) {
+        if(GameManager.touchMode) {
             foreach (Touch touch in Input.touches)
             {
                 Vector2 touchPos = touch.position;

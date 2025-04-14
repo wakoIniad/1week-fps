@@ -9,6 +9,9 @@ public class TouchPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public RectTransform rectTr;
     void Start() {
         rectTr = gameObject.GetComponent<RectTransform>();
+        if(!GameManager.touchMode) {
+            gameObject.SetActive(false);
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
