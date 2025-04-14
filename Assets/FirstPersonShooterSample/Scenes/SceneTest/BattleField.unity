@@ -3448,6 +3448,7 @@ MonoBehaviour:
   isHeld: 0
   touchEnd: 0
   touched: 0
+  rectTr: {fileID: 0}
 --- !u!1 &795691031
 GameObject:
   m_ObjectHideFlags: 0
@@ -6034,6 +6035,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallActivater: {fileID: 1053367326}
   score: 0
+  touchModeSetting: 0
 --- !u!1 &1849890255
 GameObject:
   m_ObjectHideFlags: 0
@@ -6307,6 +6309,7 @@ MonoBehaviour:
   isHeld: 0
   touchEnd: 0
   touched: 0
+  rectTr: {fileID: 0}
 --- !u!1 &1910555316
 GameObject:
   m_ObjectHideFlags: 0
@@ -6940,7 +6943,6 @@ MonoBehaviour:
   playerHealth: {fileID: 474093383}
   playerCore: {fileID: 474093387}
   playerRespawn: {fileID: 474093391}
-  touchMode: 1
 --- !u!1001 &7696598998969919375
 PrefabInstance:
   m_ObjectHideFlags: 0
