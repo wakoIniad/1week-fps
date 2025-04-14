@@ -22,7 +22,7 @@ public class FPSS_PlayerCamera : MonoBehaviour
 
 
     float camRot;//現在のカメラの角度を入れておく
-    float plyrRot;
+    //float plyrRot;
     
 
     Transform cameraTransform;
@@ -50,7 +50,7 @@ public class FPSS_PlayerCamera : MonoBehaviour
         instance = this;
     }
     
-
+    bool noRef = true;
     //ゲームをはじめて最初に呼ばれる
     void Start()
     {
@@ -71,30 +71,33 @@ public class FPSS_PlayerCamera : MonoBehaviour
         float xInput = 0;
         float yInput = 0;
         if(playerManager.touchMode) {
-
+            if(movePad.touched) {
+                Debug.Log("TOUCHED!!!!");
+                refPos = new Vector2(Input.GetAxis("Mouse X"),Input.GetAxis("Mouse Y"));
+                noRef = false;
+                Debug.Log("REF="+refPos);
+            }
             if(movePad.isHeld) {
+                if(noRef)return;
                 xInput = Input.GetAxis("Mouse X")-refPos.x;
-                yInput = Input.GetAxis("Mouse Y")-refPos.y;
+                yInput = -(Input.GetAxis("Mouse Y")-refPos.y);
                 //xInput = Input.GetAxis("Mouse X");
                 //yInput = -Input.GetAxis("Mouse Y");
-                lastPos = new Vector2(xInput, yInput);
+               // lastPos = new Vector2(xInput, yInput);
             } else {
-                refPos = lastPos;   
+                noRef = true;
+                Debug.Log("NOREF");
             }
-            plyrRot = 0;
-            plyrRot += xInput * speed * (reverseX ? -1 : 1);
-            camRot += yInput * speed * (reverseY ? -1 : 1);
         } else {
             xInput = Input.GetAxis("Mouse X");
             yInput = -Input.GetAxis("Mouse Y");
-            plyrRot = 0;
-            //マウスが動いたぶん角度を変更
-            plyrRot = xInput * speed * (reverseX ? -1 : 1);
-            camRot += yInput * speed * (reverseY ? -1 : 1);
         }
         //Unity > ProjectSettings > InputManagerに設定がある
         Debug.Log(refPos);
         
+        float plyrRot = 0;
+        plyrRot += xInput * speed * (reverseX ? -1 : 1);
+        camRot += yInput * speed * (reverseY ? -1 : 1);
 
         //カメラの角度を制限する
         camRot = Mathf.Clamp(camRot, -angle/2, angle/2);

@@ -20,7 +20,7 @@ public class TouchPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         touchEnd = true;
         Debug.Log("ボタンが離された！");
     }
-    void Update() {
+    void LateUpdate() {
         if(touched || touchEnd)Debug.Log("TouchPad:"+touchEnd+","+touched);
         if(touched) touched = false;
         if(touchEnd) touchEnd = false;
