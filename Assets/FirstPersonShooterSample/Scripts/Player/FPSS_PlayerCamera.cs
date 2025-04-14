@@ -63,34 +63,55 @@ public class FPSS_PlayerCamera : MonoBehaviour
 
     float xInput = 0;
     float yInput = 0;
+    Vector2 lastTouch = new Vector2(0,0);
+    int trackingTouchId = -1;
     //毎フレーム呼ばれる
     void Update()
     {
+        float plyrRot = 0;
+        
         time += Time.deltaTime;
         if(stop)return;
         //入力を取得
         if(playerManager.touchMode) {
-            if(movePad.isHeld) {
-                float x = Input.GetAxis("Mouse X");
-                float y = Input.GetAxis("Mouse Y");
-                xInput += x - lastPos.x;
-                yInput += y - lastPos.y;
-                //xInput = Input.GetAxis("Mouse X");
-                //yInput = -Input.GetAxis("Mouse Y");
-                lastPos = new Vector2(x, y);
-                Debug.Log("TESTERRR"+x+","+y);
-                if(movePad.touched) {
-                    Debug.Log("Test;;:"+x+","+y);  
+            foreach (Touch touch in Input.touches)
+            {
+                Vector2 touchPos = touch.position;
+
+                if (touch.phase == TouchPhase.Began)
+                {
+                    if (RectTransformUtility.RectangleContainsScreenPoint(movePad.rectTr, touchPos))
+                    {
+                        trackingTouchId = touch.fingerId;
+                        Debug.Log("タッチ追跡開始");
+                    }
+                }
+
+                if (touch.fingerId == trackingTouchId)
+                {
+                    if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
+                    {
+                        // 追跡中のタッチの処理
+                        Debug.Log("追跡中：" + touch.position);
+                        
+                        xInput = 0.05f * touch.deltaPosition.x; //0.05は感度
+                        yInput = 0.05f * touch.deltaPosition.y; //0.05は感度
+                    }
+
+                    if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+                    {
+                        trackingTouchId = -1;
+                        Debug.Log("タッチ終了");
+                    }
                 }
             }
+    
         } else {
             xInput = Input.GetAxis("Mouse X");
             yInput = Input.GetAxis("Mouse Y");
         }
         //Unity > ProjectSettings > InputManagerに設定がある
         Debug.Log(refPos);
-        
-        float plyrRot = 0;
         plyrRot = xInput * speed * (reverseX ? -1 : 1);
         camRot += -yInput * speed * (reverseY ? -1 : 1);
 

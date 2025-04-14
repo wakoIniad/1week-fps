@@ -6,6 +6,10 @@ public class TouchPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public bool isHeld = false; //押し続けてる間
     public bool touchEnd = false;
     public bool touched = false; //1frameのみ
+    public RectTransform rectTr;
+    void Start() {
+        rectTr = gameObject.GetComponent<RectTransform>();
+    }
 
     public void OnPointerDown(PointerEventData eventData)
     {
