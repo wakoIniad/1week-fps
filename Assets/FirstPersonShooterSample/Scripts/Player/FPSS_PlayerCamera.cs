@@ -61,15 +61,14 @@ public class FPSS_PlayerCamera : MonoBehaviour
         
     }
 
-    float xInput = 0;
-    float yInput = 0;
     Vector2 lastTouch = new Vector2(0,0);
     int trackingTouchId = -1;
     //毎フレーム呼ばれる
     void Update()
     {
-        float plyrRot = 0;
         
+        float xInput = 0;
+        float yInput = 0;
         time += Time.deltaTime;
         if(stop)return;
         //入力を取得
@@ -94,8 +93,8 @@ public class FPSS_PlayerCamera : MonoBehaviour
                         // 追跡中のタッチの処理
                         Debug.Log("追跡中：" + touch.position);
                         
-                        xInput = 0.05f * touch.deltaPosition.x; //0.05は感度
-                        yInput = 0.05f * touch.deltaPosition.y; //0.05は感度
+                        xInput = 0.1f * touch.deltaPosition.x; //0.05は感度
+                        yInput = 0.1f * touch.deltaPosition.y; //0.05は感度
                     }
 
                     if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
@@ -112,6 +111,8 @@ public class FPSS_PlayerCamera : MonoBehaviour
         }
         //Unity > ProjectSettings > InputManagerに設定がある
         Debug.Log(refPos);
+        
+        float plyrRot = 0;
         plyrRot = xInput * speed * (reverseX ? -1 : 1);
         camRot += -yInput * speed * (reverseY ? -1 : 1);
 
