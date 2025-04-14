@@ -50,7 +50,6 @@ public class FPSS_PlayerCamera : MonoBehaviour
         instance = this;
     }
     
-    bool noRef = true;
     //ゲームをはじめて最初に呼ばれる
     void Start()
     {
@@ -62,42 +61,38 @@ public class FPSS_PlayerCamera : MonoBehaviour
         
     }
 
+    float xInput = 0;
+    float yInput = 0;
     //毎フレーム呼ばれる
     void Update()
     {
         time += Time.deltaTime;
         if(stop)return;
         //入力を取得
-        float xInput = 0;
-        float yInput = 0;
         if(playerManager.touchMode) {
-            if(movePad.touched) {
-                Debug.Log("TOUCHED!!!!");
-                refPos = new Vector2(Input.GetAxis("Mouse X"),Input.GetAxis("Mouse Y"));
-                noRef = false;
-                Debug.Log("REF="+refPos);
-            }
             if(movePad.isHeld) {
-                if(noRef)return;
-                xInput = Input.GetAxis("Mouse X")-refPos.x;
-                yInput = -(Input.GetAxis("Mouse Y")-refPos.y);
+                float x = Input.GetAxis("Mouse X");
+                float y = Input.GetAxis("Mouse Y");
+                xInput += x - lastPos.x;
+                yInput += y - lastPos.y;
                 //xInput = Input.GetAxis("Mouse X");
                 //yInput = -Input.GetAxis("Mouse Y");
-               // lastPos = new Vector2(xInput, yInput);
-            } else {
-                noRef = true;
-                Debug.Log("NOREF");
+                lastPos = new Vector2(x, y);
+                Debug.Log("TESTERRR"+x+","+y);
+                if(movePad.touched) {
+                    Debug.Log("Test;;:"+x+","+y);  
+                }
             }
         } else {
             xInput = Input.GetAxis("Mouse X");
-            yInput = -Input.GetAxis("Mouse Y");
+            yInput = Input.GetAxis("Mouse Y");
         }
         //Unity > ProjectSettings > InputManagerに設定がある
         Debug.Log(refPos);
         
         float plyrRot = 0;
-        plyrRot += xInput * speed * (reverseX ? -1 : 1);
-        camRot += yInput * speed * (reverseY ? -1 : 1);
+        plyrRot = xInput * speed * (reverseX ? -1 : 1);
+        camRot += -yInput * speed * (reverseY ? -1 : 1);
 
         //カメラの角度を制限する
         camRot = Mathf.Clamp(camRot, -angle/2, angle/2);
