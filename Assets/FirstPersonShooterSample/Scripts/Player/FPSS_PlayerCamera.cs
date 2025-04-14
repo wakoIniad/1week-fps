@@ -22,6 +22,7 @@ public class FPSS_PlayerCamera : MonoBehaviour
 
 
     float camRot;//現在のカメラの角度を入れておく
+    float plyrRot;
     
 
     Transform cameraTransform;
@@ -69,29 +70,31 @@ public class FPSS_PlayerCamera : MonoBehaviour
         //入力を取得
         float xInput = 0;
         float yInput = 0;
-        bool moved = false;
         if(playerManager.touchMode) {
 
             if(movePad.isHeld) {
                 xInput = Input.GetAxis("Mouse X")-refPos.x;
-                yInput = -(Input.GetAxis("Mouse Y")+refPos.y);
+                yInput = Input.GetAxis("Mouse Y")-refPos.y;
+                //xInput = Input.GetAxis("Mouse X");
+                //yInput = -Input.GetAxis("Mouse Y");
                 lastPos = new Vector2(xInput, yInput);
-                moved = true;
+            } else {
+                refPos = lastPos;   
             }
-            if(movePad.touchEnd)refPos = lastPos;
+            plyrRot = 0;
+            plyrRot += xInput * speed * (reverseX ? -1 : 1);
+            camRot += yInput * speed * (reverseY ? -1 : 1);
         } else {
             xInput = Input.GetAxis("Mouse X");
             yInput = -Input.GetAxis("Mouse Y");
-            moved = true;
-        }
-        //Unity > ProjectSettings > InputManagerに設定がある
-        Debug.Log(lastPos);
-        float plyrRot = 0;
-        if(moved) {
+            plyrRot = 0;
             //マウスが動いたぶん角度を変更
             plyrRot = xInput * speed * (reverseX ? -1 : 1);
             camRot += yInput * speed * (reverseY ? -1 : 1);
         }
+        //Unity > ProjectSettings > InputManagerに設定がある
+        Debug.Log(refPos);
+        
 
         //カメラの角度を制限する
         camRot = Mathf.Clamp(camRot, -angle/2, angle/2);

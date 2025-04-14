@@ -1547,6 +1547,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1908558673}
     - target: {fileID: 4716061619079642398, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
+      propertyPath: movePad
+      value: 
+      objectReference: {fileID: 1908558673}
+    - target: {fileID: 4716061619079642398, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: webSocketLoader
       value: 
       objectReference: {fileID: 795691032}
@@ -6936,6 +6940,7 @@ MonoBehaviour:
   playerHealth: {fileID: 474093383}
   playerCore: {fileID: 474093387}
   playerRespawn: {fileID: 474093391}
+  touchMode: 1
 --- !u!1001 &7696598998969919375
 PrefabInstance:
   m_ObjectHideFlags: 0
