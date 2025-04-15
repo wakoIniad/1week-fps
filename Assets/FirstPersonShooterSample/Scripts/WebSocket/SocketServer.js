@@ -574,7 +574,7 @@ function checkDefenceZone() {
             playerCore.owner = defenceZoneClaiming;
             server.sendAllClient(`Core,Create,${coreId},${createAt.join(',')}`);
             playerCore.Transport(defenceZoneClaiming);
-            connections[defenceZoneClaiming].send(`Core,Claim,${defenceZoneClaiming}`);
+            connections[defenceZoneClaiming].send(`Core,Claim,${coreId}`);
             server.sendAllClient(`Core,Transport,${coreId},${defenceZoneClaiming}`);
         },32*1000);
     } else if(defenceZoneClaiming) {
