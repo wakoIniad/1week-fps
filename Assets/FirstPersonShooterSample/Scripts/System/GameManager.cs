@@ -3,9 +3,9 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static BGM_Volum = 1;
-    public static MouseSpeed = 1;
-    public static UserName = "Unnamed";
+    public static float BGM_Volum = 1;
+    public static float MouseSpeed = 1;
+    public static string UserName = "Unnamed";
     public WallActivater wallActivater;
     public int score;
     public bool touchModeSetting = true;
