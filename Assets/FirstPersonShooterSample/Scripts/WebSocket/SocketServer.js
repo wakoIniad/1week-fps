@@ -87,7 +87,7 @@ const PLAYER_DEFAULT_HEALTH = 10;
 const REVIVAL_HEALTH_RATE = 0.2;
 const CORE_WARP_COST = 50;//消費するHP
 const ANGEL_MODE_TIME = 16;
-const CORE_ANGEL_COST = 1;//4;//放棄するコア数
+const CORE_ANGEL_COST = 4;//4;//放棄するコア数
 
 const SYSTEM_PLAYER_NAME = "SYSTEM";
 //コアが破壊された後にだれにも移送されずに同じ人に再取得されるのを防ぐ時間

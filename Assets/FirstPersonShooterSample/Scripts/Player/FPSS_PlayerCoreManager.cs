@@ -160,6 +160,8 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
         keys.Add(id);
         viewManager.DisplayCoreHealth(coreLoader.GetModelById(id).nowHealth);
         viewManager.button.onClick.AddListener(() => OnCoreStatusViewClicked?.Invoke(id));
+        RectTransform statViewRectTr = coreStatusViewContainer.transform.gameObject.GetComponent<RectTransform>();
+        statViewRectTr.sizeDelta = new Vector2(statViewRectTr.sizeDelta.x, 100*coreView.Count);
     }
     public void RemoveCore(string id) {
         coreView[id].Remove();
