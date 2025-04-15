@@ -32,6 +32,34 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     //    coreMapUI.DeactivateUI();
     //    playerManager.ExitUIMde();
     //}
+    public void CoreViewHandler(string modelId, bool handle) {
+        CoreLocalModel model = coreLoader.GetModelById(modelId);
+        if(model.owned) {
+            if(model.transporting) {
+                coreView[modelId].DisplayTransporting();
+                coreLoader.RefreshHpber(model.id);
+                if(handle) {
+                    model.TryPlace();
+                    waitForPlace[modelId] = true;
+                }
+            } else {
+                if(waitForPlace[modelId]) {
+                    coreView[modelId].DisplayPlacing();
+                    coreLoader.RefreshHpber(model.id);
+                    waitForPlace[modelId] = false;
+                }
+                
+                if(handle) {
+                    if(transportTarget != null && transportTarget.id == model.id) {
+                        model.TryCollect();
+                        transportTarget = null;
+                    } else {
+                        model.TryWarp();
+                    }
+                }
+            }
+        }
+    }
     void Update()
     {
         //和集合で全ての範囲を取る
@@ -79,28 +107,28 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
             };
             
         for(int i = 0; i < Math.Min(10, keys.Count); i++) {
-            
-            CoreLocalModel model = coreLoader.GetModelById(keys[i]);
-            if(model.owned) {
-                if(model.transporting) {
-                    coreView[keys[i]].DisplayTransporting();
-                    coreLoader.RefreshHpber(model.id);
-                    if(alphaInput[i]) {
-                        model.TryPlace();
-                        waitForPlace[keys[i]] = true;
-                    }
-                } else {
-                    if(waitForPlace[keys[i]]) {
-                        coreView[keys[i]].DisplayPlacing();
-                        coreLoader.RefreshHpber(model.id);
-                        waitForPlace[keys[i]] = false;
-                    }
-                    if(alphaInput[i]) {
-                        model.TryWarp();
-                    }
-                }
-            }
-        }
+            CoreViewHandler(keys[i], alphaInput[i]);
+            //CoreLocalModel model = coreLoader.GetModelById(keys[i]);
+            //if(model.owned) {
+            //    if(model.transporting) {
+            //        coreView[keys[i]].DisplayTransporting();
+            //        coreLoader.RefreshHpber(model.id);
+            //        if(alphaInput[i]) {
+            //            model.TryPlace();
+            //            waitForPlace[keys[i]] = true;
+            //        }
+            //    } else {
+            //        if(waitForPlace[keys[i]]) {
+            //            coreView[keys[i]].DisplayPlacing();
+            //            coreLoader.RefreshHpber(model.id);
+            //            waitForPlace[keys[i]] = false;
+            //        }
+            //        if(alphaInput[i]) {
+            //            model.TryWarp();
+            //        }
+            //    }
+            //}
+        }//
 
         
             /*if(transportingCoreObject.transporting && transportingCoreObject.owned) {
@@ -125,6 +153,8 @@ public class FPSS_PlayerCoreManager : MonoBehaviour
     public void AddCore(string id) {
         GameObject statusView = Instantiate(coreStatusViewPrefab, coreStatusViewContainer);
         CoreStatusView viewManager = statusView.GetComponent<CoreStatusView>();
+        viewManager.coreId = id;
+        viewManager.playerCoreManager = this;
         coreView.Add(id, viewManager);
         waitForPlace.Add(id, false);
         keys.Add(id);

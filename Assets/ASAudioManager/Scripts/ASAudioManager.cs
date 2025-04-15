@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public static class ASAudioManager
 {
-
     public enum AudioType
     {
         SE,

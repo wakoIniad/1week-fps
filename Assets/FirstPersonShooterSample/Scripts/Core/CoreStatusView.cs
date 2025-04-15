@@ -11,12 +11,16 @@ public class CoreStatusView : MonoBehaviour
     public Image image;
     public TextMeshProUGUI healthText;
     public Button button;
-    public int coreId;
+    public string coreId;
+    public FPSS_PlayerCoreManager playerCoreManager;
     void Awake() {
         DisplayPlacing();
         if(!usingBar) {
             Debug.Log("USINGBAR"+coreId);
         }
+        button.onClick.AddListener(()=>{
+            playerCoreManager.CoreViewHandler(coreId, true);
+        });
     }
 
     public void Remove() {
@@ -85,7 +89,7 @@ public class CoreStatusView : MonoBehaviour
         usingBar = warpIconImageBar;
         fireImageBar.gameObject.SetActive(false);
     }
-    public void SetId(int id) {
+    public void SetId(string id) {
         coreId = id;
     }
     /*void Start() {
