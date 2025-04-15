@@ -3,6 +3,7 @@ using UnityEngine;
 public class UiManager : MonoBehaviour
 {
     public TouchPad PadM;
+    public TouchPad PadClose;
     public SystemMenuUI systemMenuUI;
     public CoreMapUI coreMapUI;
     public GameObject battleUIContainer;
@@ -24,7 +25,7 @@ public class UiManager : MonoBehaviour
             }
             UpdateUIMode();
         }
-        if(Input.GetKeyDown(KeyCode.M) || PadM.touched) {
+        if(Input.GetKeyDown(KeyCode.M) || PadM.CheckTouched() || PadClose.CheckTouched()) {
             if(!systemMenuUI.active) {
                 coreMapUI.toggleVisibility();
                 if(systemMenuUI.active)systemMenuUI.DeactivateUI();

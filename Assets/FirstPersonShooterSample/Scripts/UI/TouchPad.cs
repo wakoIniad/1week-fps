@@ -32,4 +32,11 @@ public class TouchPad : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if(touched) touched = false;
         if(touchEnd) touchEnd = false;
     }
+    public bool CheckTouched() {
+        if(touched) { 
+            touched = false;
+            return true;
+        }
+        return false;
+    }
 }
