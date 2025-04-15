@@ -82,7 +82,6 @@ public class FPSS_PlayerCamera : MonoBehaviour
                     if (RectTransformUtility.RectangleContainsScreenPoint(movePad.rectTr, touchPos))
                     {
                         trackingTouchId = touch.fingerId;
-                        Debug.Log("タッチ追跡開始");
                     }
                 }
 
@@ -91,7 +90,6 @@ public class FPSS_PlayerCamera : MonoBehaviour
                     if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
                     {
                         // 追跡中のタッチの処理
-                        Debug.Log("追跡中：" + touch.position);
                         
                         xInput = 0.1f * touch.deltaPosition.x; //0.05は感度
                         yInput = 0.1f * touch.deltaPosition.y; //0.05は感度
@@ -100,7 +98,6 @@ public class FPSS_PlayerCamera : MonoBehaviour
                     if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
                     {
                         trackingTouchId = -1;
-                        Debug.Log("タッチ終了");
                     }
                 }
             }
