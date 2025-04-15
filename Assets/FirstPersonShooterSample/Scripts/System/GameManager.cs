@@ -3,13 +3,16 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public static BGM_Volum = 1;
+    public static MouseSpeed = 1;
+    public static UserName = "Unnamed";
     public WallActivater wallActivater;
     public int score;
     public bool touchModeSetting = true;
     public static bool touchMode = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake () {
-        touchMode = touchModeSetting;  
+        touchMode = touchModeSetting; 
     }
 
     void Start()
@@ -20,7 +23,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+         
     }
     void Handover(GameManager nextGameManager) {
         nextGameManager.score = score;
