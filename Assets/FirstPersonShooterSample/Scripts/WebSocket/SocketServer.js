@@ -88,7 +88,8 @@ const FIREBALL_DAMAGE = 2;
 const REVIVAL_HEALTH_RATE = 0.2;
 const CORE_WARP_COST = CORE_DEFAULT_HEALTH/2;//消費するHP
 const ANGEL_MODE_TIME = 16;
-const CORE_ANGEL_COST = 4;//4;//放棄するコア数
+const ANGEL_CORE_COST = 4;//4;//放棄するコア数
+const SNIPER_CORE_COST = 1;
 
 const SYSTEM_PLAYER_NAME = "SYSTEM";
 //コアが破壊された後にだれにも移送されずに同じ人に再取得されるのを防ぐ時間
@@ -536,8 +537,8 @@ server.on("connection", async (socket) => {
             case "AngelEntry":
                 if(Date.now() - playerList[id].lastAngelMode < ANGEL_MODE_TIME * 1000)break;
                 const ownedCores = getOwnedCores(id);
-                if(ownedCores.length >= CORE_ANGEL_COST) {
-                    for(let i = 0;i < CORE_ANGEL_COST;i++) {
+                if(ownedCores.length >= ANGEL_CORE_COST) {
+                    for(let i = 0;i < ANGEL_CORE_COST;i++) {
                         //AngelModeになるとコアを落とす。取られる可能性有
                         ownedCores[i].Unclaim(playerList[id].position);
                     }
@@ -552,6 +553,32 @@ server.on("connection", async (socket) => {
             case "ExitDefenceZone":
                 defenceZonePlayers = defenceZonePlayers.filter(f=>f!==id);
                 checkDefenceZone();
+                break;
+            case "SniperEntry":
+                let closestDistance = Infinity;
+                let closestPlayer = null;
+                
+                for(const player of Object.values(playerList)) {
+                    if(!player.gameOver && !player.ghost && player.id !== id) {
+                        const p2 = player.position;
+                        const p1 = playerList[id].position;
+                        const d = (p1.x - p2.x)**2+(p1.y-p2.y)**2;
+                        if(d < closestDistance) {
+                            closestDistance = d;
+                            closestPlayer = player.id;
+                        }
+                    }
+                }
+                if(!closestPlayer)break;
+                if(ownedCores.length >= SNIPER_CORE_COST) {
+                    for(let i = 0;i < SNIPER_CORE_COST;i++) {
+                        ownedCores[i].Break(closestPlayer);
+                    }
+                }
+                socket.send(`System,MarkOtherPlayer,${closestPlayer}`);
+                setTimeout(()=>{
+                    socket.send(`System,UnmarkOtherPlayer,${closestPlayer}`);
+                },24*1000);
                 break;
             default:
                 console.log("default:"+command);

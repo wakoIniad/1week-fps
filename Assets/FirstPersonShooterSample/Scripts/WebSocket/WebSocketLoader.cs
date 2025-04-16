@@ -368,4 +368,10 @@ public class WebSocketLoader : MonoBehaviour
             "ExitDefenceZone"
         );
     }
+    public void EntrySniper() {
+        
+        SendText(
+            "SniperEntry"
+        );
+    }
 }
