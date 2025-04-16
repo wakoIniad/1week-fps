@@ -1944,7 +1944,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 222396993697985379, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 61.000027
+      value: 61.00089
       objectReference: {fileID: 0}
     - target: {fileID: 252020400453298943, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: m_Size
@@ -2090,6 +2090,10 @@ PrefabInstance:
       propertyPath: w
       value: 
       objectReference: {fileID: 566277582}
+    - target: {fileID: 2846770226700898275, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
+      propertyPath: PadP
+      value: 
+      objectReference: {fileID: 1318433866}
     - target: {fileID: 2846770226700898275, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: padA
       value: 
@@ -4827,6 +4831,7 @@ MonoBehaviour:
   playerManager: {fileID: 2060108085}
   gameManager: {fileID: 1724181671}
   defenceZone: {fileID: 1192303333}
+  effectManager: {fileID: 2097410362}
   EntryAccepted: 0
 --- !u!4 &795691033
 Transform:
@@ -5837,6 +5842,7 @@ Transform:
   - {fileID: 795691033}
   - {fileID: 414000906}
   - {fileID: 341430993}
+  - {fileID: 2097410363}
   m_Father: {fileID: 741124496}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1020364059
@@ -9779,6 +9785,51 @@ MonoBehaviour:
   touchEnd: 0
   touched: 0
   rectTr: {fileID: 0}
+--- !u!1 &2097410361
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2097410363}
+  - component: {fileID: 2097410362}
+  m_Layer: 0
+  m_Name: EffectManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2097410362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097410361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 817b22aca2eda324cb5c2168367a0f4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  warpEffectPrefab: {fileID: 9103528613349506846, guid: 47c38fb883631d34494c56b4e23b3d66, type: 3}
+--- !u!4 &2097410363
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097410361}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1020364058}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &7696598998969919375
 PrefabInstance:
   m_ObjectHideFlags: 0

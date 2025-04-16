@@ -13,6 +13,7 @@ public class FPSS_PlayerController : MonoBehaviour
     public TouchPad padA;
     public TouchPad padS;
     public TouchPad padD;
+    public TouchPad PadP;
     public TouchPad padSpace;
     public float dashCommandDuration = 0.5f;
     float dashCommandTimer = 0;
@@ -88,7 +89,7 @@ public class FPSS_PlayerController : MonoBehaviour
             }
         }
         
-        if(Input.GetKeyDown(KeyCode.P) && isGround) {
+        if((Input.GetKeyDown(KeyCode.P) || PadP.CheckTouched())&& isGround) {
             playerManager.webSocketLoader.EntryAngel();
         }
     }

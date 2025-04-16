@@ -15,6 +15,7 @@ public class WebSocketLoader : MonoBehaviour
     public PlayerManager playerManager;
     public GameManager gameManager;
     public DefenceZone defenceZone;
+    public EffectManager effectManager;
     //public Transform PlayerPositionAnchor;
 
     private WebSocket ws;
@@ -158,6 +159,13 @@ public class WebSocketLoader : MonoBehaviour
                                 }
                                 break;
                         
+                    }
+                    break;
+                case "Particle":
+                    switch(CommandType) {
+                        case "Warp":
+                            effectManager.WarpEffect(playerLoader.GetModelById(arg[0]).transform);
+                            break;
                     }
                     break;
                 case "System":// server[IDasign -> CoreCreate -> CoreOwned]

@@ -509,13 +509,14 @@ server.on("connection", async (socket) => {
                 if(coreList[args[0]].Warp(id)) {
                     socket.send("System,SetPosition,"+playerList[id].position.join(','));
                     socket.broadcast(`Player,Position,${id},${playerList[id].position.join(',')}`);
+                    server.sendAllClient(`Particle,Warp,${id}`);
                 };
                 break;
             case "CoreDamageEntry":
-                coreList[args[0]].Damage(id, FIREBALL_DAMAGE);
+                coreList[args[0]].Damage(id, args[1]);
                 break;
             case "PlayerDamageEntry":
-                playerList[args[0]].Damage(id, FIREBALL_DAMAGE);
+                playerList[args[0]].Damage(id, args[1]);
                 break;
             case "ShootEntry":
                 socket.broadcast(`System,Fireball,${args.join(',')}`);
