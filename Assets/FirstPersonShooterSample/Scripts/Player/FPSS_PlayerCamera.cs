@@ -63,6 +63,15 @@ public class FPSS_PlayerCamera : MonoBehaviour
 
     Vector2 lastTouch = new Vector2(0,0);
     int trackingTouchId = -1;
+    Vector2 getTouchDelta(Touch touch) {
+        #if UNITY_WEBGL && !UNITY_EDITOR
+            // WebGL向けの処理
+            return new Vector2(touch.deltaPosition.x, -touch.deltaPosition.y);
+        #else
+            // Editorや他プラットフォーム向け
+            return touch.deltaPosition;
+        #endif
+    }
     //毎フレーム呼ばれる
     void Update()
     {
@@ -87,12 +96,12 @@ public class FPSS_PlayerCamera : MonoBehaviour
 
                 if (touch.fingerId == trackingTouchId)
                 {
-                    if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
+                    if (touch.phase == TouchPhase.Moved/* || touch.phase == TouchPhase.Stationary*/)
                     {
                         // 追跡中のタッチの処理
-                        
-                        xInput = 0.05f*touch.deltaPosition.x; //0.05は感度
-                        yInput = 0.05f*touch.deltaPosition.y; //0.05は感度
+                        Vector2 pos = getTouchDelta(touch);
+                        xInput = 0.05f*pos.x; //0.05は感度
+                        yInput = 0.05f*pos.y; //0.05は感度
                     }
 
                     if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
