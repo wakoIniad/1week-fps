@@ -13,6 +13,9 @@ public class FPSS_PlayerController : MonoBehaviour
     public TouchPad padA;
     public TouchPad padS;
     public TouchPad padD;
+    public float dashCommandDuration = 0.5f;
+    float dashCommandTimer = 0;
+    bool handlingDashCommand = false;
     public TimerProgressRing timerProgressRing;
     public GameObject angelModeTensionRod;
     [System.NonSerialized] public PlayerManager playerManager;
@@ -40,6 +43,7 @@ public class FPSS_PlayerController : MonoBehaviour
 
     public float dashInputSpeed = 0.5f;
     float dashInputTimer = -1f;
+    bool dashIsActivated = false;
 
     [System.NonSerialized] public bool stop;
     float time = 0;
@@ -58,6 +62,12 @@ public class FPSS_PlayerController : MonoBehaviour
     //毎フレーム呼ばれる
     void Update()
     {   
+        if(handlingDashCommand) {
+            dashCommandTimer += Time.deltaTime;
+            if(dashCommandTimer > dashCommandDuration) {
+                handlingDashCommand = false;
+            }
+        }
         time += Time.deltaTime;
         if(stop)return;
         //機能ごとに分けてわかりやすく
@@ -145,12 +155,22 @@ public class FPSS_PlayerController : MonoBehaviour
         //if(dashInputTimer >= dashInputSpeed) {
         //    dashInputTimer = -1f;
         //}
+        if( padW.CheckTouched() ) {
+            if(handlingDashCommand) {
+                handlingDashCommand = false;
+                dashIsActivated = true;
+            } else {
+                handlingDashCommand = true;
+                dashCommandTimer = 0f;
+                dashIsActivated = false;
+            }
+        }
 
         //ジャンプボタンを押した瞬間か
         jumpInput = Input.GetKeyDown(KeyCode.Space);
 
         //ダッシュボタンを押しているか
-        dashInput = Input.GetKey(KeyCode.LeftShift);
+        dashInput = Input.GetKey(KeyCode.LeftShift) || dashIsActivated;
     }
 
 

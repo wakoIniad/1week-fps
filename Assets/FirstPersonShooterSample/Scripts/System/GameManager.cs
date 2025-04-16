@@ -12,7 +12,13 @@ public class GameManager : MonoBehaviour
     public static bool touchMode = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake () {
-        touchMode = touchModeSetting; 
+        
+        if(SystemInfo.deviceType == DeviceType.Handheld) {
+            touchMode = true;
+        } else if(SystemInfo.deviceType == DeviceType.Desktop) {
+            touchMode = false;
+        }
+        if(touchModeSetting)touchMode = touchModeSetting;
     }
 
     void Start()
