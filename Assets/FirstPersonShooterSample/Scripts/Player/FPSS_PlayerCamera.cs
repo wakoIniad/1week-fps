@@ -91,8 +91,8 @@ public class FPSS_PlayerCamera : MonoBehaviour
                     {
                         // 追跡中のタッチの処理
                         
-                        xInput = GameManager.sensibility * touch.deltaPosition.x; //0.05は感度
-                        yInput = GameManager.sensibility * touch.deltaPosition.y; //0.05は感度
+                        xInput = 0.05f*touch.deltaPosition.x; //0.05は感度
+                        yInput = 0.05f*touch.deltaPosition.y; //0.05は感度
                     }
 
                     if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
@@ -110,8 +110,10 @@ public class FPSS_PlayerCamera : MonoBehaviour
         Debug.Log(refPos);
         
         float plyrRot = 0;
-        plyrRot = xInput * speed * (reverseX ? -1 : 1);
-        camRot += -yInput * speed * (reverseY ? -1 : 1);
+        
+        float s = GameManager.sensibility;//playerManager.playerLoader.webSocketLoader.gameManager.sensibility;
+        plyrRot = s * xInput * speed * (reverseX ? -1 : 1);
+        camRot += s * -yInput * speed * (reverseY ? -1 : 1);
 
         //カメラの角度を制限する
         camRot = Mathf.Clamp(camRot, -angle/2, angle/2);
