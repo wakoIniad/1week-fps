@@ -82,12 +82,13 @@ function makeId() {
 const base = 2;
 const CORE_REPAIR_FACTOR_ON_TRANSPORTING = base*1.5;
 const CORE_REPAIR_FACTOR_ON_PLACED = base;
-const CORE_DEFAULT_HEALTH = 100;
-const PLAYER_DEFAULT_HEALTH = 10;
+const CORE_DEFAULT_HEALTH = 20;
+const PLAYER_DEFAULT_HEALTH = 4;
+const FIREBALL_DAMAGE = 2;
 const REVIVAL_HEALTH_RATE = 0.2;
 const CORE_WARP_COST = 50;//消費するHP
 const ANGEL_MODE_TIME = 16;
-const CORE_ANGEL_COST = 1;//4;//放棄するコア数
+const CORE_ANGEL_COST = 4;//4;//放棄するコア数
 
 const SYSTEM_PLAYER_NAME = "SYSTEM";
 //コアが破壊された後にだれにも移送されずに同じ人に再取得されるのを防ぐ時間
@@ -158,6 +159,10 @@ class Player {
                     gameOver = false;
                 }
             }
+        }
+        if(defenceZonePlayers.includes(this.id)) {
+            defenceZonePlayers = defenceZonePlayers.filter(id => id !== this.id);
+            checkDefenceZone();
         }
         if(gameOver) {
             this.gameOver = true;
@@ -378,6 +383,8 @@ server.sendAllClient = text => {
 function getOwnedCores(id) {
     return Object.values(coreList).filter( (core) => core.owner === id );
 }
+let defenceZonePlayers = [];
+let defenceZoneClaiming = null;
 server.on("connection", async (socket) => {
     connectionCounter++;
     console.log("connected");
@@ -422,7 +429,7 @@ server.on("connection", async (socket) => {
                 }
                 
                 for(const core of Object.values(coreList)) {
-                    socket.send(`Core,Create,${core.id},${core.position.join(',')}`)
+                    socket.send(`Core,Create,${core.id},${core.position.join(',')}`);
                     if(core.transporting) {
                         server.sendAllClient(`Core,Transport,${core.id},${core.transporter}`);
                     };
@@ -436,7 +443,7 @@ server.on("connection", async (socket) => {
                 const playerCore = new Core(id, createAt);// psitionは仮
                 playerCore.owner = id;
                 coreList[id] = playerCore;
-                const playerObj = new Player(id, createAt);;
+                const playerObj = new Player(id, createAt);
                 playerList[id] = playerObj
                 server.sendAllClient(`Core,Create,${id},${createAt.join(',')}`);
                 playerCore.Transport(id);
@@ -503,10 +510,10 @@ server.on("connection", async (socket) => {
                 };
                 break;
             case "CoreDamageEntry":
-                coreList[args[0]].Damage(id, +args[1]);
+                coreList[args[0]].Damage(id, FIREBALL_DAMAGE);
                 break;
             case "PlayerDamageEntry":
-                playerList[args[0]].Damage(id, +args[1]);
+                playerList[args[0]].Damage(id, FIREBALL_DAMAGE);
                 break;
             case "ShootEntry":
                 socket.broadcast(`System,Fireball,${args.join(',')}`);
@@ -535,6 +542,14 @@ server.on("connection", async (socket) => {
                     socket.send("System,Angel");
                 }
                 break;
+            case "EnterDefenceZone":
+                defenceZonePlayers.push(id);
+                checkDefenceZone();
+                break;
+            case "ExitDefenceZone":
+                defenceZonePlayers = defenceZonePlayers.filter(f=>f!==id);
+                checkDefenceZone();
+                break;
             default:
                 console.log("default:"+command);
                 break;
@@ -546,3 +561,27 @@ server.on("connection", async (socket) => {
 //      delete connections[id];
     });
 });
+let timeout = null;
+function checkDefenceZone() {
+    if(defenceZonePlayers.length === 1) {
+        connections[defenceZonePlayers[0]].send("System,ClaimingDefenceZone");
+        defenceZoneClaiming = defenceZonePlayers[0];
+        timeout = setTimeout(()=>{
+            if(!defenceZoneClaiming)return;
+            const coreId = defenceZoneClaiming+"$"+Date.now();
+            const createAt = playerList[defenceZoneClaiming].position;
+            const playerCore = new Core(coreId, createAt);// psitionは仮
+            coreList[coreId] = playerCore;
+            playerCore.owner = defenceZoneClaiming;
+            server.sendAllClient(`Core,Create,${coreId},${createAt.join(',')}`);
+            playerCore.Transport(defenceZoneClaiming);
+            connections[defenceZoneClaiming].send(`Core,Claim,${coreId}`);
+            server.sendAllClient(`Core,Transport,${coreId},${defenceZoneClaiming}`);
+        },32*1000);
+    } else if(defenceZoneClaiming) {
+        connections[defenceZoneClaiming].send("System,CancelClaimingDefenceZone");
+        defenceZoneClaiming = null;
+        if(timeout)clearTimeout(timeout);
+        timeout = null;
+    }
+}

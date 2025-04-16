@@ -8,7 +8,10 @@ using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
 public class FPSS_PlayerCamera : MonoBehaviour
-{
+{   
+    public TouchPad movePad;
+    Vector2 lastPos = new Vector2(0,0);
+    Vector2 refPos = new Vector2(0,0);
     [System.NonSerialized] public PlayerManager playerManager;
     public GameObject playerBody;//プレイヤー本体をいれておく
     public float speed = 2;//視点移動の速度
@@ -19,6 +22,7 @@ public class FPSS_PlayerCamera : MonoBehaviour
 
 
     float camRot;//現在のカメラの角度を入れておく
+    //float plyrRot;
     
 
     Transform cameraTransform;
@@ -46,7 +50,6 @@ public class FPSS_PlayerCamera : MonoBehaviour
         instance = this;
     }
     
-
     //ゲームをはじめて最初に呼ばれる
     void Start()
     {
@@ -58,21 +61,59 @@ public class FPSS_PlayerCamera : MonoBehaviour
         
     }
 
+    Vector2 lastTouch = new Vector2(0,0);
+    int trackingTouchId = -1;
     //毎フレーム呼ばれる
     void Update()
     {
+        
+        float xInput = 0;
+        float yInput = 0;
         time += Time.deltaTime;
         if(stop)return;
         //入力を取得
+        if(GameManager.touchMode) {
+            foreach (Touch touch in Input.touches)
+            {
+                Vector2 touchPos = touch.position;
+
+                if (touch.phase == TouchPhase.Began)
+                {
+                    if (RectTransformUtility.RectangleContainsScreenPoint(movePad.rectTr, touchPos))
+                    {
+                        trackingTouchId = touch.fingerId;
+                    }
+                }
+
+                if (touch.fingerId == trackingTouchId)
+                {
+                    if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
+                    {
+                        // 追跡中のタッチの処理
+                        
+                        xInput = 0.05f*touch.deltaPosition.x; //0.05は感度
+                        yInput = 0.05f*touch.deltaPosition.y; //0.05は感度
+                    }
+
+                    if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+                    {
+                        trackingTouchId = -1;
+                    }
+                }
+            }
+    
+        } else {
+            xInput = Input.GetAxis("Mouse X");
+            yInput = Input.GetAxis("Mouse Y");
+        }
         //Unity > ProjectSettings > InputManagerに設定がある
-        float xInput = Input.GetAxis("Mouse X");
-        float yInput = -Input.GetAxis("Mouse Y");
-
+        Debug.Log(refPos);
+        
         float plyrRot = 0;
-
-        //マウスが動いたぶん角度を変更
-        plyrRot = xInput * speed * (reverseX ? -1 : 1);
-        camRot += yInput * speed * (reverseY ? -1 : 1);
+        
+        float s = GameManager.sensibility;//playerManager.playerLoader.webSocketLoader.gameManager.sensibility;
+        plyrRot = s * xInput * speed * (reverseX ? -1 : 1);
+        camRot += s * -yInput * speed * (reverseY ? -1 : 1);
 
         //カメラの角度を制限する
         camRot = Mathf.Clamp(camRot, -angle/2, angle/2);
