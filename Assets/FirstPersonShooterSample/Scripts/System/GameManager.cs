@@ -29,7 +29,9 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-         
+       if(Input.GetKeyDown(KeyCode.I)) {
+            touchMode = !touchMode;
+       }  
     }
     void Handover(GameManager nextGameManager) {
         nextGameManager.score = score;
