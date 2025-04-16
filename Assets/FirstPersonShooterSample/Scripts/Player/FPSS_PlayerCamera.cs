@@ -66,7 +66,7 @@ public class FPSS_PlayerCamera : MonoBehaviour
     Vector2 getTouchDelta(Touch touch) {
         #if UNITY_WEBGL && !UNITY_EDITOR
             // WebGL向けの処理
-            return new Vector2(touch.deltaPosition.x, -touch.deltaPosition.y);
+            return new Vector2(-touch.deltaPosition.x, -touch.deltaPosition.y);
         #else
             // Editorや他プラットフォーム向け
             return touch.deltaPosition;
