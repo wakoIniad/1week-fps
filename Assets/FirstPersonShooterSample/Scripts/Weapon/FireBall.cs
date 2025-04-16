@@ -3,7 +3,7 @@ using UnityEngine;
 public class FireBall : MonoBehaviour
 {
     public GameObject hitParticlePrefab;
-    public float damage = 10;
+    public float damage = 2;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

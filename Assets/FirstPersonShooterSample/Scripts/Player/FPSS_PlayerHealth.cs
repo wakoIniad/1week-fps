@@ -10,6 +10,7 @@ public class FPSS_PlayerHealth : MonoBehaviour
 {
     [System.NonSerialized] public PlayerManager playerManager;
     public int playerHealth = 10;
+    public ImageBar hpBar;
     public TMP_Text healthText;
 
     float nowHealth;//現在の体力を入れておく
@@ -20,14 +21,15 @@ public class FPSS_PlayerHealth : MonoBehaviour
         //体力を設定
         nowHealth = playerHealth;
         //表示を更新する
-        healthText.text = "Health: " + nowHealth.ToString();
+        //healthText.text = "Health: " + nowHealth.ToString();
+        hpBar.UpdateBar(nowHealth/PlayerLocalModel.defaultHealth);
     }
 
     //マルチプレイの都合上、Damageをこっちに変える
     public void SetHealth(float hp) {
         nowHealth = hp;
         //表示を更新する
-        healthText.text = "Health: " + nowHealth.ToString();
+        hpBar.UpdateBar(nowHealth/PlayerLocalModel.defaultHealth);
         //ここはサーバー側の処理に変える
         if(nowHealth <= 0)
         {
@@ -43,7 +45,7 @@ public class FPSS_PlayerHealth : MonoBehaviour
         //体力を減らす
         nowHealth -= damage;
         //表示を更新する
-        healthText.text = "Health: " + nowHealth.ToString();
+        hpBar.UpdateBar(nowHealth/PlayerLocalModel.defaultHealth);
 
         //体力が無くなったらその処理をする
         if(nowHealth <= 0)

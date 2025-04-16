@@ -91,8 +91,8 @@ public class FPSS_PlayerCamera : MonoBehaviour
                     {
                         // 追跡中のタッチの処理
                         
-                        xInput = 0.4f * touch.deltaPosition.x; //0.05は感度
-                        yInput = 0.4f * touch.deltaPosition.y; //0.05は感度
+                        xInput = GameManager.sensibility * touch.deltaPosition.x; //0.05は感度
+                        yInput = GameManager.sensibility * touch.deltaPosition.y; //0.05は感度
                     }
 
                     if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)

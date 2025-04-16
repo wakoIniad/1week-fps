@@ -11,7 +11,7 @@ public class FPSS_ShooterScript : MonoBehaviour
     public TouchPad pad;
     public OnepointSE se;
     [System.NonSerialized] public PlayerManager playerManager;
-    public int damage = 10;//ダメージ
+    public int damage = 2;//ダメージ
     public GameObject hitParticlePrefab;//撃った場所に出現するパーティクル (エフェクト)
     public float rayMaxDistance = 100;//最大射程
     public LayerMask rayLayer = 0b0001;//判定するもののレイヤー設定

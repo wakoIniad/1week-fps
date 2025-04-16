@@ -82,8 +82,9 @@ function makeId() {
 const base = 2;
 const CORE_REPAIR_FACTOR_ON_TRANSPORTING = base*1.5;
 const CORE_REPAIR_FACTOR_ON_PLACED = base;
-const CORE_DEFAULT_HEALTH = 100;
-const PLAYER_DEFAULT_HEALTH = 10;
+const CORE_DEFAULT_HEALTH = 20;
+const PLAYER_DEFAULT_HEALTH = 4;
+const FIREBALL_DAMAGE = 2;
 const REVIVAL_HEALTH_RATE = 0.2;
 const CORE_WARP_COST = 50;//消費するHP
 const ANGEL_MODE_TIME = 16;
@@ -509,10 +510,10 @@ server.on("connection", async (socket) => {
                 };
                 break;
             case "CoreDamageEntry":
-                coreList[args[0]].Damage(id, +args[1]);
+                coreList[args[0]].Damage(id, FIREBALL_DAMAGE);
                 break;
             case "PlayerDamageEntry":
-                playerList[args[0]].Damage(id, +args[1]);
+                playerList[args[0]].Damage(id, FIREBALL_DAMAGE);
                 break;
             case "ShootEntry":
                 socket.broadcast(`System,Fireball,${args.join(',')}`);

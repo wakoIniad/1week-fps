@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public int score;
     public bool touchModeSetting = true;
     public static bool touchMode = true;
+    public static float sensibility = 0.4f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake () {
         

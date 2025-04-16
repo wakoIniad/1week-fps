@@ -1804,6 +1804,7 @@ GameObject:
   - component: {fileID: 439169770}
   - component: {fileID: 439169769}
   - component: {fileID: 439169768}
+  - component: {fileID: 439169771}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -1874,7 +1875,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 439169769}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 439169771}
+        m_TargetAssemblyTypeName: FullscreenToggle, Assembly-CSharp
+        m_MethodName: SetFullscreen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &439169769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1913,6 +1926,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 439169766}
   m_CullTransparentMesh: 1
+--- !u!114 &439169771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439169766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 403ff81622e15304c9c1e656d44fa20c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &498630724
 GameObject:
   m_ObjectHideFlags: 0
@@ -2688,8 +2713,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4280287045
+  m_fontColor: {r: 0.27191144, g: 1, b: 0.122641385, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
