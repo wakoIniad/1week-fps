@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class FPSS_ShooterScript : MonoBehaviour
 {
+    public GameObject DamageEffectPrefabSetting;
+    public static GameObject DamageEffectPrefab;
     public TouchPad pad;
     public OnepointSE se;
     [System.NonSerialized] public PlayerManager playerManager;
@@ -32,6 +34,10 @@ public class FPSS_ShooterScript : MonoBehaviour
 
 
     //ゲームをはじめて最初に呼ばれる
+    void Awake()
+    {
+        DamageEffectPrefab = DamageEffectPrefabSetting;
+    }
     void Start()
     {
         //プレイヤーのカメラを取得

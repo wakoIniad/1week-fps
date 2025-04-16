@@ -27,6 +27,9 @@ public class FireBall : MonoBehaviour
             {
                 model.TryDamage(damage);
                 Destroy(gameObject);
+                if(FPSS_ShooterScript.DamageEffectPrefab) {
+                    GameObject obj = Instantiate(FPSS_ShooterScript.DamageEffectPrefab, hit.transform);
+                }
             }
         }
         if(hit.gameObject.CompareTag("Core"))
@@ -37,16 +40,19 @@ public class FireBall : MonoBehaviour
             {
                 coreModel.TryDamage(damage);
                 Destroy(gameObject);
+                if(FPSS_ShooterScript.DamageEffectPrefab) {
+                    GameObject obj = Instantiate(FPSS_ShooterScript.DamageEffectPrefab, hit.transform);
+                }
             }
         }
         //パーティクルを出現させる
-        if(hitParticlePrefab)
-        {
-            Vector3 triggerPoint = hit.ClosestPoint(transform.position);
-            GameObject obj = Instantiate(hitParticlePrefab);
-            obj.transform.position = triggerPoint;
-            //obj.transform.rotation = Quaternion.LookRotation(-hit.normal);
-        }
+        //if(hitParticlePrefab)
+        //{
+        //    Vector3 triggerPoint = hit.ClosestPoint(transform.position);
+        //    GameObject obj = Instantiate(hitParticlePrefab);
+        //    obj.transform.position = triggerPoint;
+        //    //obj.transform.rotation = Quaternion.LookRotation(-hit.normal);
+        //}
         
     }
 }
