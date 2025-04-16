@@ -8439,7 +8439,7 @@ MonoBehaviour:
   playerModelLoader: {fileID: 414000905}
   mapObject: {fileID: 1951856931}
   coreLoader: {fileID: 341430992}
-  respawnPointIconPrefab: {fileID: 6447915616392592800, guid: ebd3607f37dbbc544a0cc77ed18b1d99, type: 3}
+  respawnPointIconPrefab: {fileID: 6447915616392592800, guid: 1d9e31f87e95ab34ab09f29e04bdd45f, type: 3}
   MAP_SIZE: 64
   WARP_COST: 50
   playerIcon: {fileID: 42538844}
