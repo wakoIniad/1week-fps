@@ -13,6 +13,7 @@ public class FPSS_PlayerController : MonoBehaviour
     public TouchPad padA;
     public TouchPad padS;
     public TouchPad padD;
+    public TouchPad padSpace;
     public float dashCommandDuration = 0.5f;
     float dashCommandTimer = 0;
     bool handlingDashCommand = false;
@@ -167,7 +168,7 @@ public class FPSS_PlayerController : MonoBehaviour
         }
 
         //ジャンプボタンを押した瞬間か
-        jumpInput = Input.GetKeyDown(KeyCode.Space);
+        jumpInput = Input.GetKeyDown(KeyCode.Space) || padSpace.CheckTouched();
 
         //ダッシュボタンを押しているか
         dashInput = Input.GetKey(KeyCode.LeftShift) || dashIsActivated;
