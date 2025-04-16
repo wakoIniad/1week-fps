@@ -210,6 +210,7 @@ public class WebSocketLoader : MonoBehaviour
                             CoreLocalModel.defaultHealth = float.Parse(arg[1]);
                             CoreLocalModel.repairAmountOnPlacedPerSec = float.Parse(arg[2]);
                             CoreLocalModel.repairAmountOnTransportingPerSec = float.Parse(arg[3]);
+                            CoreMapUI.WARP_COST = float.Parse(arg[4]);
                             break;
                         case "Revival":
                             

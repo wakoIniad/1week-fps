@@ -413,6 +413,8 @@ server.on("connection", async (socket) => {
                     CORE_REPAIR_FACTOR_ON_PLACED
                 },${
                     CORE_REPAIR_FACTOR_ON_TRANSPORTING
+                },${
+                    CORE_WARP_COST
                 }`);
                 
                 for(const player of Object.values(playerList)) {

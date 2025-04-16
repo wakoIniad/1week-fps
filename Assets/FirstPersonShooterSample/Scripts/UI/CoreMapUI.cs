@@ -17,7 +17,7 @@ public class CoreMapUI : MonoBehaviour
     RectTransform mapRectTransform;
     //下記2変数はサーバーと（手動で）同期するように！
     public float MAP_SIZE = 64;
-    public float WARP_COST = 50;
+    public static float WARP_COST;
     public event Action<string> OnRespawnAnchorSelected; 
     public GameObject playerIcon;
 
