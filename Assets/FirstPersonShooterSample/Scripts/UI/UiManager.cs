@@ -4,6 +4,7 @@ public class UiManager : MonoBehaviour
 {
     public TouchPad PadM;
     public TouchPad PadClose;
+    public TouchPad PadEscape;
     public SystemMenuUI systemMenuUI;
     public CoreMapUI coreMapUI;
     public GameObject battleUIContainer;
@@ -17,7 +18,7 @@ public class UiManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape)) {
+        if(Input.GetKeyDown(KeyCode.Escape) || PadEscape.CheckTouched()) {
             if(coreMapUI.active) {
                 coreMapUI.DeactivateUI();
             } else {
