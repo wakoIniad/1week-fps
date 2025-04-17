@@ -2080,7 +2080,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 222396993697985379, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 61.00034
+      value: 61.000004
       objectReference: {fileID: 0}
     - target: {fileID: 252020400453298943, guid: 3f3071d506bca444a9994e06369ae84d, type: 3}
       propertyPath: m_Size
@@ -9039,7 +9039,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallActivater: {fileID: 1053367326}
   score: 0
-  touchModeSetting: 1
+  touchModeSetting: 0
 --- !u!1 &1731725710
 GameObject:
   m_ObjectHideFlags: 0
