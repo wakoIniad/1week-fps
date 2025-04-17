@@ -17,8 +17,11 @@
 });*/
 
 //server.listen(PORT, () => {
-//  console.log(`listening on port ${PORT}`);
+//  MyLogger(`listening on port ${PORT}`);
 //});
+function MyLogger(...arg) {
+    console.log(Date.now(),...arg);
+}
 const TEST_MODE = false;
 const connections = {};
 const coreList = {};
@@ -30,7 +33,7 @@ function makeId() {
 // クライアントとのコネクションが確立したら'connected'という表示させる
 /*io.on("connection", (socket) => {
     connectionCounter++;
-    console.log("connected");
+    MyLogger("connected");
     const id = makeId();
     connections[id] = socket;
     
@@ -76,10 +79,10 @@ function makeId() {
         }
     });
     socket.on('close', () => {
-      console.log('ws close');
+      MyLogger('ws close');
     });
 });*/
-const base = 2;
+const base = 0.5;
 const CORE_REPAIR_FACTOR_ON_TRANSPORTING = base*1.5;
 const CORE_REPAIR_FACTOR_ON_PLACED = base;
 const CORE_DEFAULT_HEALTH = 20;
@@ -121,7 +124,7 @@ class Player {
         if(this.nowHealth <= 0)
         {
             const revival = this.Kill(applicant);
-            console.log('revival',revival);
+            MyLogger('revival',revival);
             connections[this.id].send(`System,SetHealth,${this.nowHealth}`);
             if(!revival) {
                 connections[this.id].send(`System,Rank,${GetRank()}`);
@@ -238,7 +241,7 @@ class Core {
         this.nowHealth = 0;
         this.position = position;
         this.lastBreaked = Date.now();
-        console.log("Unclaim",this.id,this.owner);
+        MyLogger("Unclaim",this.id,this.owner);
     }
     UseHealth(amount) {
         this.System_Repair(amount);
@@ -366,7 +369,7 @@ async function connect() {
     "a1MvMiL1VPNKHc6pb8XNAw6fcwh85fc8V3wgocpmJjYK1Tm"
   );
 
-  console.log(contract.address.toHuman());
+  MyLogger(contract.address.toHuman());
 
   return contract.address.toHuman();
 }
@@ -388,7 +391,7 @@ let defenceZonePlayers = [];
 let defenceZoneClaiming = null;
 server.on("connection", async (socket) => {
     connectionCounter++;
-    console.log("connected");
+    MyLogger("connected");
     const id = makeId();
     connections[id] = socket;
     socket.broadcast = (text) => {
@@ -400,9 +403,9 @@ server.on("connection", async (socket) => {
     }
 
     socket.on("message", (msg) => {
-        if(!msg)return console.log('noMSG:'+msg);
+        if(!msg)return MyLogger('noMSG:'+msg);
         const [ command, ...args ] = msg.toString().split(',');
-        console.log(command,args);
+        MyLogger(id,command,args);
         switch(command) {
             case "Entry":
                 socket.send(`System,AsignId,${id}`);
@@ -457,7 +460,7 @@ server.on("connection", async (socket) => {
                 //broadcast(id,`Player,Create,${id},${createAt.join(',')}`);
                 socket.send(`System,SetPosition,${playerObj.position.join(',')}`);
                 socket.send(`Core,Claim,${playerCore.id}`);
-                console.log("SYSTEM_ENTRY_END");
+                MyLogger("SYSTEM_ENTRY_END");
                 //},100);
                 break;
             case "Position":
@@ -489,7 +492,7 @@ server.on("connection", async (socket) => {
                         }
                         socket.send(`System,GameEnd`);
                     }
-                } else console.log("claimReq is denied",coreList[args[0]]);
+                } else MyLogger("claimReq is denied",coreList[args[0]]);
                 break;
             case "TransportRequest":
                 if(coreList[args[0]].Transport(id)) {
@@ -581,13 +584,13 @@ server.on("connection", async (socket) => {
                 },24*1000);
                 break;
             default:
-                console.log("default:"+command);
+                MyLogger("default:"+command);
                 break;
 
         }
     });
     socket.on('close', () => {
-      console.log('ws close');
+      MyLogger('ws close');
 //      delete connections[id];
     });
 });
